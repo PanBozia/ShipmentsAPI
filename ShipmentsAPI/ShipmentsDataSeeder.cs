@@ -26,6 +26,13 @@ namespace ShipmentsAPI
                     dbContext.Statuses.AddRange(statuses);
                     dbContext.SaveChanges();
                 }
+
+                if (!dbContext.Customers.Any())
+                {
+                    var customers = GetCustomers();
+                    dbContext.Customers.AddRange(customers);
+                    dbContext.SaveChanges();
+                }
                 
             }
         }
@@ -67,6 +74,32 @@ namespace ShipmentsAPI
 
             };
             return statuses;
+        }
+        private IEnumerable<Customer> GetCustomers()
+        {
+            var customers = new List<Customer>()
+            {
+                new Customer()
+                {
+                    Name = "Daicel Safety Systems Europe Sp. z o.o.",
+                    ShortName = "DSSE",
+                    ClientNumber = "102030",
+                    CityAddress = "Żarów",
+                    StreetAddress = "Strefowa 8",
+                    ZipCodeAddress = "58-130",
+                },
+                new Customer()
+                {
+                    Name = "Toyoda Gosei Czech",
+                    ShortName = "TGCZ",
+                    ClientNumber = "203431",
+                    CityAddress = "Klasterec nad Ohri",
+                    StreetAddress = "Prymuslova 145",
+                    ZipCodeAddress = "068-130",
+                }
+
+            };
+            return customers;
         }
     }
 }

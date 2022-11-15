@@ -12,6 +12,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ShipmentsAPI.Services;
+using ShipmentsAPI.Middleware;
 
 namespace ShipmentsAPI
 {
@@ -27,10 +29,16 @@ namespace ShipmentsAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen();
             services.AddControllers();
             services.AddDbContext<ShipmentsDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ShipmentsDbConnection")));
             services.AddScoped<ShipmentsDataSeeder>();
+            services.AddAutoMapper(this.GetType().Assembly);
+            services.AddScoped<ICustomerService, CustomerService>();
+            services.AddHttpContextAccessor();
+
+            services.AddScoped<ErrorHandlingMiddleware>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,12 +50,18 @@ namespace ShipmentsAPI
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseHttpsRedirection();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ShipmentsAPI");
+            });
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
