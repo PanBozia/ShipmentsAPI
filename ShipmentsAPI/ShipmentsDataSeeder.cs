@@ -33,7 +33,14 @@ namespace ShipmentsAPI
                     dbContext.Customers.AddRange(customers);
                     dbContext.SaveChanges();
                 }
-                
+
+                if (!dbContext.Incoterms.Any())
+                {
+                    var inco = GetIncoterms();
+                    dbContext.Incoterms.AddRange(inco);
+                    dbContext.SaveChanges();
+                }
+
             }
         }
 
@@ -100,6 +107,74 @@ namespace ShipmentsAPI
 
             };
             return customers;
+        }
+        private IEnumerable<Incoterm> GetIncoterms()
+        {
+            var incoterms = new List<Incoterm>()
+            {
+                new Incoterm()
+                {
+                    Name = "Ex Works (and named place)",
+                    ShortName = "EXW"
+                },
+                new Incoterm()
+                {
+                    Name = "Free Carrier (and named place)",
+                    ShortName = "FCA"
+                },
+                  new Incoterm()
+                {
+                    Name = "Carriage Paid To (insert named place of destination)",
+                    ShortName = "CPT"
+                },
+                    new Incoterm()
+                {
+                    Name = "Carriage and Insurance Paid To (insert named place of destination)",
+                    ShortName = "CIP"
+                },  
+                new Incoterm()
+                {
+                    Name = "Delivered at Place (insert named place of destination)",
+                    ShortName = "DAP"
+                },
+                new Incoterm()
+                {
+                    Name = "Delivered at Place Unloaded (insert named place of destination)",
+                    ShortName = "DPU"
+                },
+                 new Incoterm()
+                {
+                    Name = "Delivered Duty Paid (insert named place of destination)",
+                    ShortName = "DDP"
+                },
+                  new Incoterm()
+                {
+                    Name = "Free Alongside Ship (insert named port of shipment)",
+                    ShortName = "FAS"
+                },
+                   new Incoterm()
+                {
+                    Name = "Free On Board (insert named port of shipment)",
+                    ShortName = "FOB"
+                },
+                    new Incoterm()
+                {
+                    Name = "Cost and Freight (insert named port of destination)",
+                    ShortName = "CFR"
+                },
+                     new Incoterm()
+                {
+                    Name = "Cost Insurance and Freight",
+                    ShortName = "CIF"
+                },
+                     new Incoterm()
+                {
+                    Name = "Inne lub nieznane",
+                    ShortName = "N/A"
+                }
+
+            };
+            return incoterms;
         }
     }
 }
