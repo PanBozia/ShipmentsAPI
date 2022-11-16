@@ -36,6 +36,8 @@ namespace ShipmentsAPI
             services.AddScoped<ShipmentsDataSeeder>();
             services.AddAutoMapper(this.GetType().Assembly);
             services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<IForwarderService, ForwarderService>();
+
             services.AddHttpContextAccessor();
 
             services.AddScoped<ErrorHandlingMiddleware>();

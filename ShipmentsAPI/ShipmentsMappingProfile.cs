@@ -9,7 +9,6 @@ namespace ShipmentsAPI
         public ShipmentsMappingProfile()
         {
             CreateMap<Customer, CustomerDto>();
-            //.ForMember(m =>m.PurchaseOrders, c => c.MapFrom(s => s.PurchaseOrders) );
             CreateMap<PurchaseOrder, PurchaseOrderDto>();
             CreateMap<Forwarder, ForwarderDto>();
             CreateMap<Incoterm, IncotermDto>(); 
@@ -17,6 +16,7 @@ namespace ShipmentsAPI
             CreateMap<Status, StatusDto>();
             CreateMap<WarehouseArea, WarehouseAreaDto>();
             CreateMap<CreateCustomerDto, Customer>();
+            CreateMap<CreateForwarderDto, Forwarder>();
         }
     }
 }
