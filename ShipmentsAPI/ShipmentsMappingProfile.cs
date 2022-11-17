@@ -17,6 +17,9 @@ namespace ShipmentsAPI
             CreateMap<WarehouseArea, WarehouseAreaDto>();
             CreateMap<CreateCustomerDto, Customer>();
             CreateMap<CreateForwarderDto, Forwarder>();
+            CreateMap<CreateStatusDto, Status>();
+            CreateMap<CreateWarehouseAreaDto, WarehouseArea>();
+            CreateMap<CreatePurchaseOrderDto, PurchaseOrder>();
         }
     }
 }

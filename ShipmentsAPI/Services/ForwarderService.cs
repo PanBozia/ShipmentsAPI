@@ -80,7 +80,7 @@ namespace ShipmentsAPI.Services
         {
             var forwarder = CheckForwarder(id);
             dbContext.Forwarders.Remove(forwarder);
-            dbContext.SaveChanges(true);
+            dbContext.SaveChanges();
         }
 
         private Forwarder CheckForwarder(Guid id)

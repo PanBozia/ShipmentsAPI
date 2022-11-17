@@ -10,8 +10,8 @@ namespace ShipmentsAPI.DtoModels
         public string PONumber { get; set; }
         public DateTime DeliveryDate { get; set; }
         public int? PalletQty { get; set; }
-        public IncotermDto Incoterm { get; set; }
-        public CustomerDto Customer { get; set; }
+        public int IncotermId { get; set; }
+        public Guid CustomerId { get; set; }
         public List<ShipmentDto> Shipments { get; set; }
     }
 }
