@@ -30,9 +30,23 @@ namespace ShipmentsAPI.Controllers
         [HttpPost]
         public ActionResult<Guid> Create([FromBody] CreatePurchaseOrderDto dto)
         {
-            return orderService.Create(dto);
+            var newOrderId = orderService.Create(dto);
+            return Ok(newOrderId);
+        }
+        
+
+        [HttpPut("{id}")]
+        public ActionResult<PurchaseOrderDto> Update([FromRoute] Guid id, CreatePurchaseOrderDto dto)
+        {
+            var updatedOrder = orderService.Update(id, dto);
+            return Ok(updatedOrder);
         }
 
-
+        [HttpDelete("{id}")]
+        public ActionResult Delete([FromRoute] Guid id)
+        {
+            orderService.Delete(id);
+            return Ok();
+        }
     }
 }

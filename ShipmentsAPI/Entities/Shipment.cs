@@ -10,7 +10,7 @@ namespace ShipmentsAPI.Entities
         public DateTime? TimeOfDeparture { get; set; }
         public bool HasPriority { get; set; } = false;
         public string Comment { get; set; }
-
+        public int? PalletQty { get; set; }
         public int WarehouseAreaId { get; set; }
         public virtual WarehouseArea WarehouseArea { get; set; }
 

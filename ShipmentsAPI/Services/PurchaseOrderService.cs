@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using ShipmentsAPI.DtoModels;
 using ShipmentsAPI.EFDbContext;
 using ShipmentsAPI.Entities;
@@ -11,9 +12,11 @@ namespace ShipmentsAPI.Services
 {
     public interface IPurchaseOrderService
     {
-        Guid Create(CreatePurchaseOrderDto dto);
         List<PurchaseOrderDto> Get();
         PurchaseOrderDto GetById(Guid id);
+        Guid Create(CreatePurchaseOrderDto dto);
+        PurchaseOrderDto Update(Guid id, CreatePurchaseOrderDto dto);
+        void Delete(Guid id);
     }
 
     public class PurchaseOrderService : IPurchaseOrderService
@@ -29,7 +32,12 @@ namespace ShipmentsAPI.Services
 
         public List<PurchaseOrderDto> Get()
         {
-            var orders = dbContext.PurchaseOrders.ToList();
+            var orders = dbContext
+                .PurchaseOrders
+                .Include(x => x.Incoterm)
+                .Include(x => x.Customer)
+                .Include(x => x.Shipments)
+                .ToList();
             if (!orders.Any())
             {
                 throw new NotFoundException("Purchase orders not found");
@@ -62,10 +70,36 @@ namespace ShipmentsAPI.Services
             return newOrder.Id;
         }
 
+        public PurchaseOrderDto Update(Guid id, CreatePurchaseOrderDto dto)
+        {
+            var purchaseOrder = CheckIfOrderExist(id);
+            purchaseOrder.PONumber = dto.PONumber;
+            purchaseOrder.DeliveryDate = dto.DeliveryDate;
+            purchaseOrder.CustomerId = dto.CustomerId;
+            purchaseOrder.IncotermId = dto.IncotermId;
+
+            dbContext.PurchaseOrders.Update(purchaseOrder);
+            dbContext.SaveChanges();
+
+            var purchaseOrderDto = mapper.Map<PurchaseOrderDto>(purchaseOrder);
+
+            return purchaseOrderDto;
+        }
+
+        public void Delete(Guid id)
+        {
+            var purchaseOrder = CheckIfOrderExist(id);
+            dbContext.PurchaseOrders.Remove(purchaseOrder);
+            dbContext.SaveChanges();
+        }
 
         private PurchaseOrder CheckIfOrderExist(Guid id)
         {
-            var order = dbContext.PurchaseOrders.FirstOrDefault(x => x.Id == id);
+            var order = dbContext
+                .PurchaseOrders
+                .Include(x => x.Incoterm)
+                .Include(x => x.Customer)
+                .FirstOrDefault(x => x.Id == id);
             if (order == null)
             {
                 throw new NotFoundException($"Purchase order wit id: {id} not found");

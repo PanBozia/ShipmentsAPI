@@ -40,6 +40,7 @@ namespace ShipmentsAPI
             services.AddScoped<IStatusService, StatusService>();
             services.AddScoped<IWarehouseAreaService, WarehouseAreaService >();
             services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
+            services.AddScoped<IShipmentService, ShipmentService>();
             services.AddHttpContextAccessor();
 
             services.AddScoped<ErrorHandlingMiddleware>();

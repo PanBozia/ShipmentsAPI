@@ -11,11 +11,11 @@ namespace ShipmentsAPI.DtoModels
         public DateTime? TimeOfDeparture { get; set; }
         public bool HasPriority { get; set; } = false;
         public string Comment { get; set; }
-        public WarehouseAreaDto WarehouseArea { get; set; }
-
+        public string WarehouseArea { get; set; }
+        public int PalletQty { get; set; }
         public ForwarderDto Forwarder { get; set; }
-        public virtual StatusDto Status { get; set; }
+        public string Status { get; set; }
 
-        public virtual List<PurchaseOrderDto> PurchaseOrders { get; set; }
+        public virtual List<PurchaseOrderBriefDto> PurchaseOrders { get; set; }
     }
 }

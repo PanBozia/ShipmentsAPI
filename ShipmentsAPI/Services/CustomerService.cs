@@ -35,6 +35,7 @@ namespace ShipmentsAPI.Services
         {
             var customers = dbContext.Customers
                 .Include(x => x.PurchaseOrders)
+                .ThenInclude( i => i.Incoterm)
                 .ToList();
             var customersDtos = mapper.Map<List<CustomerDto>>(customers);
             return customersDtos;
@@ -43,6 +44,7 @@ namespace ShipmentsAPI.Services
         {
             var customer = dbContext.Customers
                 .Include(x => x.PurchaseOrders)
+                .ThenInclude(i => i.Incoterm)
                 .FirstOrDefault(x => x.Id == id);
 
             var customerDto = mapper.Map<CustomerDto>(customer);
@@ -93,6 +95,7 @@ namespace ShipmentsAPI.Services
         public void Delete(Guid id)
         {
             var customer = dbContext.Customers
+                .Include(x => x.PurchaseOrders)
                 .FirstOrDefault(x => x.Id == id);
             if (customer == null) throw new NotFoundException($"Klient z numerem Id: {id} nie isnieje.");
             dbContext.Customers.Remove(customer);

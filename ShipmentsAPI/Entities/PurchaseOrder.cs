@@ -10,7 +10,7 @@ namespace ShipmentsAPI.Entities
         public string PONumber { get; set; }
         
         public DateTime DeliveryDate { get; set; }
-        public int? PalletQty { get; set; }
+        
         
         public int IncotermId { get; set; }
         public virtual Incoterm Incoterm { get; set; }

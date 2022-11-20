@@ -1,10 +1,8 @@
-﻿using ShipmentsAPI.Entities;
-using System.Collections.Generic;
-using System;
+﻿using System;
 
 namespace ShipmentsAPI.DtoModels
 {
-    public class PurchaseOrderDto
+    public class PurchaseOrderBriefDto
     {
         public Guid Id { get; set; }
         public string PONumber { get; set; }
@@ -12,6 +10,5 @@ namespace ShipmentsAPI.DtoModels
         
         public string IncotermName { get; set; }
         public string CustomerName { get; set; }
-        public List<ShipmentBriefDto> Shipments { get; set; }
     }
 }
