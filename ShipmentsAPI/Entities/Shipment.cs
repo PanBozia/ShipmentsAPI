@@ -11,6 +11,9 @@ namespace ShipmentsAPI.Entities
         public bool HasPriority { get; set; } = false;
         public string Comment { get; set; }
         public int? PalletQty { get; set; }
+        public string ContainerNumber { get; set; }
+        public string ContainerType { get; set; }
+        public string ContainerSealNumber { get; set; }
         public int WarehouseAreaId { get; set; }
         public virtual WarehouseArea WarehouseArea { get; set; }
 

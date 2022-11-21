@@ -60,13 +60,10 @@ namespace ShipmentsAPI.Services
             var forwarder = CheckForwarder(id);
             
             forwarder.Speditor = dto.Speditor;
-            forwarder.ContainerNumber = dto.ContainerNumber;    
             forwarder.PhoneNumber = dto.PhoneNumber;
-            forwarder.ContainerSealNumber = dto.ContainerSealNumber;
             forwarder.FirstName = dto.FirstName;
             forwarder.LastName = dto.LastName;
             forwarder.CarPlates = dto.CarPlates;
-            forwarder.ContainerType = dto.ContainerType;
 
             dbContext.Forwarders.Update(forwarder);
             dbContext.SaveChanges();

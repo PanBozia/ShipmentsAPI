@@ -17,7 +17,8 @@ namespace ShipmentsAPI
                 .ForMember(x=>x.IncotermName, o => o.MapFrom( x => x.Incoterm.ShortName));
             CreateMap<Forwarder, ForwarderDto>();
             CreateMap<Incoterm, IncotermDto>();
-            CreateMap<Shipment, ShipmentBriefDto>();
+            CreateMap<Shipment, ShipmentBriefDto>()
+                .ForMember(x => x.ContainerNumber, o => o.MapFrom(x => x.ContainerNumber));
             CreateMap<Shipment, ShipmentDto>()
                 .ForMember(x => x.WarehouseArea, o => o.MapFrom(x => x.WarehouseArea.Name))
                 .ForMember(x => x.Status, o => o.MapFrom(x => x.Status.Name));

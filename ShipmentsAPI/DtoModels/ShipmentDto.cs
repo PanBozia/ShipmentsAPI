@@ -11,6 +11,9 @@ namespace ShipmentsAPI.DtoModels
         public DateTime? TimeOfDeparture { get; set; }
         public bool HasPriority { get; set; } = false;
         public string Comment { get; set; }
+        public string ContainerNumber { get; set; }
+        public string ContainerType { get; set; }
+        public string ContainerSealNumber { get; set; }
         public string WarehouseArea { get; set; }
         public int PalletQty { get; set; }
         public ForwarderDto Forwarder { get; set; }

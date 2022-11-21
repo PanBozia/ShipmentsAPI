@@ -23,6 +23,13 @@ namespace ShipmentsAPI.Controllers
             var shipments = shipmentService.Get();
             return Ok(shipments);
         }
+        [HttpPost("search")]
+        public ActionResult<List<ShipmentDto>> Search([FromBody] FilterShipmentsDto filter)
+        {
+            var shipments = shipmentService.Search(filter);
+            return Ok(shipments);
+        }
+
         [HttpGet("{id}")]
         public ActionResult<List<ShipmentDto>> GetById([FromRoute] Guid id)
         {
@@ -44,11 +51,17 @@ namespace ShipmentsAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult<ShipmentDto> Update([FromRoute] Guid id, [FromBody] CreateShipmentDto dto)
+        public ActionResult<ShipmentBriefDto> Update([FromRoute] Guid id, [FromBody] CreateShipmentDto dto)
         {
             var updatedShipment = shipmentService.Update(id, dto);
             return Ok(updatedShipment);
         }
 
+        [HttpDelete("{id}")]
+        public ActionResult Delete([FromRoute] Guid id)
+        {
+            shipmentService.Delete(id);
+            return Ok();
+        }
     }
 }
