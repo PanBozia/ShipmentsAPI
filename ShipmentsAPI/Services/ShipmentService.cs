@@ -16,7 +16,7 @@ namespace ShipmentsAPI.Services
         Guid Create(CreateShipmentDto dto);
         void Delete(Guid id);
         List<ShipmentDto> Get();
-        List<ShipmentDto> Search(FilterShipmentsDto filterShipmentsDto);
+        PageResult<ShipmentDto> Search(QueryShipments queryShipments);
         ShipmentDto GetById(Guid id);
         ShipmentBriefDto Update(Guid id, CreateShipmentDto dto);
     }
@@ -53,7 +53,7 @@ namespace ShipmentsAPI.Services
             return shipmentsDto;
         }
 
-        public List<ShipmentDto> Search(FilterShipmentsDto filterShipmentsDto)
+        public PageResult<ShipmentDto> Search(QueryShipments queryShipments)
         {
             var nullDate = new DateTime();
 
@@ -67,54 +67,63 @@ namespace ShipmentsAPI.Services
                 .ThenInclude(c => c.Incoterm)
                 .AsQueryable();
 
-            if (filterShipmentsDto.TimeOfDeparture != nullDate)
+            if (queryShipments.TimeOfDeparture != nullDate)
             {
                 shipments = shipments
-                   .Where(d => d.TimeOfDeparture > filterShipmentsDto.TimeOfDeparture.AddDays(-2))
-                   .Where(d => d.TimeOfDeparture < filterShipmentsDto.TimeOfDeparture.AddDays(2));
+                   .Where(d => d.TimeOfDeparture > queryShipments.TimeOfDeparture.AddDays(-2))
+                   .Where(d => d.TimeOfDeparture < queryShipments.TimeOfDeparture.AddDays(2));
             }
-            if (filterShipmentsDto.HasPriority)
+            if (queryShipments.HasPriority)
             {
-                shipments = shipments.Where(x => x.HasPriority == filterShipmentsDto.HasPriority);
+                shipments = shipments.Where(x => x.HasPriority == queryShipments.HasPriority);
             }
-            if (filterShipmentsDto.WarehouseAreaId != 0)
+            if (queryShipments.WarehouseAreaId != 0)
             {
-                shipments = shipments.Where(x => x.WarehouseArea.Id == filterShipmentsDto.WarehouseAreaId);
+                shipments = shipments.Where(x => x.WarehouseArea.Id == queryShipments.WarehouseAreaId);
             }
-            if (filterShipmentsDto.StatusId != 0)
+            if (queryShipments.StatusId != 0)
             {
-                shipments = shipments.Where(x => x.Status.Id == filterShipmentsDto.StatusId);
+                shipments = shipments.Where(x => x.Status.Id == queryShipments.StatusId);
             }
-            if (!string.IsNullOrWhiteSpace(filterShipmentsDto.Comment))
+            if (!string.IsNullOrWhiteSpace(queryShipments.Comment))
             {
-                shipments = shipments.Where(x => x.Comment.ToLower().Contains(filterShipmentsDto.Comment.ToLower()));
+                shipments = shipments.Where(x => x.Comment.ToLower().Contains(queryShipments.Comment.ToLower()));
             }
-            if (!string.IsNullOrWhiteSpace(filterShipmentsDto.ContainerNumber))
+            if (!string.IsNullOrWhiteSpace(queryShipments.ContainerNumber))
             {
-                shipments = shipments.Where(x => x.ContainerNumber.ToLower().Contains(filterShipmentsDto.Comment.ToLower()));
+                shipments = shipments.Where(x => x.ContainerNumber.ToLower().Contains(queryShipments.Comment.ToLower()));
             }
-            if (!string.IsNullOrWhiteSpace(filterShipmentsDto.CarPlates))
+            if (!string.IsNullOrWhiteSpace(queryShipments.CarPlates))
             {
-                shipments = shipments.Where(x => x.Forwarder.CarPlates.ToLower().Contains(filterShipmentsDto.CarPlates.ToLower()));
+                shipments = shipments.Where(x => x.Forwarder.CarPlates.ToLower().Contains(queryShipments.CarPlates.ToLower()));
             }
-            if (filterShipmentsDto.HasPriority)
+            if (queryShipments.HasPriority)
             {
-                shipments = shipments.Where( x => x.HasPriority == filterShipmentsDto.HasPriority);
+                shipments = shipments.Where( x => x.HasPriority == queryShipments.HasPriority);
             }
-            if (!string.IsNullOrWhiteSpace(filterShipmentsDto.PurchaseOrderNumber))
+            if (!string.IsNullOrWhiteSpace(queryShipments.PurchaseOrderNumber))
             {
-                shipments = shipments.Where(x => x.PurchaseOrders.Any(y => y.PONumber.Contains(filterShipmentsDto.PurchaseOrderNumber)));
+                shipments = shipments.Where(x => x.PurchaseOrders.Any(y => y.PONumber.Contains(queryShipments.PurchaseOrderNumber)));
             }
 
 
-                if (!shipments.Any())
+            if (!shipments.Any())
             {
                 throw new NotFoundException("Brak wysyłek - nie znaleziono");
             }
 
+            var totalItemsCount = shipments.Count();
+
+            shipments = shipments
+                .Skip(queryShipments.PageSize * (queryShipments.PageNumber - 1))
+                .Take(queryShipments.PageSize)
+                .AsQueryable();
+
             var shipmentsDto = mapper.Map<List<ShipmentDto>>(shipments);
 
-            return shipmentsDto;
+            var result = new PageResult<ShipmentDto>(shipmentsDto, totalItemsCount, queryShipments.PageSize, queryShipments.PageNumber);
+
+            return result;
         }
         public ShipmentDto GetById(Guid id)
         {

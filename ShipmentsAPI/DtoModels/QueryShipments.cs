@@ -3,7 +3,7 @@ using System;
 
 namespace ShipmentsAPI.DtoModels
 {
-    public class FilterShipmentsDto
+    public class QueryShipments
     {
         public DateTime TimeOfDeparture { get; set; }
         public bool HasPriority { get; set; }
@@ -14,5 +14,8 @@ namespace ShipmentsAPI.DtoModels
         public int StatusId { get; set; }
         public string ContainerNumber { get; set; }
         public string PurchaseOrderNumber { get; set; }
+
+        public int PageNumber { get; set; }
+        public int PageSize { get; set; }
     }
 }

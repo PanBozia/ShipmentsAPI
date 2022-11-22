@@ -24,7 +24,7 @@ namespace ShipmentsAPI.Controllers
             return Ok(shipments);
         }
         [HttpPost("search")]
-        public ActionResult<List<ShipmentDto>> Search([FromBody] FilterShipmentsDto filter)
+        public ActionResult<List<ShipmentDto>> Search([FromBody] QueryShipments filter)
         {
             var shipments = shipmentService.Search(filter);
             return Ok(shipments);
