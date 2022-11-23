@@ -19,7 +19,8 @@ namespace ShipmentsAPI.Services
         List<ShipmentDto> Get();
         PageResult<ShipmentDto> Search(QueryShipments queryShipments);
         ShipmentDto GetById(Guid id);
-        ShipmentBriefDto Update(Guid id, CreateShipmentDto dto);
+        ShipmentBriefDto Update(Guid id, UpdateShipmentDto dto);
+        void ChangeStatus(Guid shipmentId, int statusId);
     }
 
     public class ShipmentService : IShipmentService
@@ -174,7 +175,7 @@ namespace ShipmentsAPI.Services
             return newShipment.Id;
         }
 
-        public ShipmentBriefDto Update(Guid id, CreateShipmentDto dto)
+        public ShipmentBriefDto Update(Guid id, UpdateShipmentDto dto)
         {
             var shipment = dbContext.Shipments
                .Include(x => x.Forwarder)
@@ -195,6 +196,32 @@ namespace ShipmentsAPI.Services
             var updatedShipmentDto = mapper.Map<ShipmentBriefDto>(shipment);
 
             return updatedShipmentDto;
+        }
+        public void ChangeStatus(Guid shipmentId, int statusId)
+        {
+            var shipment = dbContext.Shipments
+               .Include(x => x.Forwarder)
+               .Include(z => z.WarehouseArea)
+               .Include(y => y.Status)
+               .Include(s => s.PurchaseOrders)
+               .ThenInclude(c => c.Customer)
+               .FirstOrDefault(x => x.Id == shipmentId);
+            
+            if (shipment is null)
+            {
+                throw new NotFoundException($"Wysyłka z nr id: {shipmentId} nie została odnaleziona.");
+            }
+
+            var statusExists = dbContext.Statuses.Any(x => x.Id == statusId);
+            if (!statusExists) 
+            {
+                throw new NotFoundException($"Status z nr id: {statusId} nie została odnaleziona.");
+            }
+
+            shipment.StatusId = statusId;
+            dbContext.Shipments.Update(shipment);
+            dbContext.SaveChanges();
+
         }
 
         public void Delete(Guid id)

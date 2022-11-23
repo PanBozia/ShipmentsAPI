@@ -51,10 +51,16 @@ namespace ShipmentsAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult<ShipmentBriefDto> Update([FromRoute] Guid id, [FromBody] CreateShipmentDto dto)
+        public ActionResult<ShipmentBriefDto> Update([FromRoute] Guid id, [FromBody] UpdateShipmentDto dto)
         {
             var updatedShipment = shipmentService.Update(id, dto);
             return Ok(updatedShipment);
+        }
+        [HttpPut("{shipmentId}/{statusId}")]
+        public ActionResult ChangeStatus([FromRoute] Guid shipmentId, [FromRoute] int statusId)
+        {
+            shipmentService.ChangeStatus(shipmentId, statusId);
+            return Ok();
         }
 
         [HttpDelete("{id}")]
