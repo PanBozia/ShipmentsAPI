@@ -8,7 +8,7 @@ namespace ShipmentsAPI.Entities
     {
         public Guid Id { get; set; }
         public string PONumber { get; set; }
-        
+        public string Category { get; set; }
         public DateTime DeliveryDate { get; set; }
         
         

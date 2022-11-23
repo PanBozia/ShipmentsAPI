@@ -7,7 +7,7 @@ namespace ShipmentsAPI.DtoModels
         public Guid Id { get; set; }
         public string PONumber { get; set; }
         public DateTime DeliveryDate { get; set; }
-        
+        public string Category { get; set; }
         public string IncotermName { get; set; }
         public string CustomerName { get; set; }
     }

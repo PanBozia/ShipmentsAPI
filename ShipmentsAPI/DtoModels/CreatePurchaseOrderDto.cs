@@ -7,6 +7,7 @@ namespace ShipmentsAPI.DtoModels
     {
         [Required]
         public string PONumber { get; set; }
+        public string Category { get; set; }
         [Required]
         public DateTime DeliveryDate { get; set; }
         

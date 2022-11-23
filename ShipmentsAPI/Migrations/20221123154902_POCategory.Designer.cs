@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShipmentsAPI.EFDbContext;
 
 namespace ShipmentsAPI.Migrations
 {
     [DbContext(typeof(ShipmentsDbContext))]
-    partial class ShipmentsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221123154902_POCategory")]
+    partial class POCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,7 +164,7 @@ namespace ShipmentsAPI.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("ForwarderId")
+                    b.Property<Guid>("ForwarderId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("HasPriority")
@@ -262,7 +264,9 @@ namespace ShipmentsAPI.Migrations
                 {
                     b.HasOne("ShipmentsAPI.Entities.Forwarder", "Forwarder")
                         .WithMany()
-                        .HasForeignKey("ForwarderId");
+                        .HasForeignKey("ForwarderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ShipmentsAPI.Entities.Status", "Status")
                         .WithMany()

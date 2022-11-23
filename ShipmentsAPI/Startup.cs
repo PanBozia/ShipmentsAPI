@@ -14,6 +14,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using ShipmentsAPI.Services;
 using ShipmentsAPI.Middleware;
+using FluentValidation;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using ShipmentsAPI.DtoModels;
+using ShipmentsAPI.DtoModels.Validators;
+using FluentValidation.AspNetCore;
 
 namespace ShipmentsAPI
 {
@@ -31,6 +36,7 @@ namespace ShipmentsAPI
         {
             services.AddSwaggerGen();
             services.AddControllers();
+            services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
             services.AddDbContext<ShipmentsDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ShipmentsDbConnection")));
             services.AddScoped<ShipmentsDataSeeder>();
@@ -41,16 +47,24 @@ namespace ShipmentsAPI
             services.AddScoped<IWarehouseAreaService, WarehouseAreaService >();
             services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
             services.AddScoped<IShipmentService, ShipmentService>();
+            services.AddScoped<IValidator<QueryShipments>, QueryShipmentsValidator>();
             services.AddHttpContextAccessor();
 
             services.AddScoped<ErrorHandlingMiddleware>();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("FrontEndClient", builder =>
+                    builder.AllowAnyMethod()
+                    .AllowAnyOrigin()
+                    );
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ShipmentsDataSeeder seeder)
         {
+            app.UseCors("FrontEndClient");
             seeder.Seed();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

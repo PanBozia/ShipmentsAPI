@@ -7,6 +7,7 @@ using ShipmentsAPI.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace ShipmentsAPI.Services
 {
@@ -91,7 +92,7 @@ namespace ShipmentsAPI.Services
             }
             if (!string.IsNullOrWhiteSpace(queryShipments.ContainerNumber))
             {
-                shipments = shipments.Where(x => x.ContainerNumber.ToLower().Contains(queryShipments.Comment.ToLower()));
+                shipments = shipments.Where(x => x.ContainerNumber.ToLower().Contains(queryShipments.ContainerNumber.ToLower()));
             }
             if (!string.IsNullOrWhiteSpace(queryShipments.CarPlates))
             {
@@ -106,10 +107,26 @@ namespace ShipmentsAPI.Services
                 shipments = shipments.Where(x => x.PurchaseOrders.Any(y => y.PONumber.Contains(queryShipments.PurchaseOrderNumber)));
             }
 
-
-            if (!shipments.Any())
+            shipments = shipments.OrderBy(x => x.TimeOfDeparture);
+            
+            if (!string.IsNullOrEmpty(queryShipments.SortBy))
             {
-                throw new NotFoundException("Brak wysyłek - nie znaleziono");
+                var columnsSelector = new Dictionary<string, Expression<Func<Shipment, object>>>()
+                {
+                    { nameof(Shipment.TimeOfDeparture), t => t.TimeOfDeparture },
+                    { nameof(Shipment.ContainerType), t => t.ContainerType },
+                    { nameof(Shipment.ContainerNumber), t => t.ContainerNumber },
+                    { nameof(Shipment.ETD), t => t.ETD },
+                    { nameof(Shipment.PalletQty), t => t.PalletQty },
+                    { nameof(Shipment.Status.Name), t => t.Status.Name }
+                    
+                };
+
+                var selectedColumn = columnsSelector[queryShipments.SortBy];
+
+                shipments = queryShipments.SortDirection == SortDirection.ASC ? 
+                    shipments.OrderBy(selectedColumn)
+                    : shipments.OrderByDescending(selectedColumn);
             }
 
             var totalItemsCount = shipments.Count();
