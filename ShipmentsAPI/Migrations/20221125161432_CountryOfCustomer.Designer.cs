@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShipmentsAPI.EFDbContext;
 
 namespace ShipmentsAPI.Migrations
 {
     [DbContext(typeof(ShipmentsDbContext))]
-    partial class ShipmentsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221125161432_CountryOfCustomer")]
+    partial class CountryOfCustomer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

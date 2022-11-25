@@ -9,6 +9,7 @@ namespace ShipmentsAPI.DtoModels
         public DateTime DeliveryDate { get; set; }
         public string Category { get; set; }
         public string IncotermName { get; set; }
-        public string CustomerName { get; set; }
+        public string CustomerShortName { get; set; }
+        public string CustomerCity { get; set; }
     }
 }

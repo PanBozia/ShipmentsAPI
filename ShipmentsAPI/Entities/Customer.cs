@@ -14,7 +14,7 @@ namespace ShipmentsAPI.Entities
         public string StreetAddress { get; set; }
         public string CityAddress { get; set; }
         public string ZipCodeAddress { get; set; }
-
+        public string CountryAddress { get; set; }
         public virtual List<PurchaseOrder> PurchaseOrders { get; set; }
     }
 }
