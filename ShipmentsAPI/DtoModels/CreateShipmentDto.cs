@@ -13,6 +13,7 @@ namespace ShipmentsAPI.DtoModels
         public DateTime? TimeOfDeparture { get; set; }
         public bool HasPriority { get; set; } = false;
         public int PalletQty { get; set; }
+        public string CreatedByUser { get; set; } = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
         public string ContainerNumber { get; set; }
         public string ContainerType { get; set; }
         public string ContainerSealNumber { get; set; }

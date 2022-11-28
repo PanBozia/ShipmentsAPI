@@ -8,6 +8,7 @@ namespace ShipmentsAPI.Entities
         public Guid Id { get; set; }
         public DateTime ETD { get; set; }
         public DateTime? TimeOfDeparture { get; set; }
+        public string CreatedByUser { get; set; }
         public bool HasPriority { get; set; } = false;
         public string Comment { get; set; }
         public int? PalletQty { get; set; }

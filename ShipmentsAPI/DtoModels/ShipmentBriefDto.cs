@@ -11,6 +11,6 @@ namespace ShipmentsAPI.DtoModels
         public DateTime? TimeOfDeparture { get; set; }
         public int PalletQty { get; set; }
         public string ContainerNumber { get; set; }
-        
+        public string CreatedByUser { get; set; }
     }
 }

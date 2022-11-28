@@ -12,7 +12,8 @@ namespace ShipmentsAPI
             CreateMap<Customer, CustomerDto>();
             CreateMap<PurchaseOrder, PurchaseOrderDto>()
                 .ForMember(x => x.IncotermName, o => o.MapFrom(x => x.Incoterm.ShortName))
-                .ForMember(x => x.CustomerName, o => o.MapFrom(x => x.Customer.Name));
+                .ForMember(x => x.CustomerName, o => o.MapFrom(x => x.Customer.Name))
+                .ForMember(x => x.CustomerShortName, o => o.MapFrom(x => x.Customer.ShortName));
             CreateMap<PurchaseOrder, PurchaseOrderBriefDto>()
                 .ForMember(x => x.IncotermName, o => o.MapFrom(x => x.Incoterm.ShortName))
                 .ForMember(x => x.CustomerShortName, o => o.MapFrom(x => x.Customer.ShortName))

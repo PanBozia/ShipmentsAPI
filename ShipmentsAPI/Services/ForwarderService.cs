@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using ShipmentsAPI.DtoModels;
 using ShipmentsAPI.EFDbContext;
 using ShipmentsAPI.Entities;
 using ShipmentsAPI.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace ShipmentsAPI.Services
 {
@@ -14,6 +17,7 @@ namespace ShipmentsAPI.Services
         void Delete(Guid id);
         List<ForwarderDto> Get();
         ForwarderDto GetById(Guid id);
+        PageResult<ForwarderDto> Search(QueryForwarders query);
         ForwarderDto Update(Guid id, CreateForwarderDto dto);
     }
 
@@ -34,6 +38,49 @@ namespace ShipmentsAPI.Services
             var forwardersDtos = mapper.Map<List<ForwarderDto>>(forwarders);
 
             return forwardersDtos;
+        }
+
+        public PageResult<ForwarderDto> Search(QueryForwarders query)
+        {
+            var forwarders = dbContext.Forwarders.AsQueryable();
+            if (!string.IsNullOrWhiteSpace(query.SearchPhrase))
+            {
+                forwarders = forwarders.Where(x => 
+                x.CarPlates.Contains(query.SearchPhrase) 
+                || x.Speditor.Contains(query.SearchPhrase) 
+                || x.LastName.Contains(query.SearchPhrase)
+                || x.FirstName.Contains(query.SearchPhrase));
+            }
+
+            if (!string.IsNullOrEmpty(query.SortBy))
+            {
+                var columnsSelector = new Dictionary<string, Expression<Func<Forwarder, object>>>()
+                {
+                    { nameof(Forwarder.FirstName), t => t.FirstName },
+                    { nameof(Forwarder.LastName), t => t.LastName },
+                    { nameof(Forwarder.Speditor), t => t.Speditor },
+                    { nameof(Forwarder.CarPlates), t => t.CarPlates },
+                    { nameof(Forwarder.PhoneNumber), t => t.PhoneNumber },
+                };
+
+                var selectedColumn = columnsSelector[query.SortBy];
+
+                forwarders = query.SortDirection == SortDirection.ASC ?
+                    forwarders.OrderBy(selectedColumn)
+                    : forwarders.OrderByDescending(selectedColumn);
+            }
+            var totalItemsCount = forwarders.Count();
+
+            forwarders = forwarders
+                .Skip(query.PageSize * (query.PageNumber - 1))
+                .Take(query.PageSize)
+                .AsQueryable();
+
+            var forwardersDto = mapper.Map<List<ForwarderDto>>(forwarders);
+
+            var result = new PageResult<ForwarderDto>(forwardersDto, totalItemsCount, query.PageSize, query.PageNumber);
+
+            return result;
         }
 
         public ForwarderDto GetById(Guid id)

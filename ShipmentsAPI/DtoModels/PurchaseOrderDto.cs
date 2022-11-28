@@ -12,6 +12,7 @@ namespace ShipmentsAPI.DtoModels
         public string Category { get; set; }
         public string IncotermName { get; set; }
         public string CustomerName { get; set; }
+        public string CustomerShortName { get; set; }
         public List<ShipmentBriefDto> Shipments { get; set; }
     }
 }

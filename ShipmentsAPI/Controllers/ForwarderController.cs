@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ShipmentsAPI.DtoModels;
 using ShipmentsAPI.Entities;
 using ShipmentsAPI.Services;
 using System;
@@ -22,6 +23,12 @@ namespace ShipmentsAPI.Controllers
         {
             var forwardersDtos = forwarderService.Get();
             return Ok(forwardersDtos);
+        }
+        [HttpGet("search")]
+        public ActionResult<PageResult<ForwarderDto>> Search([FromQuery] QueryForwarders filter)
+        {
+            var forwarders = forwarderService.Search(filter);
+            return Ok(forwarders);
         }
 
         [HttpGet("{id}")]

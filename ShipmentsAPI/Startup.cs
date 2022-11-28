@@ -48,6 +48,8 @@ namespace ShipmentsAPI
             services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
             services.AddScoped<IShipmentService, ShipmentService>();
             services.AddScoped<IValidator<QueryShipments>, QueryShipmentsValidator>();
+            services.AddScoped<IValidator<QueryForwarders>, QueryForwardersValidator>();
+            services.AddScoped<IValidator<QueryPurchaseOrders>, QueryPurchaseOrdersValidator>();
             services.AddHttpContextAccessor();
 
             services.AddScoped<ErrorHandlingMiddleware>();

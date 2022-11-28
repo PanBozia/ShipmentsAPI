@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShipmentsAPI.DtoModels;
+using ShipmentsAPI.Entities;
 using ShipmentsAPI.Services;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,13 @@ namespace ShipmentsAPI.Controllers
         public ActionResult<List<PurchaseOrderDto>> Get()
         {
             return orderService.Get();
+        }
+
+        [HttpGet("search")]
+        public ActionResult<PageResult<PurchaseOrderDto>> Search([FromQuery] QueryPurchaseOrders filter)
+        {
+            var orders = orderService.Search(filter);
+            return Ok(orders);
         }
         [HttpGet("{id}")]
         public ActionResult<PurchaseOrderDto> GetById([FromRoute] Guid id)

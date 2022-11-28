@@ -7,6 +7,7 @@ using ShipmentsAPI.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace ShipmentsAPI.Services
 {
@@ -17,6 +18,7 @@ namespace ShipmentsAPI.Services
         Guid Create(CreatePurchaseOrderDto dto);
         PurchaseOrderDto Update(Guid id, CreatePurchaseOrderDto dto);
         void Delete(Guid id);
+        PageResult<PurchaseOrderDto> Search(QueryPurchaseOrders query);
     }
 
     public class PurchaseOrderService : IPurchaseOrderService
@@ -45,6 +47,55 @@ namespace ShipmentsAPI.Services
 
             var ordersDtos = mapper.Map<List<PurchaseOrderDto>>(orders);
             return ordersDtos;
+        }
+
+        public PageResult<PurchaseOrderDto> Search(QueryPurchaseOrders query)
+        {
+            var orders = dbContext.PurchaseOrders
+                .Include(x => x.Shipments)
+                .Include(x => x.Incoterm)
+                .Include(x => x.Customer)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(query.SearchPhrase))
+            {
+                orders = orders.Where(x =>
+                x.Customer.Name.Contains(query.SearchPhrase)
+                || x.PONumber.Contains(query.SearchPhrase)
+                || x.Customer.ShortName.Contains(query.SearchPhrase)
+                || x.Customer.Name.Contains(query.SearchPhrase)
+                || x.Customer.CityAddress.Contains(query.SearchPhrase));
+            }
+
+            if (!string.IsNullOrEmpty(query.SortBy))
+            {
+                var columnsSelector = new Dictionary<string, Expression<Func<PurchaseOrder, object>>>()
+                {
+                    { nameof(PurchaseOrder.Category), t => t.Category },
+                    { nameof(PurchaseOrder.DeliveryDate), t => t.DeliveryDate },
+                    { nameof(PurchaseOrder.PONumber), t => t.PONumber },
+                    { "CustomerShortName", t => t.Customer.ShortName },
+                    { "Incoterms", t => t.Incoterm.ShortName },
+                };
+
+                var selectedColumn = columnsSelector[query.SortBy];
+
+                orders = query.SortDirection == SortDirection.ASC ?
+                    orders.OrderBy(selectedColumn)
+                    : orders.OrderByDescending(selectedColumn);
+            }
+            var totalItemsCount = orders.Count();
+
+            orders = orders
+                .Skip(query.PageSize * (query.PageNumber - 1))
+                .Take(query.PageSize)
+                .AsQueryable();
+
+            var ordersDto = mapper.Map<List<PurchaseOrderDto>>(orders);
+
+            var result = new PageResult<PurchaseOrderDto>(ordersDto, totalItemsCount, query.PageSize, query.PageNumber);
+
+            return result;
         }
 
         public PurchaseOrderDto GetById(Guid id)
