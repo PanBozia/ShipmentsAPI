@@ -1,0 +1,50 @@
+.form-add{
+    margin:  50px 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+}
+.search-form{
+    display: flex;
+    align-items: center;
+}
+.form-add label{
+    font-weight: 300 ;
+}
+.form-add input{
+    height: 34px;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 10px;
+}
+.form-add button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to right bottom, #42c231,#07531e);
+    border: none;
+    color:#fff;
+    padding: 5px 30px;
+    margin: 0px 10px;
+    cursor: pointer;
+    height: 34px;
+    width: 100px;
+    font-family: 'Poppins', sans-serif;
+}
+.form-add  button:hover{
+    background: linear-gradient(to right bottom, #fdd700,#c58001);
+
+}
+.btn-search{
+    background: linear-gradient(to right bottom, #5bb7f8,#0e409d);
+}
+.btn-search span{
+    font-size: 1.5em;
+}
+
+#add-btn-container{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}

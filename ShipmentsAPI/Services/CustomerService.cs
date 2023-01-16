@@ -8,6 +8,7 @@ using ShipmentsAPI.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace ShipmentsAPI.Services
 {
@@ -18,6 +19,7 @@ namespace ShipmentsAPI.Services
         Guid Create(CreateCustomerDto createCustomerDto);
         CustomerDto Update(Guid id, CreateCustomerDto dto);
         void Delete(Guid id);
+        PageResult<CustomerDto> Search(QueryCustomers query);
     }
 
     public class CustomerService : ICustomerService
@@ -49,6 +51,52 @@ namespace ShipmentsAPI.Services
 
             var customerDto = mapper.Map<CustomerDto>(customer);
             return customerDto;
+        }
+        public PageResult<CustomerDto> Search(QueryCustomers query)
+        {
+            var customers = dbContext.Customers.AsQueryable();
+            if (!string.IsNullOrWhiteSpace(query.SearchPhrase))
+            {
+                customers = customers.Where(x =>
+                x.Name.Contains(query.SearchPhrase)
+                || x.ShortName.Contains(query.SearchPhrase)
+                || x.ClientNumber.Contains(query.SearchPhrase)
+                || x.CityAddress.Contains(query.SearchPhrase)
+                || x.StreetAddress.Contains(query.SearchPhrase));
+            }
+
+            if (!string.IsNullOrEmpty(query.SortBy))
+            {
+                var columnsSelector = new Dictionary<string, Expression<Func<Customer, object>>>()
+                {
+                    { nameof(Customer.Name), t => t.Name },
+                    { nameof(Customer.ShortName), t => t.ShortName },
+                    { nameof(Customer.ClientNumber), t => t.ClientNumber },
+                    { nameof(Customer.CityAddress), t => t.CityAddress },
+                    { nameof(Customer.CountryAddress), t => t.CountryAddress },
+                    { nameof(Customer.ZipCodeAddress), t => t.ZipCodeAddress },
+                    { nameof(Customer.StreetAddress), t => t.StreetAddress },
+
+                };
+
+                var selectedColumn = columnsSelector[query.SortBy];
+
+                customers = query.SortDirection == SortDirection.ASC ?
+                    customers.OrderBy(selectedColumn)
+                    : customers.OrderByDescending(selectedColumn);
+            }
+            var totalItemsCount = customers.Count();
+
+            customers = customers
+                .Skip(query.PageSize * (query.PageNumber - 1))
+                .Take(query.PageSize)
+                .AsQueryable();
+
+            var customersDto = mapper.Map<List<CustomerDto>>(customers);
+
+            var result = new PageResult<CustomerDto>(customersDto, totalItemsCount, query.PageSize, query.PageNumber);
+
+            return result;
         }
 
         public Guid Create(CreateCustomerDto createCustomerDto)

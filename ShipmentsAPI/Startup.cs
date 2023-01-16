@@ -49,6 +49,7 @@ namespace ShipmentsAPI
             services.AddScoped<IShipmentService, ShipmentService>();
             services.AddScoped<IValidator<QueryShipments>, QueryShipmentsValidator>();
             services.AddScoped<IValidator<QueryForwarders>, QueryForwardersValidator>();
+            services.AddScoped<IValidator<QueryCustomers>, QueryCustomersValidator>();
             services.AddScoped<IValidator<QueryPurchaseOrders>, QueryPurchaseOrdersValidator>();
             services.AddHttpContextAccessor();
 
@@ -57,7 +58,8 @@ namespace ShipmentsAPI
             {
                 options.AddPolicy("FrontEndClient", builder =>
                     builder.AllowAnyMethod()
-                    .AllowAnyOrigin()
+                           .AllowAnyOrigin()
+                           .AllowAnyHeader()
                     );
             });
         }

@@ -17,5 +17,8 @@ namespace ShipmentsAPI.DtoModels
         public string CityAddress { get; set; }
         [Required]
         public string ZipCodeAddress { get; set; }
+        [Required]
+        public string CountryAddress { get; set; }
+
     }
 }

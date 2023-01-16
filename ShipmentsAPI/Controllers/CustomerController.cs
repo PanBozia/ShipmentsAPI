@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShipmentsAPI.DtoModels;
+using ShipmentsAPI.Entities;
 using ShipmentsAPI.Services;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,14 @@ namespace ShipmentsAPI.Controllers
             var customer = customerService.GetById(id);
             return Ok(customer);
         }
+
+        [HttpGet("search")]
+        public ActionResult<PageResult<CustomerDto>> Search([FromQuery] QueryCustomers filter)
+        {
+            var customers = customerService.Search(filter);
+            return Ok(customers);
+        }
+
         [HttpPost]
         public ActionResult<Guid> Create([FromBody] CreateCustomerDto createCustomerDto)
         {
