@@ -2,7 +2,7 @@
   <div>
     <div class="search-header">
         <div class="search-item">
-            <p>Lista kierowców</p>
+            <p>Lista zamówień</p>
         </div>
         <form class="search-form" @submit.prevent="handleSubmit">
             <input type="search" v-model="searchPhrase">
@@ -14,41 +14,65 @@
         <p>{{error}}</p>
     </div>
     <div v-if="error == null">
-        <div class="list-item list-header forwarder-header">
-            <p>IMIĘ I NAZWISKO</p>
-            <p>SPEDYTOR</p>
-            <p>NR TELEFONU</p>
-            <p>NR REJESTRACYJNE</p>
+        <div class="list-item list-header po-header po-list">
+            <p>TYP</p>   
+            <p>INCOTERMS</p>
+            <p>NUMER PO</p>
+            <p>KLIENT</p>
+            <p>DATA DOSTAWY</p>
+            <p>WYSYŁKI</p>
         </div>
-         <div class="list-item list-header forwarder-header sort-bar">
-            <p >
+        <div class="list-item list-header po-header po-list sort-bar">
+             <p>
                 <span class="sort-icon-label">SORTUJ:</span>
-                <span @click="sortBy='LastName', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
-                <span @click="sortBy='LastName', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>
+                <span @click="sortBy='Category', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
+                <span @click="sortBy='Category', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>
+            </p>   
+            <p>
+                <span class="sort-icon-label">SORTUJ:</span>
+                <span @click="sortBy='Incoterms', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
+                <span @click="sortBy='Incoterms', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>
             </p>
             <p>
                 <span class="sort-icon-label">SORTUJ:</span>
-                <span @click="sortBy='Speditor', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
-                <span @click="sortBy='Speditor', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>
+                <span @click="sortBy='PONumber', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
+                <span @click="sortBy='PONumber', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>
             </p>
             <p>
                 <span class="sort-icon-label">SORTUJ:</span>
-                <span @click="sortBy='PhoneNumber', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
-                <span @click="sortBy='PhoneNumber', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>
+                <span @click="sortBy='CustomerShortName', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
+                <span @click="sortBy='CustomerShortName', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>
             </p>
             <p>
                 <span class="sort-icon-label">SORTUJ:</span>
-                <span @click="sortBy='CarPlates', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
-                <span @click="sortBy='CarPlates', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>
+                <span @click="sortBy='DeliveryDate', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
+                <span @click="sortBy='DeliveryDate', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>
+            </p>
+            <p>
+                
             </p>
         </div>
 
-        <div class="list-item" v-for="forwarder in forwarders" :key=forwarder.id>
-            <p>{{forwarder.lastName}} {{forwarder.firstName}}</p>
-            <p>{{forwarder.speditor}}</p>
-            <p>{{forwarder.phoneNumber}}</p>
-            <p>{{forwarder.carPlates}}</p>
+        <div class="list-item po-list" v-for="order in orders" :key=order.id>
+            <p>{{order.category}}</p>
+            <p>{{order.incotermName}}</p>
+            <p>{{order.poNumber}}</p>
+            <p>{{order.customerShortName}} - {{order.customerName}}</p>
+            <p>{{moment(order.deliveryDate).locale("pl").format("YYYY MMMM DD")}}</p>
+            <div v-if="order.shipments.length == 0"></div>
+            <div v-else v-for="shipment in order.shipments" :key="shipment.id" class="order-shipment">
+                <div>
+                    <p>ETD:</p>
+                    <p>{{moment(shipment.etd).format("YYYY-MM-DD")}}</p>
+                </div>
+                <div>
+                    <p>TD:</p>
+                    <p>{{moment(shipment.timeOfDeparture).format("YYYY-MM-DD")}}</p>
+                </div>
+            </div>
+            <div></div>
             <button>EDYTUJ</button>
+            <button class="customer-add-btn"><span class="material-symbols-outlined">add_box</span> WYSYŁKA</button>
         </div>
         <div class="list-footer">
             <p>Ilość wszystkich pozycji: {{totalItemsCount}}</p>
@@ -77,7 +101,6 @@
                 <div v-else>
                     <p>Brak stron</p>
                 </div>
-            
         </div>
     </div>
   </div>
@@ -85,25 +108,28 @@
 
 <script>
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
-import getForwarders from '../js-components/getForwarders.js'
+import getPurchaseOrders from '../js-components/getPurchaseOrders.js'
+import moment from 'moment'
+import 'moment/min/locales.min'
+import 'moment/locale/pl'
 export default {
     setup(){
         const url = 'https://localhost:44331/api/'
-        const {loadForwarders, error, forwarders, totalPages, itemsFrom, itemsTo, totalItemsCount} = getForwarders(url)
+        const {loadOrders, error, orders, totalPages, itemsFrom, itemsTo, totalItemsCount} = getPurchaseOrders(url)
 
         const searchPhrase = ref('')
         const pageSize = ref(5)
         const pageNumber = ref(1)
-        const sortBy = ref('LastName')
+        const sortBy = ref('Category')
         const sortDirection = ref(0)
-        
-        const updateFowarders = (_pageSize, _pageNumber )=>{
+        moment.locale('pl')
+        const updateOrders = (_pageSize, _pageNumber )=>{
             pageSize.value = _pageSize
             pageNumber.value = _pageNumber
-            loadForwarders(searchPhrase.value, pageSize.value, pageNumber.value, sortBy.value, sortDirection.value)
+            loadOrders(searchPhrase.value, pageSize.value, pageNumber.value, sortBy.value, sortDirection.value)
         }
 
-        // stronki
+        // pages
         const pagesRange = computed(()=>{
             let range = []
             if(totalPages.value < 5){
@@ -132,39 +158,38 @@ export default {
         })
 
         onMounted (()=>{
-            updateFowarders(5,1)
+            updateOrders(5,1)
         })
+
         const updateTable = ()=>{
-            updateFowarders(pageSize.value, pageNumber.value)
+            updateOrders(pageSize.value, pageNumber.value)
             pagesRange.effect.run
         }
-
+        
         const searchWatcher = watch((searchPhrase), () => {
             updateTable()
         })
-        const sortByWatcher = watch((sortBy), () => {
-            updateTable()
-        })
         const sortDirectionWatcher = watch((sortDirection), () => {
-            updateTable()
+            updateTable();
+        })
+        const sortByWatcher = watch((sortBy), () => {
+            updateTable();
         })
         
         const handleSubmit = ()=>{
-            updateFowarders(pageSize.value, pageNumber.value)
+            updateOrders(pageSize.value, pageNumber.value)
         }
         const handleGoToPage = (pageNumber)=>{
-            updateFowarders(pageSize.value, pageNumber)
+            updateOrders(pageSize.value, pageNumber)
         }
         const handlePageSize = (pageSize)=>{
-            updateFowarders(pageSize, 1)
+            updateOrders(pageSize, 1)
         }
-
-        onUnmounted(()=>{
-            searchWatcher();
+        onUnmounted (()=>{
+            searchWatcher(); //invoking the method ends watching
             sortDirectionWatcher();
             sortByWatcher();
         })
-
         return{ pagesRange, 
                 handlePageSize, 
                 handleGoToPage, 
@@ -174,11 +199,12 @@ export default {
                 totalItemsCount, 
                 itemsTo, 
                 itemsFrom, 
-                forwarders, 
+                orders, 
                 error, 
                 pageNumber,
                 sortBy,
-                sortDirection }                          
+                sortDirection,
+                moment }                          
                 
     }
 }
@@ -220,7 +246,25 @@ input{
 .btn-search span{
     font-size: 1.5em;
 }
-.list-item.list-header.forwarder-header.sort-bar{
+
+.list-item.po-list{
+    grid-template-columns: 9% 10% 13% 20% 13% 8% 5% 10% 12% ;
+    
+}
+.list-header.sort-icon.po-header{
+    font-size: 0.1em;
+}
+.sort-icon p span{
+    font-size: 0.3em;
+}
+.customer-add-btn{
+    background: linear-gradient(to right, #e6ff9b,#d0ff35); 
+}
+.customer-add-btn span{
+    font-size: 1.4em;
+    margin-right: 4px ;
+}
+.list-item.list-header.po-header.po-list.sort-bar{
     border-radius: 0;
     margin: 0;
     
@@ -231,7 +275,25 @@ input{
    
     border-bottom: solid 1px var(--back);
 }
-.list-item.list-header.forwarder-header{
+.list-item.list-header.po-header.po-list{
     border-bottom: none;
+}
+.order-shipment{
+    display: flex;
+    flex-direction: column;
+    border-left:solid 1px #888; 
+    border-right: solid 1px #888; 
+    
+    
+    border-radius: 5%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 4px;
+    font-size: 0.8em;
+    
+}
+.order-shipment div{
+    display: flex;
+    justify-content: space-between;
 }
 </style>

@@ -3,7 +3,7 @@
    <div>
      <div class="view-container">
         <div class="sub-page-header item-e ">
-            <p>KIEROWCY</p>
+            <p>ZAMÓWIENIA</p>
         </div>
         <div class="item-a item-container" @click="openAddComponent">
             <p><span class="material-symbols-outlined">add_box</span></p>
@@ -14,10 +14,10 @@
             <p>Lista kierowców</p>
         </div>
         <div v-if="listFlag" class="item-v">
-            <ForwardersList/>
+            <PurchaseOrdersList/>
         </div>
         <div v-if="addFlag" class="item-v">
-            <AddForwarder/>
+            <AddPurchaseOrder/>
         </div>
   </div>
   </div>
@@ -26,11 +26,11 @@
 <script>
 import { ref } from 'vue'
 import NavbarComponent from '../components/NavbarComponent.vue'
-import ForwardersList from "../components/ForwardersList.vue"
-import AddForwarder from "../components/AddForwarder.vue"
+import PurchaseOrdersList from "../components/PurchaseOrdersList.vue"
+import AddPurchaseOrder from "../components/AddPurchaseOrder.vue"
 
 export default {
-    components: {ForwardersList, AddForwarder, NavbarComponent},
+    components: {PurchaseOrdersList, AddPurchaseOrder, NavbarComponent},
     setup(){
         const listFlag = ref(true);
         const addFlag = ref(false);

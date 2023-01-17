@@ -4,6 +4,7 @@ import ShipmentsView from '../views/ShipmentsView.vue'
 import ScheduleView from '../views/ScheduleView.vue'
 import ForwarderView from '../views/ForwarderView.vue'
 import CustomerView from '../views/CustomerView.vue'
+import PurchaseOrderView from '../views/PurchaseOrderView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,6 +18,11 @@ const router = createRouter({
       path: '/customers',
       name: 'CustomerView',
       component: CustomerView
+    },
+    {
+      path: '/orders',
+      name: 'PurchaseOrderView',
+      component: PurchaseOrderView
     },
     {
       path: '/schedule',

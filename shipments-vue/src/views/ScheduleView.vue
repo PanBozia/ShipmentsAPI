@@ -1,11 +1,17 @@
 <template>
+<NavbarComponent />
   <div class="schedule-container">
     <p>Schedule</p>
   </div>
 </template>
 
 <script>
+import NavbarComponent from '../components/NavbarComponent.vue'
 export default {
+    components: {NavbarComponent},
+    setup(){
+        return{}
+    }
 
 }
 </script>

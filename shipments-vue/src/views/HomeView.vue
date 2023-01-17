@@ -1,10 +1,13 @@
 <template>
-  <main>
-   <div>
-    <h3>Home Page</h3>
-   </div>
-  </main>
+  <NavbarComponent />
 </template>
 
 <script>
+import NavbarComponent from '../components/NavbarComponent.vue'
+export default {
+    components: {NavbarComponent},
+    setup(){
+        return{}
+    }
+}
 </script>

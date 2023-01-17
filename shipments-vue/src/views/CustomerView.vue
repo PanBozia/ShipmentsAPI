@@ -1,4 +1,5 @@
 <template>
+    <NavbarComponent />
    <div>
      <div class="view-container">
         <div class="sub-page-header item-e ">
@@ -24,12 +25,12 @@
 
 <script>
 import { ref } from 'vue'
-
+import NavbarComponent from '../components/NavbarComponent.vue'
 import CustomersList from "../components/CustomersList.vue"
 import AddCustomer from "../components/AddCustomer.vue"
 
 export default {
-    components: {CustomersList, AddCustomer},
+    components: {CustomersList, AddCustomer, NavbarComponent},
     setup(){
         const listFlag = ref(true);
         const addFlag = ref(false);

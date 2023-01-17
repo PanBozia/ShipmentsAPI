@@ -15,33 +15,39 @@
     </div>
     <div v-if="error == null">
         <div class="list-item list-header customer-list">
+            <p>SKRÓT</p>
+            <p>NUMER</p>
+            <p>NAZWA</p>
+            <p>ADRES</p>
+            <p>KRAJ</p>
+        </div>
+         <div class="list-item list-header customer-list sort-bar">
             <p >
-                SKRÓT 
+                <span class="sort-icon-label">SORTUJ:</span>
                 <span @click="sortBy='ShortName', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
                 <span @click="sortBy='ShortName', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>
             </p>
             <p>
-                NUMER
+                <span class="sort-icon-label">SORTUJ:</span>
                 <span @click="sortBy='ClientNumber', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
                 <span @click="sortBy='ClientNumber', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>
             </p>
             <p>
-                NAZWA
+                <span class="sort-icon-label">SORTUJ:</span>
                 <span @click="sortBy='Name', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
                 <span @click="sortBy='Name', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>
             </p>
             <p>
-                ADRES
+                <span class="sort-icon-label">SORTUJ:</span>
                 <span @click="sortBy='CityAddress', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
                 <span @click="sortBy='CityAddress', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>
             </p>
             <p>
-                KRAJ
+                <span class="sort-icon-label">SORTUJ:</span>
                 <span @click="sortBy='CountryAddress', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
                 <span @click="sortBy='CountryAddress', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>
             </p>
         </div>
-        
 
         <div class="list-item customer-list" v-for="customer in customers" :key=customer.id>
             <p>{{customer.shortName}}</p>
@@ -233,5 +239,19 @@ input{
 .customer-add-btn span{
     font-size: 1.4em;
     margin-right: 4px ;
+}
+.list-item.list-header.customer-list.sort-bar{
+    border-radius: 0;
+    margin: 0;
+    
+    padding-top: 4px;
+    padding-bottom: 4px;
+    height: auto;
+    border-top: none;
+   
+    border-bottom: solid 1px var(--back);
+}
+.list-item.list-header.customer-list{
+    border-bottom: none;
 }
 </style>
