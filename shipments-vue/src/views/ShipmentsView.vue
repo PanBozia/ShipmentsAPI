@@ -14,10 +14,10 @@
             <p>Lista wysyłek</p>
         </div>
         <div v-if="listFlag" class="item-v">
-            <CustomersList/>
+            <ShipmentsList/>
         </div>
         <div v-if="addFlag" class="item-v">
-            <AddCustomer/>
+            <AddShipment/>
         </div>
   </div>
   </div>
@@ -26,11 +26,11 @@
 <script>
 import { ref } from 'vue'
 import NavbarComponent from '../components/NavbarComponent.vue'
-import CustomersList from "../components/CustomersList.vue"
-import AddCustomer from "../components/AddCustomer.vue"
+import ShipmentsList from "../components/ShipmentsList.vue"
+import AddShipment from "../components/AddShipment.vue"
 
 export default {
-    components: {CustomersList, AddCustomer, NavbarComponent},
+    components: {ShipmentsList, AddShipment, NavbarComponent},
     setup(){
         const listFlag = ref(true);
         const addFlag = ref(false);

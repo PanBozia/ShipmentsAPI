@@ -24,11 +24,14 @@ body{
 }
 #app {
     font-family: 'Poppins', sans-serif;
-    font-weight: normal;
+    font-weight: 400;
+    
 }
+
 
 h1, h2, h3, h4 {
     font-family: 'Bebas Neue', cursive;
+    font-weight: 400;
 }
 
 #app .main-container {
@@ -69,7 +72,7 @@ h1, h2, h3, h4 {
     font-family: 'Bebas Neue';
     color: #2f548b;
     padding: 2px 20px;
-    font-size: 1.5em;
+    font-size: 1.6em;
 }
 a {
     color: inherit;
@@ -92,7 +95,7 @@ a:hover{
     background: -webkit-linear-gradient(#fff, #eee, #777);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-size: 66px;
+    font-size: 4.4em;
     align-self: center;
     padding: 0;
 }
@@ -104,13 +107,23 @@ a:hover{
 
 #app .view-container{
     display:grid;
-    grid-template-columns: 1fr 1fr 2fr 280px 280px 1fr;
+    /* grid-template-columns: 1fr 1fr 2fr 280px 280px 1fr; */
     grid-template-areas:
         ". header header get post ."
         ". void void void void .";
     justify-content: center;
     margin-top: 40px;
     
+}
+@media screen and (min-width: 1281px){
+    #app .view-container{
+        grid-template-columns: 1fr 1fr 2fr 280px 280px 1fr;
+    }
+}
+@media screen and (max-width: 1280px){
+    #app .view-container{
+        grid-template-columns: 0.1fr 1fr 2fr 280px 280px 0.1fr;
+    }
 }
 .item-a {
     grid-area: post;
@@ -178,9 +191,8 @@ a:hover{
 .sub-page-header p{
     margin: 0;
     font-family: 'Bebas Neue', cursive;
-    font-size: 2.2em;
+    font-size: 3.0em;
     padding: 10px;
-    
 }
 
 .list-item{
@@ -205,7 +217,7 @@ a:hover{
     border-bottom: solid 1px var(--back);
     border-radius: 10px 10px 0  0;
     background: #eee;
-    font-size: 1.4em;
+    font-size: 1.1em;
     /* height: 20px; */
     padding:20px 20px 0px 50px;
 }
@@ -226,18 +238,27 @@ a:hover{
     align-self: center;
     color: #1e1e1e;
     font-weight: 600;
-    font-size: 0.7em;
+    
 }
 .list-item p{
     margin: 0px;
-    
     font-weight: 400;
     color: #111;
-    font-size: 0.8em;
     padding: 0;
+    word-wrap: break-word;
+}
+@media screen and (min-width: 901px){
+    .list-item p{
+        font-size: 13px;
+    }
+}
+@media screen and (max-width: 900px){
+    .list-item p{
+        font-size: 9px;
+    }
 }
 .list-header .sort-icon{
-    font-size: 0.7em;
+    font-size: 0.66em;
     margin-right: 2px ;
     padding: 2px 2px;
     color: #bbb;
@@ -289,9 +310,9 @@ a:hover{
     align-items: center;
     margin: 0px 2px;
     padding: 3px 5px;
-    min-width: 12px;
+    min-width: 0.8vw;
     /* height: 26px; */
-    font-size: 0.8em;
+    font-size: 0.7em;
     border: 1px solid #888;
     /* box-shadow: inset 2px 2px 3px rgba( 0,0,0,0.3); */
     color: rgb(31, 31, 31);
@@ -318,10 +339,10 @@ a:hover{
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.8em;
+    font-size: 0.7em;
     margin: auto 2px;
     padding: 3px 5px;
-    width: 20px;
+    width: 1vw;
     /* height: 20px; */
     border: 1px solid #888;
     color: rgb(31, 31, 31);
@@ -350,7 +371,7 @@ a:hover{
     font-family: 'Poppins', sans-serif;
     background-color: #eee;
     color: #333;
-    font-size: 0.8em;
+    font-size: 0.6vw;
 }
 .list-item button:hover{
     background: linear-gradient(to right, #e6ff9b,#d0ff35); 
@@ -392,8 +413,41 @@ button:hover{
 }
 
 .sort-icon-label{
-    font-size: 0.5em;
-    color: #bbb;
-    margin-right: 6px;
+    /* font-size: 0.6em; */
+    color: #a8a8a8;
+    margin-right: 0.21vw;
 }
 
+@media screen and (min-width: 1281px) {
+    .sort-icon-label{
+        font-size: 0.6em;
+    }
+}
+@media screen and (min-width: 1101px) and (max-width: 1280px) {
+    .sort-icon-label{
+        font-size: 0.4em;
+    }
+}
+@media screen and (max-width: 1100px){
+    .sort-icon-label{
+        display: none;
+    }
+}
+
+
+    @media screen and (min-width: 1281px) {
+        .list-item.list-header p{
+            font-size: 0.8em;
+        }
+    }
+    @media screen and (max-width: 1280px) and (min-width:901px) {
+        .list-item.list-header p{
+            font-size: 0.7em;
+        }
+    }
+    @media screen and (max-width: 900px) {
+        .list-item.list-header p{
+            font-size: 0.6em;
+        }
+    }
+    

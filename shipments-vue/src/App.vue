@@ -6,8 +6,9 @@
     <div class="main-container">
         <div class="nav-container">
             <div class="top-bar">
-                <img id="dsse-logo" src="@/assets/img/logoDSSE.png" alt="">
-                
+                <router-link :to="{name:'home'}">
+                    <img id="dsse-logo" src="@/assets/img/logoDSSE.png" alt="">
+                </router-link>
                 <div id="label">FG Shipments</div>
             </div>
             <div>

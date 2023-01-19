@@ -2,10 +2,10 @@
   <div>
     <div class="search-header">
         <div class="search-item">
-            <p>Lista zamówień</p>
+            <p>Lista wysyłek</p>
         </div>
         <form class="search-form" @submit.prevent="handleSubmit">
-            <input type="search" v-model="searchPhrase">
+            <input type="search" v-model="queryData.carPlates">
             <button class="btn-search"><span class="material-symbols-outlined">search</span> Szukaj</button>
         </form>
 
@@ -14,65 +14,67 @@
         <p>{{error}}</p>
     </div>
     <div v-if="error == null">
-        <div class="list-item list-header po-header po-list">
-            <p>TYP</p>   
-            <p>INCOTERMS</p>
-            <p>NUMER PO</p>
-            <p>KLIENT</p>
-            <p>DATA DOSTAWY</p>
-            <p>WYSYŁKI</p>
+        <div class="list-item list-header shipment-header shipment-list">
+            
+            <p>NR PO</p>
+            <p>WYJAZD</p>
+            <p>KONTENER</p>
+            <p>TPA</p>
+            <p>ILOŚĆ</p>
+            <p>KIEROWCA</p>
+            <p>UŻYTKOWNIK</p>
+            <p>STATUS</p>
         </div>
-        <div class="list-item list-header po-header po-list sort-bar">
+        <div class="list-item list-header shipment-header shipment-list sort-bar">
              <p>
-                <span class="sort-icon-label">SORTUJ:</span>
-                <span @click="sortBy='Category', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
-                <span @click="sortBy='Category', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>
+               
             </p>   
             <p>
                 <span class="sort-icon-label">SORTUJ:</span>
-                <span @click="sortBy='Incoterms', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
-                <span @click="sortBy='Incoterms', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>
+                <span @click="sortBy='TimeOfDeparture', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
+                <span @click="sortBy='TimeOfDeparture', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>
             </p>
             <p>
                 <span class="sort-icon-label">SORTUJ:</span>
-                <span @click="sortBy='PONumber', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
-                <span @click="sortBy='PONumber', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>
+                <span @click="sortBy='ContainerType', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
+                <span @click="sortBy='ContainerType', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>
             </p>
+            <p></p>
             <p>
                 <span class="sort-icon-label">SORTUJ:</span>
-                <span @click="sortBy='CustomerShortName', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
-                <span @click="sortBy='CustomerShortName', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>
+                <span @click="sortBy='PalletQty', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
+                <span @click="sortBy='PalletQty', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>
             </p>
+            <p></p>
+            <p></p>
             <p>
                 <span class="sort-icon-label">SORTUJ:</span>
-                <span @click="sortBy='DeliveryDate', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
-                <span @click="sortBy='DeliveryDate', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>
-            </p>
-            <p>
-                
+                <span @click="sortBy='Name', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
+                <span @click="sortBy='Name', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>                
             </p>
         </div>
 
-        <div class="list-item po-list" v-for="order in orders" :key=order.id>
-            <p>{{order.category}}</p>
-            <p>{{order.incotermName}}</p>
-            <p>{{order.poNumber}}</p>
-            <p>{{order.customerShortName}} - {{order.customerName}}</p>
-            <p>{{moment(order.deliveryDate).locale("pl").format("YYYY MMMM DD")}}</p>
-            <div v-if="order.shipments.length == 0"></div>
-            <div v-else v-for="shipment in order.shipments" :key="shipment.id" class="order-shipment">
+        <div class="list-item shipment-list " :class="{'prio-shipment' : shipment.hasPriority}" v-for="shipment in shipments" :key=shipment.id>
+            <div v-if="shipment.purchaseOrders.length == 0">
+                <p>N/A</p>
+            </div>
+            <div v-else v-for="order in shipment.purchaseOrders" :key="order.id" class="order-shipment">
                 <div>
-                    <p>ETD:</p>
-                    <p>{{moment(shipment.etd).format("YYYY-MM-DD")}}</p>
-                </div>
-                <div>
-                    <p>TD:</p>
-                    <p>{{moment(shipment.timeOfDeparture).format("YYYY-MM-DD")}}</p>
+                    <!-- <p>PO#: </p> -->
+                    <p>{{order.poNumber}}</p>
                 </div>
             </div>
-            <div></div>
-            <button>EDYTUJ</button>
-            <button class="customer-add-btn"><span class="material-symbols-outlined">add_box</span> WYSYŁKA</button>
+            <p>{{moment(shipment.etd).locale("pl").format("YYYY-MM-DD")}} ETD<br>{{moment(shipment.timeOfDeparture).locale("pl").format("YYYY-MM-DD")}} ATD</p>
+            <p>{{shipment.containerType}} <br>CTNR#: {{shipment.containerNumber}}<br>SEAL#: {{shipment.containerSealNumber}}</p>
+            <p>{{shipment.warehouseArea}}</p>
+            <p>{{shipment.palletQty}}</p>
+            <p v-if="shipment.forwarder">{{shipment.forwarder.carPlates}}<br>{{shipment.forwarder.firstName +' '+ shipment.forwarder.lastName}}<br>{{shipment.forwarder.speditor}}</p>
+            <p v-else>N/A</p>
+            <p>{{shipment.createdByUser}}</p>
+            <p>{{shipment.status}}</p>
+            <div v-if="shipment.hasPriority"><p><span class="material-symbols-outlined">timer</span></p></div>
+            <div v-else></div>
+            <button class="shipment-add-btn"><span class="material-symbols-outlined">edit</span>EDYTUJ</button>
         </div>
         <div class="list-footer">
             <p>Ilość wszystkich pozycji: {{totalItemsCount}}</p>
@@ -108,26 +110,43 @@
 
 <script>
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
-import getPurchaseOrders from '../js-components/getPurchaseOrders.js'
+import getShipments from '../js-components/getShipments.js'
 import moment from 'moment'
 import 'moment/min/locales.min'
 import 'moment/locale/pl'
 export default {
     setup(){
         const url = 'https://localhost:44331/api/'
-        const {loadOrders, error, orders, totalPages, itemsFrom, itemsTo, totalItemsCount} = getPurchaseOrders(url)
+        const {loadShipments, error, shipments, totalPages, itemsFrom, itemsTo, totalItemsCount} = getShipments(url)
 
-        const searchPhrase = ref('')
         const pageSize = ref(5)
         const pageNumber = ref(1)
-        const sortBy = ref('Category')
+        const sortBy = ref('')
         const sortDirection = ref(0)
         moment.locale('pl')
-        const updateOrders = (_pageSize, _pageNumber )=>{
-            pageSize.value = _pageSize
-            pageNumber.value = _pageNumber
-            loadOrders(searchPhrase.value, pageSize.value, pageNumber.value, sortBy.value, sortDirection.value)
-        }
+        const queryData = computed(()=>{
+            let query = {
+                // timeOfDeparture : "",
+                hasPriority: false,
+                comment: "",
+                warehouseAreaId: 0,
+                palletQty: 0,
+                carPlates: "",
+                statusId: 0,
+                containerNumber: "",
+                purchaseOrderNumber: "",
+                pageNumber: pageNumber.value,
+                pageSize: pageSize.value,
+                sortBy: sortBy.value,
+                sortDirection: sortDirection.value
+            }
+            return query
+        })
+        // const updateShipments = (_pageSize, _pageNumber )=>{
+        //     pageSize.value = _pageSize
+        //     pageNumber.value = _pageNumber
+        //     loadShipments(searchPhrase.value, pageSize.value, pageNumber.value, sortBy.value, sortDirection.value)
+        // }
 
         // pages
         const pagesRange = computed(()=>{
@@ -158,53 +177,50 @@ export default {
         })
 
         onMounted (()=>{
-            updateOrders(5,1)
+            loadShipments(queryData.value)
         })
 
         const updateTable = ()=>{
-            updateOrders(pageSize.value, pageNumber.value)
+            loadShipments(queryData.value)
             pagesRange.effect.run
         }
         
-        const searchWatcher = watch((searchPhrase), () => {
+        const searchWatcher = watch((queryData), () => {
             updateTable()
         })
-        const sortDirectionWatcher = watch((sortDirection), () => {
-            updateTable();
-        })
-        const sortByWatcher = watch((sortBy), () => {
-            updateTable();
-        })
+        
         
         const handleSubmit = ()=>{
-            updateOrders(pageSize.value, pageNumber.value)
+            loadShipments(queryData.value)
         }
-        const handleGoToPage = (pageNumber)=>{
-            updateOrders(pageSize.value, pageNumber)
+        const handleGoToPage = (pageNo)=>{
+            pageNumber.value = pageNo
+            queryData.value.pageNumber = pageNo
+            loadShipments(queryData.value)
         }
-        const handlePageSize = (pageSize)=>{
-            updateOrders(pageSize, 1)
+        const handlePageSize = (pageS)=>{
+            pageSize.value = pageS
+            queryData.value.pageSize = pageS
+            loadShipments(queryData.value)
         }
         onUnmounted (()=>{
             searchWatcher(); //invoking the method ends watching
-            sortDirectionWatcher();
-            sortByWatcher();
         })
         return{ pagesRange, 
                 handlePageSize, 
                 handleGoToPage, 
                 handleSubmit, 
-                searchPhrase, 
                 totalPages, 
                 totalItemsCount, 
                 itemsTo, 
                 itemsFrom, 
-                orders, 
+                shipments, 
                 error, 
                 pageNumber,
                 sortBy,
                 sortDirection,
-                moment }                          
+                moment,
+                queryData }                          
                 
     }
 }
@@ -244,27 +260,34 @@ input{
     background: linear-gradient(to right bottom, #5bb7f8,#0e409d);
 }
 .btn-search span{
-    font-size: 1.5em;
+    font-size: 1.1vw;
 }
 
-.list-item.po-list{
-    grid-template-columns: 9% 10% 13% 20% 13% 8% 5% 10% 12% ;
-    
+.list-item.shipment-list{
+    grid-template-columns: 8% 11% 14% 6% 6% 14% 12% 10% 2% 8% ;
+    column-gap: 1%;
 }
-.list-header.sort-icon.po-header{
-    font-size: 0.1em;
+.list-item.shipment-list p{
+    font-size: 0.7em;
+    padding: 4px;
+
+}
+.prio-shipment{
+    background: #ffe46c;
+    background: linear-gradient(to right,#fff, #fff,#fff,#ffe46c); 
 }
 .sort-icon p span{
     font-size: 0.3em;
 }
-.customer-add-btn{
+.shipment-add-btn{
     background: linear-gradient(to right, #e6ff9b,#d0ff35); 
+    
 }
-.customer-add-btn span{
-    font-size: 1.4em;
+.shipment-add-btn span{
+    font-size: 1.2em;
     margin-right: 4px ;
 }
-.list-item.list-header.po-header.po-list.sort-bar{
+.list-item.list-header.shipment-header.shipment-list.sort-bar{
     border-radius: 0;
     margin: 0;
     
@@ -275,10 +298,14 @@ input{
    
     border-bottom: solid 1px var(--back);
 }
-.list-item.list-header.po-header.po-list{
+.list-item.list-header.shipment-header.shipment-list{
     border-bottom: none;
 }
-.order-shipment{
+.list-item.list-header.shipment-header.shipment-list p{
+    padding: 0 5px;
+    font-size: 0.8em;
+}
+/* .order-shipment{
     display: flex;
     flex-direction: column;
     border-left:solid 1px #888; 
@@ -295,9 +322,5 @@ input{
 .order-shipment div{
     display: flex;
     justify-content: space-between;
-}
-.order-shipment div p{
-    font-size: 0.6vw;
-
-}
+} */
 </style>
