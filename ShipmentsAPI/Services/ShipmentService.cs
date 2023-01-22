@@ -107,6 +107,10 @@ namespace ShipmentsAPI.Services
             {
                 shipments = shipments.Where(x => x.PurchaseOrders.Any(y => y.PONumber.Contains(queryShipments.PurchaseOrderNumber)));
             }
+            if (queryShipments.PalletQty != 0) 
+            { 
+                shipments = shipments.Where(x => x.PalletQty == queryShipments.PalletQty || x.PalletQty == queryShipments.PalletQty + 1 || x.PalletQty == queryShipments.PalletQty-1);
+            }
 
             shipments = shipments.OrderBy(x => x.TimeOfDeparture);
             

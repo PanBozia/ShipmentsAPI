@@ -5,14 +5,14 @@
         <div class="sub-page-header item-e ">
             <p>ZAMÓWIENIA</p>
         </div>
-        <div class="item-a item-container" @click="openAddComponent">
+        <!-- <div class="item-a item-container" @click="openAddComponent">
             <p><span class="material-symbols-outlined">add_box</span></p>
             <p>Dodaj kierowcę</p>
-        </div>
-        <div class="item-d item-container" @click="openListComponent">
+        </div> -->
+        <!-- <div class="item-d item-container" @click="openListComponent">
             <p><span class="material-symbols-outlined">list_alt</span></p>
             <p>Lista kierowców</p>
-        </div>
+        </div> -->
         <div v-if="listFlag" class="item-v">
             <PurchaseOrdersList/>
         </div>

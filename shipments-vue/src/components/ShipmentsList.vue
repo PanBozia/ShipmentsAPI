@@ -1,15 +1,113 @@
 <template>
   <div>
-    <div class="search-header">
+   <div>
+    <form class="shipment-search-form">
         <div class="search-item">
-            <p>Lista wysyłek</p>
+            <h2 class="filter-header">Filtrowanie</h2>
         </div>
-        <form class="search-form" @submit.prevent="handleSubmit">
-            <input type="search" v-model="queryData.carPlates">
-            <button class="btn-search"><span class="material-symbols-outlined">search</span> Szukaj</button>
-        </form>
+        <div class="search-item">
+            <label>Data Wyjścia</label>
+            <div class="item-row">
+                <input type="datetime-local" v-model="timeOfDeparture">
+                <span class="material-symbols-outlined cancel-btn" @click="timeOfDeparture = null">
+                    backspace
+                </span>
 
-    </div>
+            </div>
+        </div>
+        <div class="search-item">
+            <label>Nr rejestracyjny</label>
+            <div class="item-row">
+                <input type="text" v-model="carPlates">
+                 <span class="material-symbols-outlined cancel-btn" @click="carPlates = ''">
+                    backspace
+                </span>
+            </div>
+        </div>
+        <div class="search-item">
+            <label>Nr kontenera</label>
+            <div class="item-row">
+                <input type="text" v-model="containerNumber">
+                <span class="material-symbols-outlined cancel-btn" @click="containerNumber = ''">
+                    backspace
+                </span>
+            </div>
+        </div>
+        <div class="search-item">
+            <label>TPA</label>
+            <div class="item-row">
+                <!-- <input type="text" v-model="warehouseAreaId"> -->
+                <select v-if="!areaError" v-model="warehouseAreaId">
+                    <option value="0"></option>
+                    <option v-for="area in areas " :key="area.id" :value="area.id">{{area.name}}</option>
+                    
+                </select>
+                <span class="material-symbols-outlined cancel-btn" @click="warehouseAreaId = 0">
+                        backspace
+                </span>
+            </div>
+        </div>
+        <div class="search-item">
+            <label>Nr zamówienia</label>
+            <div class="item-row">
+            <input type="text" v-model="purchaseOrderNumber">
+            <span class="material-symbols-outlined cancel-btn" @click="purchaseOrderNumber = ''">
+                    backspace
+            </span>
+            </div>
+        </div> 
+        <div class="search-item">
+            <label>Ilość palet</label>
+            <div class="item-row">
+                <!-- <input type="number" v-model="palletQty"> -->
+                <select v-model="palletQty">
+                    <option v-for="number in palletsArray" :key="number" :value="number">{{number}}</option>
+                </select>
+                <span class="material-symbols-outlined cancel-btn" @click="palletQty = 0">
+                        backspace
+                </span>
+            </div>
+        </div>
+        <div class="search-item">
+            <label>Status</label>
+            <div class="item-row">
+                <select v-model="statusId">
+                    <option v-for="status in statuses" :key="status.id" :value="status.id">{{status.name}}</option>
+                </select>
+                <span class="material-symbols-outlined cancel-btn" @click="statusId = 0">
+                        backspace
+                </span>
+            </div>
+        </div>
+        <div class="search-item">
+            <label>Komentarz</label>
+            <div class="item-row">
+                <input type="text" v-model="comment">
+                <span class="material-symbols-outlined cancel-btn" @click="comment = ''">
+                        backspace
+                </span>
+            </div>
+        </div>
+        <div class="prio-item">
+            <!-- <input type="checkbox"  v-model="hasPriority">
+            <label>PRIO</label> -->
+
+            <p><span class="material-symbols-outlined">timer</span></p>
+            <div class="userSwitch">
+                                <input type="checkbox" name="userSwitch" :checked="hasPriority" class="userSwitch-cb"  :id="hasPriority" v-model="hasPriority">
+                                <label class="userSwitch-label" @click="handlePrio()">
+                                <div class="userSwitch-inner"></div>
+                                <div class="userSwitch-switch"></div>
+                                </label>
+                            </div>
+        </div>
+        
+    </form>
+
+   </div>
+
+
+
     <div v-if="error != null" style="color:#f61">
         <p>{{error}}</p>
     </div>
@@ -53,8 +151,8 @@
                 <span @click="sortBy='Name', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>                
             </p>
         </div>
-
-        <div class="list-item shipment-list " :class="{'prio-shipment' : shipment.hasPriority}" v-for="shipment in shipments" :key=shipment.id>
+        <!-- :class="{'prio-shipment' : shipment.hasPriority}" -->
+        <div class="list-item shipment-list "  v-for="shipment in shipments" :key=shipment.id>
             <div v-if="shipment.purchaseOrders.length == 0">
                 <p>N/A</p>
             </div>
@@ -111,6 +209,8 @@
 <script>
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import getShipments from '../js-components/getShipments.js'
+import getAreas from '../js-components/getAreas.js'
+import getStatuses from '../js-components/getStatuses.js'
 import moment from 'moment'
 import 'moment/min/locales.min'
 import 'moment/locale/pl'
@@ -118,36 +218,52 @@ export default {
     setup(){
         const url = 'https://localhost:44331/api/'
         const {loadShipments, error, shipments, totalPages, itemsFrom, itemsTo, totalItemsCount} = getShipments(url)
+        const {loadAreas, error:areaError, areas} = getAreas(url)
+        const {loadStatuses, error:statusError, statuses} = getStatuses(url)
 
         const pageSize = ref(5)
         const pageNumber = ref(1)
         const sortBy = ref('')
         const sortDirection = ref(0)
         moment.locale('pl')
+        const timeOfDeparture = ref()
+        const hasPriority = ref(false)
+        const comment =ref('')
+        const warehouseAreaId = ref()
+        const palletQty = ref()
+        const carPlates =ref("")
+        const statusId = ref()
+        const containerNumber = ref("")
+        const purchaseOrderNumber = ref()
+        
+        const palletsArray = ref([])
+        
+
         const queryData = computed(()=>{
+            
             let query = {
-                // timeOfDeparture : "",
-                hasPriority: false,
-                comment: "",
-                warehouseAreaId: 0,
-                palletQty: 0,
-                carPlates: "",
-                statusId: 0,
-                containerNumber: "",
-                purchaseOrderNumber: "",
+                
+                hasPriority: hasPriority.value,
+                comment: comment.value,
+                warehouseAreaId: warehouseAreaId.value,
+                carPlates: carPlates.value,
+                statusId: statusId.value,
+                containerNumber: containerNumber.value,
+                purchaseOrderNumber: purchaseOrderNumber.value,
                 pageNumber: pageNumber.value,
                 pageSize: pageSize.value,
                 sortBy: sortBy.value,
                 sortDirection: sortDirection.value
-            }
+            };
+                if(palletQty.value != 0){query['palletQty'] = palletQty.value}
+                console.log(timeOfDeparture.value)
+                if (moment(timeOfDeparture.value).format("YYYY-MM-DDThh:mm") != "Invalid date") {query['timeOfDeparture'] = timeOfDeparture.value}
+
             return query
         })
-        // const updateShipments = (_pageSize, _pageNumber )=>{
-        //     pageSize.value = _pageSize
-        //     pageNumber.value = _pageNumber
-        //     loadShipments(searchPhrase.value, pageSize.value, pageNumber.value, sortBy.value, sortDirection.value)
-        // }
 
+        
+        
         // pages
         const pagesRange = computed(()=>{
             let range = []
@@ -177,10 +293,21 @@ export default {
         })
 
         onMounted (()=>{
-            loadShipments(queryData.value)
+            loadAreas();
+            loadStatuses();
+            loadShipments(queryData.value);
+            let pallets = [];
+            for(let index = 0; index < 100; index++) {
+                pallets[index] = index +1;
+            }
+            palletsArray.value = pallets
+
+            console.log(palletsArray.value)
+            console.log('palletsArray.value')
         })
 
         const updateTable = ()=>{
+            pageNumber.value = 1
             loadShipments(queryData.value)
             pagesRange.effect.run
         }
@@ -201,26 +328,45 @@ export default {
         const handlePageSize = (pageS)=>{
             pageSize.value = pageS
             queryData.value.pageSize = pageS
+            queryData.value.pageNumber = 1
             loadShipments(queryData.value)
         }
+        const handlePrio = ()=>{
+            hasPriority.value = !hasPriority.value
+        }
+
         onUnmounted (()=>{
             searchWatcher(); //invoking the method ends watching
         })
         return{ pagesRange, 
+                palletsArray,
                 handlePageSize, 
                 handleGoToPage, 
                 handleSubmit, 
+                handlePrio,
                 totalPages, 
                 totalItemsCount, 
                 itemsTo, 
                 itemsFrom, 
                 shipments, 
                 error, 
+                areaError,
+                areas,
+                statusError,
+                statuses,
                 pageNumber,
                 sortBy,
                 sortDirection,
                 moment,
-                queryData }                          
+                timeOfDeparture,
+                hasPriority,
+                comment,
+                warehouseAreaId,
+                palletQty,
+                carPlates,
+                statusId,
+                containerNumber,
+                purchaseOrderNumber }                          
                 
     }
 }
@@ -232,36 +378,16 @@ form{
     margin:  0;
     padding: 0;
 }
-.search-form{
-    display: flex;
-    align-items: center;
-}
+
 
 input{
-    height: 34px;
-    width: 220px;
+    font-size: 0.7em;
+    
     border: none;
     font-family: 'Poppins', sans-serif;
 }
 
-.btn-search{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: none;
-    color:#fff;
-    padding: 5px 30px;
-    margin: 0px 10px;
-    cursor: pointer;
-    height: 34px;
-    font-family: 'Poppins', sans-serif;
-    margin-right: 0;
-    margin-left: 20px;
-    background: linear-gradient(to right bottom, #5bb7f8,#0e409d);
-}
-.btn-search span{
-    font-size: 1.1vw;
-}
+
 
 .list-item.shipment-list{
     grid-template-columns: 8% 11% 14% 6% 6% 14% 12% 10% 2% 8% ;
@@ -305,22 +431,190 @@ input{
     padding: 0 5px;
     font-size: 0.8em;
 }
-/* .order-shipment{
+
+.shipment-search-form{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: auto;
+    gap: 12px;
+    align-items: end;
+    
+    border: solid 2px #eee;
+    border-radius: 10px 10px 0 0;
+    color:#fff;
+    padding: 20px 30px 30px 30px;
+    transform: translateY(10px);
+    border-bottom: none;
+    /* background: linear-gradient(to right bottom, #5bb7f8,#0e409d); */
+    background: #0064ac;
+    background: linear-gradient(to right bottom, #0178cd, var(--back));
+}
+.shipment-search-form input{
+    padding: 5px 8px;
+    max-width: 120px;
+}
+.shipment-search-form .item-row select{
+    font-size: 0.7em;
+    padding: 5px 8px;
+    max-width: 120px;
+    min-width: 136px;
+    border: none;
+}
+.shipment-search-form .search-item{
     display: flex;
     flex-direction: column;
-    border-left:solid 1px #888; 
-    border-right: solid 1px #888; 
-    
-    
-    border-radius: 5%;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    padding: 4px;
-    font-size: 0.8em;
+    align-items: flex-start;
+}
+.shipment-search-form .prio-item{
+    align-self: end;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 1.3em;
     
 }
-.order-shipment div{
+.shipment-search-form .prio-item p{
     display: flex;
-    justify-content: space-between;
-} */
+    padding: 0px 4px;
+    margin: 0 16px 0 0;
+}
+
+.shipment-search-form .prio-item .material-symbols-outlined{
+    font-size: 1.4em;
+      
+}
+.shipment-search-form  .item-row{
+    display: flex;
+    flex-flow: row;
+    /* align-items: center; */
+    margin:0px;
+}
+.cancel-btn{
+    background: #fff;
+    font-size: 1.5em;
+    border: 0;
+    
+    font-weight: 100;
+    cursor: pointer;
+    color: #aaa;
+    display: flex;
+    align-items: center;
+    justify-content: stretch;
+    /* min-width: 28px; */
+    /* max-height: 20px; */
+    margin: 0;
+    
+
+}
+.cancel-btn:hover{
+    background: var(--back);
+    color: #fff;
+
+}
+.filter-header{
+    padding: 0px;
+    margin: 0;
+    justify-self: flex-start;
+    align-self: flex-start;
+}
+
+label{
+    font-weight: 300;
+    font-size: 0.8em;
+}
+.shipment-search-form input[type="checkbox"]{
+    height: 26px;
+    width: 26px;
+    
+}
+
+.shipment-search-form .btn-search{
+    display: flex;
+    padding: 5px 30px;
+    margin: 0px 10px;
+    cursor: pointer;
+    height: 34px;
+    font-family: 'Poppins', sans-serif;
+    margin-right: 0;
+    margin-left: 20px;
+    background: linear-gradient(to right bottom, #5bb7f8,#0e409d);
+}
+
+
+
+.userSwitch {
+    margin: 2px 0;
+    position: relative;
+    width: 94px;
+}
+.userSwitch input[type=checkbox] {
+  display: none;
+}
+.userSwitch-label {
+  display: block;
+  overflow: hidden;
+  cursor: pointer;
+  border: 0px solid #000c20;
+  border-radius: 50px;
+}
+.userSwitch-inner {
+  width: 200%;
+  margin-left: -100%;
+  transition: margin 0.2s ease-in 0s;
+  
+}
+.userSwitch-inner:before, .userSwitch-inner:after {
+  float: left;
+  width: 50%;
+  height: 24px;
+  padding: 0;
+  line-height: 24px;
+  font-size: 11px;
+  color: white;
+  /* font-family: Trebuchet, Arial, sans-serif; */
+  /* font-weight: bold; */
+  box-sizing: border-box;
+  
+}
+.userSwitch-inner:before {
+  content: "PRIO";
+  padding-left: 10px;
+  background-color: #fff;
+  color: #000000;
+  box-shadow: inset 2px 2px 4px rgba(0,0,0,0.4);
+}
+.switches .flipswitch-inner:after {
+    content: "";
+
+}
+.userSwitch-inner:after {
+    content: "WSZYSTKIE";
+    padding-right: 8px;
+    background-color: #003e6a;
+    color: #E8E8E8;
+    text-align: right;
+    box-shadow: inset 2px 2px 4px rgba(0,0,0,0.4);
+}
+.userSwitch-switch {
+  width: 24px;
+  height: 24px;
+  margin: 0px;
+  background: #F5B727;
+  box-shadow: 1px 1px 3px rgba(4,4,4,0.4), -1px -1px 3px rgba(4,4,4,0.4);
+  border-radius: 50px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 70px;
+  transition: all 0.2s ease-in 0s;
+}
+.userSwitch-cb:checked + .userSwitch-label .userSwitch-inner {
+  margin-left: 0;
+}
+.userSwitch-cb:checked + .userSwitch-label .userSwitch-switch {
+  right: 0;
+}
+
+
 </style>
