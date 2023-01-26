@@ -1,16 +1,19 @@
 <template>
   <NavbarComponent />
-  <div style="display:flex; justify-content:center; border-bottom:solid 1px #fff; margin:30px 40px 0px 40px;">
-    <h1>NOTATNIK</h1>
-    
-  </div>
-  <div class="img-ctnr">
-    <div></div>
-    <img class="test-image second" src="../assets/img/note01.jpg" alt="" srcset="">
-    <img class="test-image first" src="../assets/img/note02.jpg" alt="" srcset="">
-    <img class="test-image second" src="../assets/img/note04.jpg" alt="" srcset="">
-    <img class="test-image third" src="../assets/img/note03.jpg" alt="" srcset="">
-    <div></div>
+  <div class="frame">
+    <div style="display:flex; justify-content:center; border-bottom:solid 1px #fff; margin:30px 40px 0px 40px;">
+        <h1>NOTATNIK</h1>
+        
+    </div>
+    <div class="img-ctnr">
+        <div></div>
+        <img class="test-image second" src="../assets/img/note01.jpg" alt="" srcset="">
+        <img class="test-image first" src="../assets/img/note02.jpg" alt="" srcset="">
+        <img class="test-image second" src="../assets/img/note04.jpg" alt="" srcset="">
+        <img class="test-image third" src="../assets/img/note03.jpg" alt="" srcset="">
+        <div></div>
+    </div>
+
   </div>
 </template>
 

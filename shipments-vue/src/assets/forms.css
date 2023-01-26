@@ -1,3 +1,12 @@
+input, select{
+    color: #222;
+    border-radius: 4px;    
+}
+button{
+    border-radius: 4px;    
+}
+
+
 .form-add{
     margin:  50px 0;
     padding: 0;
@@ -17,7 +26,16 @@
     border: none;
     font-family: 'Poppins', sans-serif;
     margin-bottom: 10px;
+    padding: 2px 10px;
 }
+.form-add select{
+    height: 34px;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 10px;
+    padding: 2px 10px;
+}
+
 .form-add button{
     display: flex;
     justify-content: center;

@@ -71,8 +71,7 @@
                 </div>
             </div>
             <div></div>
-            <button>EDYTUJ</button>
-            <button class="customer-add-btn"><span class="material-symbols-outlined">add_box</span> WYSYŁKA</button>
+            <button class="customer-add-btn">EDYTUJ</button>
         </div>
         <div class="list-footer">
             <p>Ilość wszystkich pozycji: {{totalItemsCount}}</p>
@@ -248,8 +247,8 @@ input{
 }
 
 .list-item.po-list{
-    grid-template-columns: 9% 10% 13% 20% 13% 8% 5% 10% 12% ;
-    
+    grid-template-columns: 9% 11% 12% 20% 18% 10% 2% 11%;
+    gap: 1%;
 }
 .list-header.sort-icon.po-header{
     font-size: 0.1em;

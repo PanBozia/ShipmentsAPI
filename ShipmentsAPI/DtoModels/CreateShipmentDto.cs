@@ -18,7 +18,7 @@ namespace ShipmentsAPI.DtoModels
         public string ContainerType { get; set; }
         public string ContainerSealNumber { get; set; }
         public string Comment { get; set; }
-        public int WarehouseAreaId { get; set; }
+        public int? WarehouseAreaId { get; set; }
         public Guid? ForwarderId { get; set; }
 
     }

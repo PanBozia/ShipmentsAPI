@@ -449,21 +449,23 @@ input{
     background: #0064ac;
     background: linear-gradient(to right bottom, #0178cd, var(--back));
 }
-.shipment-search-form input{
-    padding: 5px 8px;
-    max-width: 120px;
-}
-.shipment-search-form .item-row select{
-    font-size: 0.7em;
-    padding: 5px 8px;
-    max-width: 120px;
-    min-width: 136px;
-    border: none;
-}
+
+
+
 .shipment-search-form .search-item{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    display: grid;
+    justify-items: stretch;
+    max-width: 180px;
+}
+.shipment-search-form .search-item input, select{
+    
+    padding: 5px 8px;
+    border: none;
+    min-width: 60px;
+    
+}
+.shipment-search-form option{
+    font-size: 0.8em;
 }
 .shipment-search-form .prio-item{
     align-self: end;
@@ -485,8 +487,11 @@ input{
       
 }
 .shipment-search-form  .item-row{
-    display: flex;
-    flex-flow: row;
+    /* display: flex;
+    flex-flow: row; */
+    display: grid;
+    grid-template-columns: 1fr 26px;
+    justify-items: stretch;
     /* align-items: center; */
     margin:0px;
 }
@@ -494,7 +499,7 @@ input{
     background: #fff;
     font-size: 1.5em;
     border: 0;
-    
+    border-radius: 0 4px 4px 0;
     font-weight: 100;
     cursor: pointer;
     color: #aaa;
@@ -504,7 +509,7 @@ input{
     /* min-width: 28px; */
     /* max-height: 20px; */
     margin: 0;
-    
+    transform: translateX(-3px);
 
 }
 .cancel-btn:hover{

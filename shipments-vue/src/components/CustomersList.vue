@@ -56,8 +56,8 @@
             <p>{{customer.streetAddress}}<br>{{customer.zipCodeAddress}} {{customer.cityAddress}}</p>
             <p>{{customer.countryAddress}}</p>
             <div></div>
+            <div></div>
             <button>EDYTUJ</button>
-            <button class="customer-add-btn"><span class="material-symbols-outlined">add_box</span> ZAMÓWIENIE</button>
         </div>
         <div class="list-footer">
             <p>Ilość wszystkich pozycji: {{totalItemsCount}}</p>
@@ -230,8 +230,8 @@ input{
 }
 
 .list-item.customer-list{
-    grid-template-columns: 10% 10% 22% 20% 10% 6% 11% 11% ;
-    
+    grid-template-columns: 8% 8% 24% 20% 8% 6% 2% 8% ;
+    gap:2%;
 }
 .customer-add-btn{
     background: linear-gradient(to right, #e6ff9b,#d0ff35); 

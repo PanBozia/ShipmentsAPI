@@ -15,7 +15,7 @@ namespace ShipmentsAPI.Entities
         public string ContainerNumber { get; set; }
         public string ContainerType { get; set; }
         public string ContainerSealNumber { get; set; }
-        public int WarehouseAreaId { get; set; }
+        public int? WarehouseAreaId { get; set; }
         public virtual WarehouseArea WarehouseArea { get; set; }
 
         public Guid? ForwarderId { get; set; }

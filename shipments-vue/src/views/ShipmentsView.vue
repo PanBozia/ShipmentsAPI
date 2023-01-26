@@ -1,17 +1,17 @@
 <template>
     <NavbarComponent />
-   <div>
+   <div class="frame">
      <div class="view-container">
         <div class="sub-page-header item-e ">
             <p>WYSYŁKI</p>
         </div>
-        <div class="item-a item-container" @click="openAddComponent">
-            <p><span class="material-symbols-outlined">add_box</span></p>
-            <p>Dodaj wysyłkę</p>
-        </div>
-        <div class="item-d item-container" @click="openListComponent">
-            <p><span class="material-symbols-outlined">list_alt</span></p>
-            <p>Lista wysyłek</p>
+        <div class="item-a" >
+            <div class="item-container main-list-btn" @click="openListComponent">
+                <p><span class="material-symbols-outlined">list_alt</span></p>
+            </div>
+            <div class="item-container main-add-btn" @click="openAddComponent">
+                <p><span class="material-symbols-outlined">add</span></p>
+            </div>
         </div>
         <div v-if="listFlag" class="item-v">
             <ShipmentsList/>

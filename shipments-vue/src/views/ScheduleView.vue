@@ -1,7 +1,11 @@
 <template>
 <NavbarComponent />
-  <div class="schedule-container">
-    <p>Schedule</p>
+  <div class="frame">
+    
+    <div class="schedule-container">
+        <p>Schedule</p>
+    </div>
+
   </div>
 </template>
 
