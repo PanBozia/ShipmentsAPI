@@ -4,6 +4,7 @@ namespace ShipmentsAPI.DtoModels
 {
     public class UpdateShipmentDto
     {
+        public Guid ShipmentId { get; set; }
         public DateTime ETD { get; set; }
         public DateTime? TimeOfDeparture { get; set; }
         public bool HasPriority { get; set; } = false;

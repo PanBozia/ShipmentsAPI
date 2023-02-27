@@ -27,7 +27,9 @@ namespace ShipmentsAPI
                 .ForMember(x => x.WarehouseArea, o => o.MapFrom(x => x.WarehouseArea.Name))
                 .ForMember(x => x.Status, o => o.MapFrom(x => x.Status.Name));
             //.ForMember(x => x.PurchaseOrders, o => o.MapFrom(MapOrdersInShipment));
-            CreateMap<UpdateShipmentDto, Shipment>();
+            CreateMap<UpdateShipmentDto, Shipment>()
+                .ForMember(x => x.Id, o => o.MapFrom(x => x.ShipmentId));
+                
             CreateMap<CreateShipmentDto, Shipment>();
             CreateMap<Status, StatusDto>();
             CreateMap<WarehouseArea, WarehouseAreaDto>();

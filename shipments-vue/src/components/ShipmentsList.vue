@@ -152,7 +152,7 @@
             </p>
         </div>
         <!-- :class="{'prio-shipment' : shipment.hasPriority}" -->
-        <div class="list-item shipment-list "  v-for="shipment in shipments" :key=shipment.id>
+        <div class="list-item shipment-list "  v-for="shipment in shipments" :key=shipment.id >
             <div v-if="shipment.purchaseOrders.length == 0">
                 <p>N/A</p>
             </div>
@@ -172,7 +172,7 @@
             <p>{{shipment.status}}</p>
             <div v-if="shipment.hasPriority"><p><span class="material-symbols-outlined">timer</span></p></div>
             <div v-else></div>
-            <button class="shipment-add-btn"><span class="material-symbols-outlined">edit</span>EDYTUJ</button>
+            <button class="shipment-add-btn" @click="handleEditShipment(shipment.id)"><span class="material-symbols-outlined">edit</span>EDYTUJ</button>
         </div>
         <div class="list-footer">
             <p>Ilość wszystkich pozycji: {{totalItemsCount}}</p>
@@ -214,9 +214,11 @@ import getStatuses from '../js-components/getStatuses.js'
 import moment from 'moment'
 import 'moment/min/locales.min'
 import 'moment/locale/pl'
+import {useRouter} from 'vue-router'
 export default {
     setup(){
         const url = 'https://localhost:44331/api/'
+        const router = useRouter()
         const {loadShipments, error, shipments, totalPages, itemsFrom, itemsTo, totalItemsCount} = getShipments(url)
         const {loadAreas, error:areaError, areas} = getAreas(url)
         const {loadStatuses, error:statusError, statuses} = getStatuses(url)
@@ -256,7 +258,7 @@ export default {
                 sortDirection: sortDirection.value
             };
                 if(palletQty.value != 0){query['palletQty'] = palletQty.value}
-                console.log(timeOfDeparture.value)
+                //console.log(timeOfDeparture.value)
                 if (moment(timeOfDeparture.value).format("YYYY-MM-DDThh:mm") != "Invalid date") {query['timeOfDeparture'] = timeOfDeparture.value}
 
             return query
@@ -302,8 +304,8 @@ export default {
             }
             palletsArray.value = pallets
 
-            console.log(palletsArray.value)
-            console.log('palletsArray.value')
+            //console.log(palletsArray.value)
+            //console.log('palletsArray.value')
         })
 
         const updateTable = ()=>{
@@ -338,6 +340,14 @@ export default {
         onUnmounted (()=>{
             searchWatcher(); //invoking the method ends watching
         })
+
+        const handleEditShipment = (id) => {
+            //console.log(id)
+            router.push({ name:'EditShipmentView', 
+                      params:{ shipmentId:id } 
+        })
+        }
+
         return{ pagesRange, 
                 palletsArray,
                 handlePageSize, 
@@ -366,7 +376,8 @@ export default {
                 carPlates,
                 statusId,
                 containerNumber,
-                purchaseOrderNumber }                          
+                purchaseOrderNumber,
+                handleEditShipment }                          
                 
     }
 }

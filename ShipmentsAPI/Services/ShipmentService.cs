@@ -182,6 +182,7 @@ namespace ShipmentsAPI.Services
         public ShipmentBriefDto Update(Guid id, UpdateShipmentDto dto)
         {
             var shipment = dbContext.Shipments
+               .AsNoTracking()
                .Include(x => x.Forwarder)
                .Include(z => z.WarehouseArea)
                .Include(y => y.Status)
@@ -193,8 +194,13 @@ namespace ShipmentsAPI.Services
             {
                 throw new NotFoundException($"Wysyłka z nr id: {id} nie została odnaleziona.");
             }
+            dto.ShipmentId = id;
+            
             var updatedShipment = mapper.Map<Shipment>(dto);
+
             dbContext.Shipments.Update(updatedShipment);
+            //dbContext.Shipments.Update(updatedShipment).State = EntityState.Modified;
+            
             dbContext.SaveChanges();
 
             var updatedShipmentDto = mapper.Map<ShipmentBriefDto>(shipment);

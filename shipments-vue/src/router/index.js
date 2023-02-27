@@ -5,6 +5,7 @@ import ScheduleView from '../views/ScheduleView.vue'
 import ForwarderView from '../views/ForwarderView.vue'
 import CustomerView from '../views/CustomerView.vue'
 import PurchaseOrderView from '../views/PurchaseOrderView.vue'
+import EditShipmentView from '../views/EditShipmentView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,7 +38,15 @@ const router = createRouter({
     {
         path: '/shipment',
         name: 'ShipmentsView',
-        component: ShipmentsView
+        component: ShipmentsView,
+        props: true
+    },
+    {
+        path: '/shipment/edit/:shipmentId',
+        name: 'EditShipmentView',
+        component: EditShipmentView,
+        props: true
+        
     }
     
   ]
