@@ -21,7 +21,7 @@
             <select v-if="!customersError" v-model="customerIdForm">
                 <option v-for="customer in customers" :key="customer.id" :value="customer.id">{{customer.shortName}} ({{customer.cityAddress}} - {{customer.countryAddress}})</option>
             </select>
-            <div id="add-btn-container">
+            <div v-if="!addPoError" id="add-btn-container">
                 <button>Zapisz</button>
             </div>
             <div v-if="addPoError || customersError || incotermsError" class="error" >
@@ -77,12 +77,16 @@ export default {
                     customerIdForm.value = null
                     categoryForm.value = 'Standard'
                     incotermIdForm.value = 1
+                    addPoError.value = ''
+                    customersError.value = ''
                     createdFlag.value = true
                     setTimeout(()=>{createdFlag.value = false},5000)
+                }else{
+                    setTimeout(()=>{addPoError.value = null},4000)
                 }
             })
+           
         }
-
        
         return {
             handleSubmit,
@@ -100,7 +104,7 @@ export default {
             createdFlag
          }
     }
-
+    
 }
 </script>
 

@@ -128,7 +128,9 @@ namespace ShipmentsAPI.Services
             }
 
             customer.Name = dto.Name;
+            customer.ShortName = dto.ShortName;
             customer.StreetAddress = dto.StreetAddress;
+            customer.CountryAddress = dto.CountryAddress;
             customer.CityAddress = dto.CityAddress;
             customer.ZipCodeAddress = dto.ZipCodeAddress;
             customer.ClientNumber = dto.ClientNumber;

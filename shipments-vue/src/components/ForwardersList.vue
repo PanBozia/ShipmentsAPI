@@ -92,7 +92,7 @@ export default {
         const {loadForwarders, error, forwarders, totalPages, itemsFrom, itemsTo, totalItemsCount} = getForwarders(url)
 
         const searchPhrase = ref('')
-        const pageSize = ref(5)
+        const pageSize = ref(10)
         const pageNumber = ref(1)
         const sortBy = ref('LastName')
         const sortDirection = ref(0)
@@ -132,7 +132,7 @@ export default {
         })
 
         onMounted (()=>{
-            updateFowarders(5,1)
+            updateFowarders(pageSize.value,1)
         })
         const updateTable = ()=>{
             updateFowarders(pageSize.value, pageNumber.value)

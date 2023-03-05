@@ -59,17 +59,20 @@
             <p>{{order.poNumber}}</p>
             <p>{{order.customerShortName}} - {{order.customerName}}</p>
             <p>{{moment(order.deliveryDate).locale("pl").format("YYYY MMMM DD")}}</p>
-            <div v-if="order.shipments.length == 0"></div>
-            <div v-else v-for="shipment in order.shipments" :key="shipment.id" class="order-shipment">
-                <div>
-                    <p>ETD:</p>
-                    <p>{{moment(shipment.etd).format("YYYY-MM-DD")}}</p>
-                </div>
-                <div>
-                    <p>TD:</p>
-                    <p>{{moment(shipment.timeOfDeparture).format("YYYY-MM-DD")}}</p>
+            <div>
+                <div v-if="order.shipments.length == 0"></div>
+                <div v-else v-for="shipment in order.shipments" :key="shipment.id" class="order-shipment">
+                    <div>
+                        <p>ETD:</p>
+                        <p>{{moment(shipment.etd).format("YYYY-MM-DD")}}</p>
+                    </div>
+                    <div>
+                        <p>TD:</p>
+                        <p>{{moment(shipment.timeOfDeparture).format("YYYY-MM-DD")}}</p>
+                    </div>
                 </div>
             </div>
+            
             <div></div>
             <button class="customer-add-btn">EDYTUJ</button>
         </div>
@@ -117,9 +120,9 @@ export default {
         const {loadOrders, error, orders, totalPages, itemsFrom, itemsTo, totalItemsCount} = getPurchaseOrders(url)
 
         const searchPhrase = ref('')
-        const pageSize = ref(5)
+        const pageSize = ref(10)
         const pageNumber = ref(1)
-        const sortBy = ref('Category')
+        const sortBy = ref('DeliveryDate')
         const sortDirection = ref(0)
         moment.locale('pl')
         const updateOrders = (_pageSize, _pageNumber )=>{
@@ -157,7 +160,7 @@ export default {
         })
 
         onMounted (()=>{
-            updateOrders(5,1)
+            updateOrders(pageSize.value,1)
         })
 
         const updateTable = ()=>{
@@ -178,11 +181,11 @@ export default {
         const handleSubmit = ()=>{
             updateOrders(pageSize.value, pageNumber.value)
         }
-        const handleGoToPage = (pageNumber)=>{
-            updateOrders(pageSize.value, pageNumber)
+        const handleGoToPage = (pNumber)=>{
+            updateOrders(pageSize.value, pNumber)
         }
-        const handlePageSize = (pageSize)=>{
-            updateOrders(pageSize, 1)
+        const handlePageSize = (pSize)=>{
+            updateOrders(pSize, 1)
         }
         onUnmounted (()=>{
             searchWatcher(); //invoking the method ends watching

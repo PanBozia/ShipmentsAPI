@@ -25,9 +25,7 @@
             <div>
                 <p>MAGAZYN</p>
             </div>
-            <div>
-                <p>STATUSY</p>
-            </div>
+            
             <div>
                 <router-link :to="{name:'ScheduleView'}">
                     <p>HARMONOGRAM</p>

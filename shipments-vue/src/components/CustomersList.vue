@@ -57,7 +57,7 @@
             <p>{{customer.countryAddress}}</p>
             <div></div>
             <div></div>
-            <button>EDYTUJ</button>
+            <button @click="handleEdit(customer.id)">EDYTUJ</button>
         </div>
         <div class="list-footer">
             <p>Ilość wszystkich pozycji: {{totalItemsCount}}</p>
@@ -94,14 +94,16 @@
 
 <script>
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import {useRouter} from 'vue-router'
 import getCustomers from '../js-components/getCustomers.js'
+
 export default {
     setup(){
         const url = 'https://localhost:44331/api/'
         const {loadCustomers, error, customers, totalPages, itemsFrom, itemsTo, totalItemsCount} = getCustomers(url)
-
+        const router = useRouter()
         const searchPhrase = ref('')
-        const pageSize = ref(5)
+        const pageSize = ref(10)
         const pageNumber = ref(1)
         const sortBy = ref('ShortName')
         const sortDirection = ref(0)
@@ -141,7 +143,7 @@ export default {
         })
 
         onMounted (()=>{
-            updateCustomers(5,1)
+            updateCustomers(pageSize.value,1)
         })
 
         const updateTable = ()=>{
@@ -173,7 +175,14 @@ export default {
             sortDirectionWatcher();
             sortByWatcher();
         })
-        return{ pagesRange, 
+
+        const handleEdit = (id)=>{
+             router.push({ name:'EditCustomerView', 
+                      params:{ customerId:id } 
+        })
+        }
+        return{ handleEdit,
+                pagesRange, 
                 handlePageSize, 
                 handleGoToPage, 
                 handleSubmit, 

@@ -1,13 +1,62 @@
 <template>
     <NavbarComponent />
     <div v-if="!loadShipmentError">
-        {{shipment}}
+        
     
 
     </div>
-    <div v-if="!loadShipmentError">
-            <p>Edytuj dane wysyłki wysyłkę</p>
+    <h1 id="header-edit-shipment">Edytuj dane wysyłki</h1>
+    <div v-if="!loadShipmentError" class="edit-shipment-container">
+        
             <div class="add-container add-shipment-ctnr">
+
+ <form class="form-add" @submit.prevent="handleSearchOrders()">
+                        <label class="form-labels">Zamówienia</label>
+                        <div  v-if="shipment.purchaseOrders != 0">
+                            <div class="chosen-one" v-for="po in shipment.purchaseOrders" :key="po.id">
+                                <div>
+                                    {{po.poNumber + " - " +po.customerShortName}}
+                                </div>
+                                <div class="remove-btn" @click="handleRemoveOrder(po.id)">
+                                    <span class="material-symbols-outlined">
+                                        remove_circle
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chosen-one red" v-else>
+                            <div >Brak zamówień</div>
+                        </div >
+
+                        <label class="form-labels">Wybierz zamówienia</label>
+                        <div class="search-ctnr">
+                            <input type="text" v-model="searchOrderPhrase">
+                            <button>Szukaj</button>
+                        </div>
+                        <div v-if="orders != null">
+                                <div class="forwarder-list-ctnr">
+                                    <div v-if="orders.length == 0">
+                                        <p id="no-result">Brak wyników wyszukiwania...</p>
+                                    </div>
+                                    <div v-else class="driver-line" v-for="order in orders" :key="order.id">
+                                        <p>{{order.poNumber+ " - " +order.customerShortName}}</p>
+                                        <div class="add-driver-btn" @click="handleAddOrder(order.id)">
+                                            <span class="material-symbols-outlined">
+                                                add_circle
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div v-if="totalItemsCountPo > 20">
+                                    <p class="red">Znaleziono więcej wyników spełniających kryteria wyszukiwania.</p>
+                                </div>
+                        </div>
+
+                       
+                    </form>
+
+
+
                     <form class="form-add" @submit.prevent="handleSubmit">
                         
                         <div class="form-double-ctnr">
@@ -56,12 +105,27 @@
                         <input type="text" v-model="containerNumberForm">
                         <label class="form-labels">Nr plomby (opcjonalnie)</label>
                         <input type="text" v-model="containerSealNumberForm">
+                        <label class="form-labels">Komentarz (opcjonalnie)</label>
+                        <!-- <input type="text-area" class="comment" v-model="commentForm"> -->
+                        <textarea class="comment" name="comment" rows="5" cols="1" v-model="commentForm">
+                        </textarea>
                         <label class="form-labels">Status</label>
-                         <select v-if="!getStatusesError" v-model="statusIdForm">
-                                    <option :value="status.id" v-for="status in statuses" :key="status.id">
+                        <select v-if="!getStatusesError" v-model="statusIdForm">
+                            <option :value="status.id" v-for="status in statuses" :key="status.id">
                                         {{status.name}}
-                                    </option>
-                                </select>
+                            </option>
+                        </select>
+                        <div v-if="statusIdForm">
+                            <div class="form-double-ctnr">
+                                <div class="double-ctnr-item">
+                                    <label class="form-labels">Data wysyłki</label>
+                                    <input type="datetime-local" v-model="timeOfDepartureForm" required>
+                                </div>
+                                <div class="double-ctnr-item">
+                                    
+                                </div>
+                            </div>
+                        </div>
                         
                         <div id="add-btn-container">
                             <button>Zapisz</button>
@@ -110,11 +174,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div v-if="totalItemsCount > 20">
+                                <div v-if="totalItemsCountForwarders > 20">
                                     <p class="red">Znaleziono więcej wyników spełniających kryteria wyszukiwania.</p>
                                 </div>
                         </div>
                     </form>
+
+                   
                 </div>
     </div>
 </template>
@@ -127,7 +193,10 @@ import getAreas from '../js-components/getAreas.js'
 import getForwarders from '../js-components/getForwarders.js'
 import getForwarderById from '../js-components/getForwarderById.js'
 import getStatuses from '../js-components/getStatuses.js'
-import { onMounted, ref } from 'vue'
+import getPurchaseOrders from '../js-components/getPurchaseOrders.js'
+import addOrderToShipment from '../js-components/addOrderToShipment.js'
+import removeOrderFromShipment from '../js-components/removeOrderFromShipment.js'
+import { onBeforeMount, ref } from 'vue'
 import moment from 'moment'
 export default {
     props:['shipmentId'],
@@ -144,22 +213,28 @@ export default {
         const warehouseAreaIdForm = ref(null)
         const forwarderIdForm = ref(null)
         const statusIdForm = ref(null)
-
+        const timeOfDepartureForm = ref(null)
         const newForwarder = ref(null)
         const search_phrase = ref('')
+        const searchOrderPhrase = ref('')
         const createdFlag = ref(false)
 
-        const { edit, error:editShipmentError} = editShipment(url,props.shipmentId)
-        const { loadShipment, error:loadShipmentError, shipment} = getShipmentById(url)
-        const { loadAreas, error:areasError, areas} = getAreas(url)
-        const {loadForwarders, error:forwardersError, forwarders, totalPages, itemsFrom, itemsTo, totalItemsCount} = getForwarders(url)
+        const {edit, error:editShipmentError} = editShipment(url,props.shipmentId)
+        const {loadShipment, error:loadShipmentError, shipment} = getShipmentById(url)
+        const {loadAreas, error:areasError, areas} = getAreas(url)
+        const {loadForwarders, error:forwardersError, forwarders, totalPages, itemsFrom, itemsTo, totalItemsCount:totalItemsCountForwarders} = getForwarders(url)
         const {loadForwarder, error:getForwarderByIdError, forwarder} = getForwarderById(url)
         const {loadStatuses, error:getStatusesError, statuses} = getStatuses(url)
-        onMounted(()=>{
+        const {loadOrders, error:loadOrdersError, orders, totalItemsCount:totalItemsCountPo} = getPurchaseOrders(url)
+        const {addOrder, error:addOrderError} = addOrderToShipment(url)
+        const {removeOrder, error:removeOrderError} = removeOrderFromShipment(url)
+        
+        const refreshShipmentData = () =>{
             loadStatuses()
             loadAreas()
             loadShipment(props.shipmentId).then(()=>{
                 etdForm.value = moment(shipment.value.etd).format("YYYY-MM-DD HH:mm")
+                timeOfDepartureForm.value = moment(shipment.value.timeOfDeparture).format("YYYY-MM-DD HH:mm")
                 console.log(moment(shipment.value.etd).format("DD.MM.YYYY HH:mm"))
                 hasPriorityForm.value = shipment.value.hasPriority
                 palletQtyForm.value = shipment.value.palletQty
@@ -167,20 +242,47 @@ export default {
                 containerTypeForm.value = shipment.value.containerType
                 containerSealNumberForm.value = shipment.value.containerSealNumber
                 commentForm.value = shipment.value.comment
-                warehouseAreaIdForm.value = areas.value.find(x =>x.name === shipment.value.warehouseArea).id
-                forwarderIdForm.value = shipment.value.forwarder.id
-                loadForwarder(forwarderIdForm.value).then(()=>{
-                    newForwarder.value = forwarder.value
-                })
+                if(shipment.value.warehouseArea != null){
+                    warehouseAreaIdForm.value = areas.value.find(x =>x.name === shipment.value.warehouseArea).id
+                }else{
+                    warehouseAreaIdForm.value = null
+                }
+                if(shipment.value.forwarder != null){
+                    forwarderIdForm.value = shipment.value.forwarder.id
+                    loadForwarder(forwarderIdForm.value).then(()=>{
+                        newForwarder.value = forwarder.value
+                    })
+                }
+
                 statusIdForm.value = statuses.value.find(x => x.name === shipment.value.status).id
                 console.log(statusIdForm.value)
             })
+        }
+        // onMounted(()=>{
+        //    refreshShipmentData()
+        // })
+        onBeforeMount(()=>{
+            refreshShipmentData()
         })
+
+        const handleSearchOrders = () =>{
+            loadOrders(searchOrderPhrase.value,20,1,'DeliveryDate',1)
+        }
+        const handleAddOrder = (orderId) =>{
+            addOrder(props.shipmentId, orderId).then(()=>{
+                refreshShipmentData()
+            })
+        }
+        const handleRemoveOrder = (orderId) =>{
+            removeOrder(props.shipmentId, orderId).then(()=>{
+                refreshShipmentData()
+            })
+        }
 
         const handleSubmit = ()=>{
             const shipmentData = {
                 etd : moment(etdForm.value).format("YYYY-MM-DDTHH:mm"),
-                timeOfDeparture : moment(etdForm.value).format("YYYY-MM-DDTHH:mm"),
+                timeOfDeparture : moment(timeOfDepartureForm.value).format("YYYY-MM-DDTHH:mm"),
                 statusId : statusIdForm.value,
                 // timeOfDeparture to rzeczywisty czas wysyłki, jeżeli status inny niż "wysłane", to przypisz wartość etdForm.value.
                 // jeżeli status to "wysłane", to pojawi się pole z opcją wpisania timeOfDeprture (chwilowo etd=td powyżej)
@@ -194,8 +296,10 @@ export default {
             //console.log(warehouseAreaIdForm.value)
             if(warehouseAreaIdForm.value != null){
                 shipmentData['warehouseAreaId'] = warehouseAreaIdForm.value
+            }else{
+                shipmentData['warehouseAreaId'] = null
             }
-            console.log(newForwarder.value)
+            
             if(newForwarder.value != null){
                 shipmentData['forwarderId'] = newForwarder.value['id']
             }
@@ -203,16 +307,7 @@ export default {
         
         edit(shipmentData).then(()=>{
                 if(editShipmentError.value == null){
-                    etdForm.value = null
-                    hasPriorityForm.value = false
-                    palletQtyForm.value = 0
-                    containerNumberForm.value = ''
-                    containerSealNumberForm.value =''
-                    containerTypeForm.value = '' 
-                    commentForm.value = ''
-                    warehouseAreaIdForm.value = null
-                    forwarderIdForm.value = null
-                    handleRemoveDriver()
+                    
                     createdFlag.value = true
                     setTimeout(()=>{createdFlag.value = false},5000)
                 }
@@ -231,8 +326,22 @@ export default {
         const handleRemoveDriver = ()=>{
             newForwarder.value = null
         }
+
+        //  const shipmentWatcher = watch((shipment), () => {
+        //     refreshShipmentData()
+        // })
+        // onUnmounted (()=>{
+        //     shipmentWatcher(); //invoking the method ends watching
+        // })
        
         return {
+            handleRemoveOrder,
+            removeOrderError,
+            addOrderError,
+            handleAddOrder,
+            handleSearchOrders,
+            orders, totalItemsCountPo,loadOrdersError,
+            searchOrderPhrase,
             shipment,
             loadShipmentError,
             handleChoise,
@@ -241,7 +350,7 @@ export default {
             statuses,
             statusIdForm,
             getStatusesError,
-            forwardersError, forwarders, totalPages, itemsFrom, itemsTo, totalItemsCount,
+            forwardersError, forwarders, totalPages, itemsFrom, itemsTo, totalItemsCountForwarders,
             search_phrase,
             handleSearchForwarder,
             newForwarder,
@@ -249,6 +358,7 @@ export default {
             handleSubmit,
             moment,
             etdForm,
+            timeOfDepartureForm,
             hasPriorityForm,
             palletQtyForm,
             containerNumberForm,
@@ -270,6 +380,22 @@ export default {
 
 
 <style scoped>
+.comment{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 0.8em;
+    padding: 8px 12px;
+}
+
+#header-edit-shipment{
+    display: flex;
+    justify-content: center;
+}
+.edit-shipment-container{
+    display: flex;
+    justify-content: center;
+}
+
 .form-labels{
     font-size: 0.9em;
     margin: 14px 0 4px 0;
@@ -403,7 +529,7 @@ export default {
 }
 .add-shipment-ctnr{
     display: grid;
-    grid-template-columns: 1fr 1fr ;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 40px;
 }
 

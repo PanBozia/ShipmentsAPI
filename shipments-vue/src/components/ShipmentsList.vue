@@ -153,15 +153,18 @@
         </div>
         <!-- :class="{'prio-shipment' : shipment.hasPriority}" -->
         <div class="list-item shipment-list "  v-for="shipment in shipments" :key=shipment.id >
-            <div v-if="shipment.purchaseOrders.length == 0">
-                <p>N/A</p>
-            </div>
-            <div v-else v-for="order in shipment.purchaseOrders" :key="order.id" class="order-shipment">
-                <div>
-                    <!-- <p>PO#: </p> -->
-                    <p>{{order.poNumber}}</p>
+            <div>
+                <div v-if="shipment.purchaseOrders.length == 0">
+                    <p>N/A</p>
+                </div>
+                <div v-else v-for="order in shipment.purchaseOrders" :key="order.id" class="order-shipment">
+                    <div>
+                        <!-- <p>PO#: </p> -->
+                        <p>{{order.poNumber}}</p>
+                    </div>
                 </div>
             </div>
+
             <p>{{moment(shipment.etd).locale("pl").format("YYYY-MM-DD")}} ETD<br>{{moment(shipment.timeOfDeparture).locale("pl").format("YYYY-MM-DD")}} ATD</p>
             <p>{{shipment.containerType}} <br>CTNR#: {{shipment.containerNumber}}<br>SEAL#: {{shipment.containerSealNumber}}</p>
             <p>{{shipment.warehouseArea}}</p>
@@ -185,7 +188,7 @@
                 <div v-if="totalPages" class="list-footer-pages">
                     <p> Strony:</p>
                     <div v-if="pageNumber > 3" class="first-page-ctnr">
-                        <div class="icon-page" :class="{'icon-page-active' : pageNumber==page}" @click="handleGoToPage(1)">
+                        <div class="icon-page" :class="{'icon-page-active' : pageNumber==1}" @click="handleGoToPage(1)">
                             1 
                         </div>
                         <div>...</div>
@@ -223,7 +226,7 @@ export default {
         const {loadAreas, error:areaError, areas} = getAreas(url)
         const {loadStatuses, error:statusError, statuses} = getStatuses(url)
 
-        const pageSize = ref(5)
+        const pageSize = ref(10)
         const pageNumber = ref(1)
         const sortBy = ref('')
         const sortDirection = ref(0)
@@ -303,13 +306,10 @@ export default {
                 pallets[index] = index +1;
             }
             palletsArray.value = pallets
-
-            //console.log(palletsArray.value)
-            //console.log('palletsArray.value')
         })
 
         const updateTable = ()=>{
-            pageNumber.value = 1
+            //pageNumber.value = 1
             loadShipments(queryData.value)
             pagesRange.effect.run
         }
@@ -317,7 +317,6 @@ export default {
         const searchWatcher = watch((queryData), () => {
             updateTable()
         })
-        
         
         const handleSubmit = ()=>{
             loadShipments(queryData.value)
@@ -342,7 +341,6 @@ export default {
         })
 
         const handleEditShipment = (id) => {
-            //console.log(id)
             router.push({ name:'EditShipmentView', 
                       params:{ shipmentId:id } 
         })
@@ -389,17 +387,11 @@ form{
     margin:  0;
     padding: 0;
 }
-
-
 input{
     font-size: 0.7em;
-    
     border: none;
     font-family: 'Poppins', sans-serif;
 }
-
-
-
 .list-item.shipment-list{
     grid-template-columns: 8% 11% 14% 6% 6% 14% 12% 10% 2% 8% ;
     column-gap: 1%;
@@ -418,7 +410,6 @@ input{
 }
 .shipment-add-btn{
     background: linear-gradient(to right, #e6ff9b,#d0ff35); 
-    
 }
 .shipment-add-btn span{
     font-size: 1.2em;
@@ -427,12 +418,10 @@ input{
 .list-item.list-header.shipment-header.shipment-list.sort-bar{
     border-radius: 0;
     margin: 0;
-    
     padding-top: 4px;
     padding-bottom: 4px;
     height: auto;
     border-top: none;
-   
     border-bottom: solid 1px var(--back);
 }
 .list-item.list-header.shipment-header.shipment-list{
@@ -449,7 +438,6 @@ input{
     grid-template-rows: auto;
     gap: 12px;
     align-items: end;
-    
     border: solid 2px #eee;
     border-radius: 10px 10px 0 0;
     color:#fff;
@@ -461,19 +449,15 @@ input{
     background: linear-gradient(to right bottom, #0178cd, var(--back));
 }
 
-
-
 .shipment-search-form .search-item{
     display: grid;
     justify-items: stretch;
     max-width: 180px;
 }
 .shipment-search-form .search-item input, select{
-    
     padding: 5px 8px;
     border: none;
     min-width: 60px;
-    
 }
 .shipment-search-form option{
     font-size: 0.8em;
@@ -485,7 +469,6 @@ input{
     justify-content: flex-start;
     align-items: center;
     font-size: 1.3em;
-    
 }
 .shipment-search-form .prio-item p{
     display: flex;
@@ -495,15 +478,11 @@ input{
 
 .shipment-search-form .prio-item .material-symbols-outlined{
     font-size: 1.4em;
-      
 }
 .shipment-search-form  .item-row{
-    /* display: flex;
-    flex-flow: row; */
     display: grid;
     grid-template-columns: 1fr 26px;
     justify-items: stretch;
-    /* align-items: center; */
     margin:0px;
 }
 .cancel-btn{
@@ -517,8 +496,6 @@ input{
     display: flex;
     align-items: center;
     justify-content: stretch;
-    /* min-width: 28px; */
-    /* max-height: 20px; */
     margin: 0;
     transform: translateX(-3px);
 

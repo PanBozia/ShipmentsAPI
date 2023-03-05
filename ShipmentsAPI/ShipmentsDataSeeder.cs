@@ -55,13 +55,18 @@ namespace ShipmentsAPI
                 },
                 new Status()
                 {
-                    Name = "W przygotowaniu",
+                    Name = "Kompletacja",
                     Description = "Wysyłka jest w trakcie kompletacji"
                 },
                 new Status()
                 {
                     Name = "Gotowa",
                     Description = "Kompletacja wysyłki zakończona"
+                },
+                 new Status()
+                {
+                    Name = "Wstrzymana",
+                    Description = "Wysyłka została wstrzymana"
                 },
                 new Status()
                 {
@@ -73,9 +78,14 @@ namespace ShipmentsAPI
                     Name = "Wstrzymana QA",
                     Description = "Wysyłka wstrzymana przez dział QA"
                 },
+                new Status()
+                {
+                    Name = "Anulowana",
+                    Description = "Przesyłka została anulowana"
+                },
                  new Status()
                 {
-                    Name = "Wysłana",
+                    Name = "Zrealizowana",
                     Description = "Przesyłka została wysłana"
                 },
 

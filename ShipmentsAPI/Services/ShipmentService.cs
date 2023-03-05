@@ -21,6 +21,7 @@ namespace ShipmentsAPI.Services
         ShipmentDto GetById(Guid id);
         ShipmentBriefDto Update(Guid id, UpdateShipmentDto dto);
         void ChangeStatus(Guid shipmentId, int statusId);
+        void RemoveOrderFromShipment(Guid shipmentId, Guid purchaseOrderId);
     }
 
     public class ShipmentService : IShipmentService
@@ -172,7 +173,11 @@ namespace ShipmentsAPI.Services
         {
             var newShipment = mapper.Map<Shipment>(dto);
             newShipment.Id = Guid.NewGuid();
-            newShipment.StatusId = 1;
+            var statusIdNew = dbContext.Statuses
+                .AsNoTracking()
+                .Where(x => x.Name == "Nowa")
+                .FirstOrDefault();
+            newShipment.StatusId = statusIdNew.Id;
             dbContext.Shipments.Add(newShipment);
                 dbContext.SaveChanges();
 
@@ -269,5 +274,22 @@ namespace ShipmentsAPI.Services
             dbContext.Shipments.Update(shipment);
             dbContext.SaveChanges();
         }
+        public void RemoveOrderFromShipment(Guid shipmentId, Guid purchaseOrderId)
+        {
+            var purchaseOrder = dbContext.PurchaseOrders
+                .Include(p => p.Shipments)
+                .FirstOrDefault(x => x.Id == purchaseOrderId);
+            var shipment = dbContext.Shipments
+                .Include(p => p.PurchaseOrders)
+                .FirstOrDefault(x => x.Id == shipmentId);
+            if (shipment is null || purchaseOrder is null)
+            {
+                throw new NotFoundException($"Wysyła lub Zamówienie nie zostały znalezione.");
+            }
+            shipment.PurchaseOrders.Remove(purchaseOrder);
+            dbContext.Shipments.Update(shipment);
+            dbContext.SaveChanges();
+        }
+
     }
 }

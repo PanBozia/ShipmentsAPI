@@ -6,6 +6,8 @@ import ForwarderView from '../views/ForwarderView.vue'
 import CustomerView from '../views/CustomerView.vue'
 import PurchaseOrderView from '../views/PurchaseOrderView.vue'
 import EditShipmentView from '../views/EditShipmentView.vue'
+import EditOrderView from '../views/EditOrderView.vue'
+import EditCustomerView from '../views/EditCustomerView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,6 +47,20 @@ const router = createRouter({
         path: '/shipment/edit/:shipmentId',
         name: 'EditShipmentView',
         component: EditShipmentView,
+        props: true
+        
+    },
+    {
+        path: '/order/edit/:orderId',
+        name: 'EditOrderView',
+        component: EditOrderView,
+        props: true
+        
+    },
+    {
+        path: '/customer/edit/:customerId',
+        name: 'EditCustomerView',
+        component: EditCustomerView,
         props: true
         
     }

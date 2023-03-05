@@ -49,6 +49,9 @@
             <input type="text" v-model="containerNumberForm">
             <label class="form-labels">Nr plomby (opcjonalnie)</label>
             <input type="text" v-model="containerSealNumberForm">
+            <label class="form-labels">Komentarz (opcjonalnie)</label>
+            <textarea class="comment" name="comment" rows="4" cols="1" v-model="commentForm"></textarea>
+            
             <div id="add-btn-container">
                 <button>Zapisz</button>
             </div>
@@ -212,6 +215,12 @@ export default {
 </script>
 
 <style scoped>
+.comment{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 0.8em;
+    padding: 8px 12px;
+}
 .form-labels{
     font-size: 0.9em;
     margin: 14px 0 4px 0;
