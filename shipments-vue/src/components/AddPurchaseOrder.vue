@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { onMounted, ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import getIncoterms from '../js-components/getIncoterms.js'
 import getAllCustomers from '../js-components/getAllCustomers.js'
 import addPurchaseOrder from '../js-components/addPurchaseOrder.js'
@@ -57,7 +57,7 @@ export default {
         const {loadAllCustomers, customers, error:customersError} = getAllCustomers(url)
         const {addNewPO, error:addPoError} = addPurchaseOrder(url)
         
-        onMounted(()=>{
+        onBeforeMount (()=>{
             loadIncoterms();
             loadAllCustomers();
         })

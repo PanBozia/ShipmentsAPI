@@ -1,15 +1,15 @@
 import { ref } from 'vue'
 import axios from 'axios'
 
-const getCustomerById = (url) =>{
+const getPurchaseOrderById = (url) =>{
 
-    const customer = ref([])
+    const order = ref([])
     const error = ref(null)
     
-    const loadCustomer = async (id) => {
+    const loadOrder = async (id) => {
 
         try {
-                let resp = await axios.get(url + 'Customer/'+id, {
+                let resp = await axios.get(url + 'PurchaseOrder/'+id, {
                     headers: {
                             'Accept':'*/*'
                     }
@@ -19,7 +19,7 @@ const getCustomerById = (url) =>{
                 throw Error('Coś poszło nie tak..')
                 }
                 
-                customer.value = resp.data
+                order.value = resp.data
                 
                 
             } catch (er) {
@@ -28,7 +28,7 @@ const getCustomerById = (url) =>{
 
       }
 
-      return {loadCustomer, error, customer}
+      return {loadOrder, error, order}
 }
 
-export default getCustomerById
+export default getPurchaseOrderById

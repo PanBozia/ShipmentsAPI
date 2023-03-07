@@ -124,10 +124,16 @@ namespace ShipmentsAPI.Services
         public PurchaseOrderDto Update(Guid id, CreatePurchaseOrderDto dto)
         {
             var purchaseOrder = CheckIfOrderExist(id);
+            var anyOtherOrderWithSamePoNumber = dbContext.PurchaseOrders.Any(x => x.PONumber == dto.PONumber && x.Id != id);
+            if (anyOtherOrderWithSamePoNumber)
+            {
+                throw new BadRequestException($"Inne zamówienie z tym nr {dto.PONumber} już istnieje.");
+            }
             purchaseOrder.PONumber = dto.PONumber;
             purchaseOrder.DeliveryDate = dto.DeliveryDate;
             purchaseOrder.CustomerId = dto.CustomerId;
             purchaseOrder.IncotermId = dto.IncotermId;
+            purchaseOrder.Category = dto.Category;
 
             dbContext.PurchaseOrders.Update(purchaseOrder);
             dbContext.SaveChanges();

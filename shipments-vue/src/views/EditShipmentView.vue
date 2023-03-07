@@ -230,8 +230,7 @@ export default {
         const {removeOrder, error:removeOrderError} = removeOrderFromShipment(url)
         
         const refreshShipmentData = () =>{
-            loadStatuses()
-            loadAreas()
+            
             loadShipment(props.shipmentId).then(()=>{
                 etdForm.value = moment(shipment.value.etd).format("YYYY-MM-DD HH:mm")
                 timeOfDepartureForm.value = moment(shipment.value.timeOfDeparture).format("YYYY-MM-DD HH:mm")
@@ -242,24 +241,28 @@ export default {
                 containerTypeForm.value = shipment.value.containerType
                 containerSealNumberForm.value = shipment.value.containerSealNumber
                 commentForm.value = shipment.value.comment
-                if(shipment.value.warehouseArea != null){
-                    warehouseAreaIdForm.value = areas.value.find(x =>x.name === shipment.value.warehouseArea).id
-                }else{
-                    warehouseAreaIdForm.value = null
-                }
-                if(shipment.value.forwarder != null){
-                    forwarderIdForm.value = shipment.value.forwarder.id
-                    loadForwarder(forwarderIdForm.value).then(()=>{
-                        newForwarder.value = forwarder.value
-                    })
-                }
+                loadAreas().then(()=>{
+                    if(shipment.value.warehouseArea != null){
+                        warehouseAreaIdForm.value = areas.value.find(x =>x.name === shipment.value.warehouseArea).id
+                    }else{
+                        warehouseAreaIdForm.value = null
+                    }
+                    if(shipment.value.forwarder != null){
+                        forwarderIdForm.value = shipment.value.forwarder.id
+                        loadForwarder(forwarderIdForm.value).then(()=>{
+                            newForwarder.value = forwarder.value
+                        })
+                    }
+                })
+                loadStatuses().then(()=>{
+                    statusIdForm.value = statuses.value.find(x => x.name === shipment.value.status).id
+                })
 
-                statusIdForm.value = statuses.value.find(x => x.name === shipment.value.status).id
-                console.log(statusIdForm.value)
+
             })
         }
         // onMounted(()=>{
-        //    refreshShipmentData()
+            //    refreshShipmentData()
         // })
         onBeforeMount(()=>{
             refreshShipmentData()

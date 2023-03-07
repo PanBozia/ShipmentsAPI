@@ -77,16 +77,16 @@ h1, h2, h3, h4 {
     justify-content: space-between;
     background-color: #eee;
     color: #101E32;
-    height: 60px;
+    
     margin: 0;
     padding: 0;
 }
 #app .main-container .nav-container .navbar .navbar-line{
-    min-height: 5px;
+    height: 0.4vh;
     background: linear-gradient(#888, #eee, #eee, #222);
 }
 #app .main-container .nav-container .navbar .navbar-content{
-    height: 40px;
+    height: 4.4vh; 
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -95,8 +95,16 @@ h1, h2, h3, h4 {
 #app .main-container .nav-container .navbar .navbar-content div{
     font-family: 'Bebas Neue';
     color: #2f548b;
-    padding: 2px 20px;
-    font-size: 1.6em;
+    padding: 0.2vh 2.0vh;
+    font-size: 2.6vh;
+}
+#app .main-container .nav-container .navbar .navbar-content div a{
+    padding: 0.2vh 2.0vh;
+    
+}
+#app .main-container .nav-container .navbar .navbar-content div p{
+    padding: auto;
+    margin: auto;
 }
 a {
     color: inherit;
@@ -110,8 +118,9 @@ a:hover{
     display: flex;
     float: left;
     align-items: center;
-    margin: 6px 0px;
+    margin: 0px 0px;
     background: linear-gradient(to right, #101E32, #213D67);
+    height: 9.0vh;
     
 }
 #app .main-container .top-bar #label{
@@ -119,14 +128,15 @@ a:hover{
     background: -webkit-linear-gradient(#fff, #eee, #777);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-size: 4.4em;
+    font-size: 6.8vh;
     align-self: center;
     padding: 0;
 }
 
 #dsse-logo{
-    height: 56px;
-    margin: auto 28px;
+    height: 5.0vh;
+    margin: auto 3.0vh;
+    align-self: center;
 }
 
 #app .view-container{

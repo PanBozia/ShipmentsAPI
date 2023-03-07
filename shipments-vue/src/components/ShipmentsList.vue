@@ -1,4 +1,5 @@
 <template>
+ 
   <div>
    <div>
     <form class="shipment-search-form">
@@ -120,7 +121,7 @@
             <p>TPA</p>
             <p>ILOŚĆ</p>
             <p>KIEROWCA</p>
-            <p>UŻYTKOWNIK</p>
+            <!-- <p>UŻYTKOWNIK</p> -->
             <p>STATUS</p>
         </div>
         <div class="list-item list-header shipment-header shipment-list sort-bar">
@@ -144,7 +145,7 @@
                 <span @click="sortBy='PalletQty', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>
             </p>
             <p></p>
-            <p></p>
+            
             <p>
                 <span class="sort-icon-label">SORTUJ:</span>
                 <span @click="sortBy='Name', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
@@ -160,22 +161,22 @@
                 <div v-else v-for="order in shipment.purchaseOrders" :key="order.id" class="order-shipment">
                     <div>
                         <!-- <p>PO#: </p> -->
-                        <p>{{order.poNumber}}</p>
+                        <p>{{order.poNumber}} - {{order.customerShortName}} / {{order.customerCity[0]}}{{order.customerCity[1]}}</p>
                     </div>
                 </div>
             </div>
 
-            <p>{{moment(shipment.etd).locale("pl").format("YYYY-MM-DD")}} ETD<br>{{moment(shipment.timeOfDeparture).locale("pl").format("YYYY-MM-DD")}} ATD</p>
-            <p>{{shipment.containerType}} <br>CTNR#: {{shipment.containerNumber}}<br>SEAL#: {{shipment.containerSealNumber}}</p>
+            <p>{{moment(shipment.etd).format("YYYY-MM-DD")}} ETD<br>{{moment(shipment.timeOfDeparture).format("YYYY-MM-DD")}} ATD</p>
+            <p>TYP: {{shipment.containerType}} <br>CTNR#: {{shipment.containerNumber}}<br>SEAL#: {{shipment.containerSealNumber}}</p>
             <p>{{shipment.warehouseArea}}</p>
             <p>{{shipment.palletQty}}</p>
             <p v-if="shipment.forwarder">{{shipment.forwarder.carPlates}}<br>{{shipment.forwarder.firstName +' '+ shipment.forwarder.lastName}}<br>{{shipment.forwarder.speditor}}</p>
             <p v-else>N/A</p>
-            <p>{{shipment.createdByUser}}</p>
+            <!-- <p>{{shipment.createdByUser}}</p> -->
             <p>{{shipment.status}}</p>
             <div v-if="shipment.hasPriority"><p><span class="material-symbols-outlined">timer</span></p></div>
             <div v-else></div>
-            <button class="shipment-add-btn" @click="handleEditShipment(shipment.id)"><span class="material-symbols-outlined">edit</span>EDYTUJ</button>
+            <button class="shipment-add-btn" @click="handleEditShipment(shipment.id)">EDYTUJ</button>
         </div>
         <div class="list-footer">
             <p>Ilość wszystkich pozycji: {{totalItemsCount}}</p>
@@ -230,7 +231,7 @@ export default {
         const pageNumber = ref(1)
         const sortBy = ref('')
         const sortDirection = ref(0)
-        moment.locale('pl')
+        
         const timeOfDeparture = ref()
         const hasPriority = ref(false)
         const comment =ref('')
@@ -393,7 +394,7 @@ input{
     font-family: 'Poppins', sans-serif;
 }
 .list-item.shipment-list{
-    grid-template-columns: 8% 11% 14% 6% 6% 14% 12% 10% 2% 8% ;
+    grid-template-columns: 14% 11% 14% 6% 8% 16% 13% 2% 8% ;
     column-gap: 1%;
 }
 .list-item.shipment-list p{
@@ -408,7 +409,7 @@ input{
 .sort-icon p span{
     font-size: 0.3em;
 }
-.shipment-add-btn{
+.shipment-add-btn:hover{
     background: linear-gradient(to right, #e6ff9b,#d0ff35); 
 }
 .shipment-add-btn span{

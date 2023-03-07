@@ -53,12 +53,12 @@
             </p>
         </div>
 
-        <div class="list-item po-list" v-for="order in orders" :key=order.id>
+        <div class="list-item po-list" v-for="order in orders" :key="order.id">
             <p>{{order.category}}</p>
             <p>{{order.incotermName}}</p>
             <p>{{order.poNumber}}</p>
             <p>{{order.customerShortName}} - {{order.customerName}}</p>
-            <p>{{moment(order.deliveryDate).locale("pl").format("YYYY MMMM DD")}}</p>
+            <p>{{moment(order.deliveryDate).format("YYYY MMMM DD")}}</p>
             <div>
                 <div v-if="order.shipments.length == 0"></div>
                 <div v-else v-for="shipment in order.shipments" :key="shipment.id" class="order-shipment">
@@ -74,7 +74,7 @@
             </div>
             
             <div></div>
-            <button class="customer-add-btn">EDYTUJ</button>
+            <button class="customer-add-btn" @click="handleEdit(order.id)">EDYTUJ</button>
         </div>
         <div class="list-footer">
             <p>Ilość wszystkich pozycji: {{totalItemsCount}}</p>
@@ -112,19 +112,19 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import getPurchaseOrders from '../js-components/getPurchaseOrders.js'
 import moment from 'moment'
-import 'moment/min/locales.min'
-import 'moment/locale/pl'
+
+import {useRouter} from 'vue-router'
 export default {
     setup(){
         const url = 'https://localhost:44331/api/'
         const {loadOrders, error, orders, totalPages, itemsFrom, itemsTo, totalItemsCount} = getPurchaseOrders(url)
-
+        const router = useRouter()
         const searchPhrase = ref('')
         const pageSize = ref(10)
         const pageNumber = ref(1)
         const sortBy = ref('DeliveryDate')
         const sortDirection = ref(0)
-        moment.locale('pl')
+        
         const updateOrders = (_pageSize, _pageNumber )=>{
             pageSize.value = _pageSize
             pageNumber.value = _pageNumber
@@ -187,12 +187,19 @@ export default {
         const handlePageSize = (pSize)=>{
             updateOrders(pSize, 1)
         }
+        const handleEdit =(orderId)=>{
+             router.push({ name:'EditOrderView', 
+                           params:{ orderId:orderId } 
+                        })
+        }
+
         onUnmounted (()=>{
             searchWatcher(); //invoking the method ends watching
             sortDirectionWatcher();
             sortByWatcher();
         })
         return{ pagesRange, 
+                handleEdit,
                 handlePageSize, 
                 handleGoToPage, 
                 handleSubmit, 
@@ -259,7 +266,7 @@ input{
 .sort-icon p span{
     font-size: 0.3em;
 }
-.customer-add-btn{
+.customer-add-btn:hover{
     background: linear-gradient(to right, #e6ff9b,#d0ff35); 
 }
 .customer-add-btn span{
