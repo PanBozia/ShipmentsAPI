@@ -9,7 +9,7 @@
                 <router-link :to="{name:'home'}">
                     <img id="dsse-logo" src="@/assets/img/logoDSSE.png" alt="">
                 </router-link>
-                <div id="label">FG Shipments</div>
+                <div id="label">FG SHIPMENTS</div>
             </div>
             <div>
                 <RouterView />

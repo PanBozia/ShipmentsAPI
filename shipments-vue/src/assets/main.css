@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:ital,wght@0,100;0,200;0,500;0,700;1,100;1,200;1,500;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fjalla+One&family=Poppins:ital,wght@0,100;0,200;0,500;0,700;1,100;1,200;1,500;1,700&display=swap');
 :root {
     --back-dark: #252525;
     --back-grey:#303030;
@@ -91,6 +91,7 @@ h1, h2, h3, h4 {
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
+    padding-top: 0.4vh ;
 }
 #app .main-container .nav-container .navbar .navbar-content div{
     font-family: 'Bebas Neue';

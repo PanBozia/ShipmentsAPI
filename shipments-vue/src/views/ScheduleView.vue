@@ -186,6 +186,7 @@ export default {
     }
 .schedule-container{
     font-family: 'Bebas Neue';
+    
     font-weight: 200;
     font-size: 2.6vh;
     display: grid;

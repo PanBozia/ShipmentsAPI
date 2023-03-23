@@ -32,7 +32,6 @@
             <div v-if="createdFlag" class="success">
                 <p>Zamówienie zostało zapisane.</p>
             </div>
-            
         </form>
     </div>
 </template>

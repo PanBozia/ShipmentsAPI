@@ -8,6 +8,7 @@ import PurchaseOrderView from '../views/PurchaseOrderView.vue'
 import EditShipmentView from '../views/EditShipmentView.vue'
 import EditOrderView from '../views/EditOrderView.vue'
 import EditCustomerView from '../views/EditCustomerView.vue'
+import AddAllView from '../views/AddAllView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,6 +42,12 @@ const router = createRouter({
         path: '/shipment',
         name: 'ShipmentsView',
         component: ShipmentsView,
+        props: true
+    },
+    {
+        path: '/addall',
+        name: 'AddAllView',
+        component: AddAllView,
         props: true
     },
     {
