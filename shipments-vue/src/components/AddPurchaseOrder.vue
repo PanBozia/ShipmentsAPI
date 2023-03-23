@@ -1,28 +1,28 @@
 <template>
+    <h3>Dodaj nowe zamówienie</h3>
    <div class="add-container">
         <form class="form-add" @submit.prevent="handleSubmit">
-            <p>Dodaj nowe zamówienie</p>
-            <label>Numer zamówienia</label>
+            <label class="form-labels">Numer zamówienia</label>
             <input type="text" v-model="poNumberForm" required>
-            <label>Kategoria</label>
+            <label class="form-labels">Kategoria</label>
             <select v-model="categoryForm">
-                <option value="Sample">Sample</option>
-                <option value="Standard">Standard</option>
-                <option value="Inne">Inne</option>
+                <option class="option-para" value="Sample">Sample</option>
+                <option class="option-para" value="Standard">Standard</option>
+                <option class="option-para" value="Inne">Inne</option>
             </select>
             
-            <label>Data dostawy</label>
+            <label class="form-labels">Data dostawy</label>
             <input type="datetime-local" v-model="deliveryDateForm" required>
-            <label>Incoterms</label>
+            <label class="form-labels">Incoterms</label>
             <select v-if="!incotermsError" v-model="incotermIdForm">
-                <option v-for="inco in incoterms" :key="inco.id" :value="inco.id">{{inco.shortName}} - {{inco.name}}</option>
+                <option class="option-para" v-for="inco in incoterms" :key="inco.id" :value="inco.id">{{inco.shortName}} - {{inco.name}}</option>
             </select>
-            <label>Klient</label>
+            <label class="form-labels">Klient</label>
             <select v-if="!customersError" v-model="customerIdForm">
-                <option v-for="customer in customers" :key="customer.id" :value="customer.id">{{customer.shortName}} ({{customer.cityAddress}} - {{customer.countryAddress}})</option>
+                <option class="option-para" v-for="customer in customers" :key="customer.id" :value="customer.id">{{customer.shortName}} ({{customer.cityAddress}} - {{customer.countryAddress}})</option>
             </select>
             <div v-if="!addPoError" id="add-btn-container">
-                <button>Zapisz</button>
+                <button>Dodaj</button>
             </div>
             <div v-if="addPoError || customersError || incotermsError" class="error" >
                 <p>{{addPoError}}</p>
@@ -43,7 +43,8 @@ import getAllCustomers from '../js-components/getAllCustomers.js'
 import addPurchaseOrder from '../js-components/addPurchaseOrder.js'
 import moment from 'moment'
 export default {
-    setup(){
+    emits:['order-added-event'],
+    setup(props, context){
         const url = 'https://localhost:44331/api/'
         const poNumberForm = ref('')
         const categoryForm = ref('Standard')
@@ -83,6 +84,9 @@ export default {
                 }else{
                     setTimeout(()=>{addPoError.value = null},4000)
                 }
+                if(createdFlag.value){
+                    context.emit('order-added-event',  poData.poNumber)
+                }
             })
            
         }
@@ -108,5 +112,8 @@ export default {
 </script>
 
 <style>
+.option-para{
+    font-size: 1.1vh;
+}
 
 </style>

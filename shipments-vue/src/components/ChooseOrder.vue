@@ -1,6 +1,7 @@
 <template>
+  <h3>Aktualnie wysyłane zamówienia</h3>
   <form class="form-add" @submit.prevent="handleSearchOrders()">
-    <label class="form-labels">Zamówienia</label>
+    <label class="form-labels">Wybrane zamówienia</label>
     <div v-if="shipment.purchaseOrders != 0">
       <div
         class="chosen-one"
@@ -19,10 +20,10 @@
       <div>Brak zamówień</div>
     </div>
 
-    <label class="form-labels">Wybierz zamówienia</label>
+    <label class="form-labels">Wyszukaj i wybierz zamówienia</label>
     <div class="search-ctnr">
-      <input type="text" v-model="searchOrderPhrase" />
-      <button>Szukaj</button>
+      <input class="search-input" type="text" v-model="searchOrderPhrase" />
+      <button class="search-button">Szukaj</button>
     </div>
     <div v-if="orders != null">
       <div class="forwarder-list-ctnr">
@@ -41,6 +42,11 @@
           Znaleziono więcej wyników spełniających kryteria wyszukiwania.
         </p>
       </div>
+      <div v-if="addOrderError">
+        <p class="red">
+          {{addOrderError}}
+        </p>
+      </div>
     </div>
   </form>
 </template>
@@ -50,10 +56,10 @@ import getPurchaseOrders from '../js-components/getPurchaseOrders.js'
 import addOrderToShipment from '../js-components/addOrderToShipment.js'
 import removeOrderFromShipment from '../js-components/removeOrderFromShipment.js'
 import getShipmentById from '../js-components/getShipmentById.js'
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, ref, watch } from 'vue'
 
 export default {
-    props:['shipmentId'],
+    props:['shipmentId', 'addedPoNumber'],
     setup(props){
         const url = 'https://localhost:44331/api/'
         const {loadShipment, error:loadShipmentError, shipment} = getShipmentById(url)
@@ -61,32 +67,66 @@ export default {
         const {removeOrder, error:removeOrderError} = removeOrderFromShipment(url)
         const {loadOrders, error:loadOrdersError, orders, totalItemsCount:totalItemsCountPo} = getPurchaseOrders(url)
         const searchOrderPhrase = ref('')
-        
+        const firstOrderFromListId = ref('')
+        const hardCodedId = '37747698-82b5-4c36-b524-dc5b5327bc88'
         onBeforeMount(()=>{
-            loadShipment(props.shipmentId)
+           //loadShipment(props.shipmentId)
+            loadShipment(hardCodedId)
         })
 
         const handleSearchOrders = () =>{
             loadOrders(searchOrderPhrase.value,20,1,'DeliveryDate',1)
+            // .then(()=>{
+            //     if(orders.value){
+            //         //console.log(orders.value[0].id)
+            //         firstOrderFromListId.value = orders.value[0].id
+            //     }
+            // })
         }
         const handleAddOrder = (orderId) =>{
-            addOrder(props.shipmentId, orderId)
+            //addOrder(props.shipmentId, orderId)
+            addOrder(hardCodedId, orderId).then(()=>{
+                loadShipment(hardCodedId)
+            })
         }
         const handleRemoveOrder = (orderId) =>{
-            removeOrder(props.shipmentId, orderId)
+            //removeOrder(props.shipmentId, orderId)
+            removeOrder(hardCodedId, orderId).then(()=>{
+                loadShipment(hardCodedId)
+            })
         }
+
+        watch (orders,()=>{
+                if(orders.value){
+                    console.log(orders.value[0].id)
+                    firstOrderFromListId.value = orders.value[0].id
+                }
+        })
+
+        watch(props, ()=>{
+            if(props.addedPoNumber != null){
+                searchOrderPhrase.value = props.addedPoNumber
+                loadOrders(searchOrderPhrase.value,20,1,'DeliveryDate',1).then(()=>{
+                    addOrder(hardCodedId, firstOrderFromListId.value).then(()=>{
+                        loadShipment(hardCodedId)
+                    })
+                })
+            }
+        })
+
         return {
                 handleSearchOrders, handleAddOrder, handleRemoveOrder,
                 addOrderError, removeOrderError, loadOrdersError, loadShipmentError,
                 totalItemsCountPo,
                 shipment,
-                orders
+                orders,
+                searchOrderPhrase
         }
     }
 }
 </script>
 
-<style scoped>
+<style>
 .comment{
     font-family: 'Poppins', sans-serif;
     font-weight: 400;
@@ -103,14 +143,7 @@ export default {
     justify-content: center;
 }
 
-.form-labels{
-    font-size: 0.9em;
-    margin: 14px 0 4px 0;
-    
-}
-.form-add{
-    margin:14px 0;
-}
+
 
 .form-double-ctnr{
     display: grid;
@@ -127,9 +160,9 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-width: 280;
+    
     height: 34px;
-    margin: 0px 0px 20px 0;
+    margin: 0px 0px 10px 0;
     padding: 2px 10px;
     /* border-bottom: 1px solid #fff; */
     border: 1px solid #fff;
@@ -161,18 +194,17 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 6px;
+    margin-bottom: 16px;
 }
-.search-ctnr button{
-    height: 39px;
-    margin: 2px 0px 20px 0;
-    padding: 2px 10px;
+.search-ctnr .search-button{
+    height: 34px;
+    margin: 0px;
+    padding: 2px 6px;
 }
-.search-ctnr input{
-    /* height: 34px; */
-    min-width: 260px;
-    margin: 2px 0px 20px 0;
-    padding: 2px 10px;
+.search-ctnr .search-input{
+    height: 30px;
+    margin: 0px;
+    padding: 2px 6px;
 }
 
 .forwarder-list-ctnr{

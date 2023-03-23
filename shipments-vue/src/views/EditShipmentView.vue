@@ -30,8 +30,8 @@
 
                         <label class="form-labels">Wybierz zamówienia</label>
                         <div class="search-ctnr">
-                            <input type="text" v-model="searchOrderPhrase">
-                            <button>Szukaj</button>
+                            <input class="search-input" type="text" v-model="searchOrderPhrase">
+                            <button class="search-button" >Szukaj</button>
                         </div>
                         <div v-if="orders != null">
                                 <div class="forwarder-list-ctnr">
@@ -453,23 +453,8 @@ export default {
     font-weight: 200;
     pointer-events: none;
 }
-.search-ctnr{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 6px;
-}
-.search-ctnr button{
-    height: 39px;
-    margin: 2px 0px 20px 0;
-    padding: 2px 10px;
-}
-.search-ctnr input{
-    /* height: 34px; */
-    min-width: 260px;
-    margin: 2px 0px 20px 0;
-    padding: 2px 10px;
-}
+
+
 
 .forwarder-list-ctnr{
     min-height: 244px;
