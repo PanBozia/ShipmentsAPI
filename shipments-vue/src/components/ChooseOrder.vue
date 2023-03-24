@@ -1,5 +1,5 @@
 <template>
-  <h3>Aktualnie wysyłane zamówienia</h3>
+  <h2>Aktualnie wysyłane zamówienia</h2>
   <form class="form-add" @submit.prevent="handleSearchOrders()">
     <label class="form-labels">Wybrane zamówienia</label>
     <div v-if="shipment.purchaseOrders != 0">
@@ -127,12 +127,6 @@ export default {
 </script>
 
 <style>
-.comment{
-    font-family: 'Poppins', sans-serif;
-    font-weight: 400;
-    font-size: 0.8em;
-    padding: 8px 12px;
-}
 
 #header-edit-shipment{
     display: flex;
@@ -148,13 +142,10 @@ export default {
 .form-double-ctnr{
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    gap: 2vh;
     align-items: end;
 }
-.form-double-ctnr .double-ctnr-item{
-    display: flex;
-    flex-flow: column;
-}
+
 
 .chosen-one{
     display: flex;

@@ -1,5 +1,5 @@
 <template>
-    <h3>Dodaj nowe zamówienie</h3>
+    <h2>Dodaj nowe zamówienie</h2>
    <div class="add-container">
         <form class="form-add" @submit.prevent="handleSubmit">
             <label class="form-labels">Numer zamówienia</label>

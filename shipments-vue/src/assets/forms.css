@@ -12,14 +12,14 @@ button{
     padding: 0;
     display: flex;
     flex-direction: column;
-    max-width: 300px;
+    
     min-width: 100px;
 }
 
 .form-labels{
     font-size: 1.3vh;
     margin: 0px 0 4px 0;
-    
+    font-weight: 300 ;
 }
 
 .search-form{
@@ -28,6 +28,7 @@ button{
 }
 .form-add label{
     font-weight: 300 ;
+    margin: 0px 0 4px 0;
 }
 .form-add input{
     height: 34px;

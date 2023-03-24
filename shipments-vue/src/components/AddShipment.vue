@@ -1,69 +1,128 @@
 <template>
-            <p>Dodaj nową wysyłkę</p>
-   <div class="add-container add-shipment-ctnr">
+    <h2>Dodaj nową wysyłkę</h2>
+    
+   <div >
         <form class="form-add" @submit.prevent="handleSubmit">
-            
-            <div class="form-double-ctnr">
-                <div class="double-ctnr-item">
-                    <label class="form-labels">ETD</label>
-                    <input type="datetime-local" v-model="etdForm" required>
-                </div>
-                <div class="double-ctnr-item">
-                    <label class="form-labels"> Wysyłka priorytetowa</label>    
-                    <div class="prio-ctnr">
-                        <p><span class="material-symbols-outlined timer">timer</span> </p>
-                        <div class="userSwitch">
-                            <input type="checkbox" name="userSwitch" :checked="hasPriorityForm" class="userSwitch-cb"  :id="hasPriorityForm" v-model="hasPriorityForm">
-                            <label class="userSwitch-label" @click="handlePrio()">
-                            <div class="userSwitch-inner"></div>
-                            <div class="userSwitch-switch"></div>
-                            </label>
-                        
+            <div class="add-shipment-grid">
+                <div>
+                    <div class="double-ctnr-item">
+                        <div>
+                            <div>
+                                <label class="form-labels">ETD</label>
+                            </div>
+                            <div>
+                                <input type="datetime-local" v-model="etdForm" required>
+                            </div>
+                        </div>
+                        <div>
+                            <div>
+                                <label class="form-labels"> Wysyłka priorytetowa</label>    
+                            </div>
+                                <div class="prio-ctnr">
+                                    <p><span class="material-symbols-outlined timer">timer</span> </p>
+                                    <div class="userSwitch">
+                                        <input type="checkbox" name="userSwitch" :checked="hasPriorityForm" class="userSwitch-cb"  :id="hasPriorityForm" v-model="hasPriorityForm">
+                                        <label class="userSwitch-label" @click="handlePrio()">
+                                        <div class="userSwitch-inner"></div>
+                                        <div class="userSwitch-switch"></div>
+                                        </label>
+                                    
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div>
+                            <label class="form-labels">Ilość palet: {{palletQtyForm}}</label>
+                        </div>
+                        <div>
+                            <input type="range" step="1" name="vol" min="0" max="100" v-model="palletQtyForm">
+                        </div>
+                        <div class="form-double-ctnr">
+                            <div >
+                                <div>
+                                    <div>
+                                        <label class="form-labels">Lokacja</label>
+                                    </div>
+                                    <div>
+                                        <select v-if="!areasError" v-model="warehouseAreaIdForm">
+                                            <option :value="area.id" v-for="area in areas" :key="area.id">
+                                                {{area.name}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div>
+                                <div>
+                                    <div>
+                                        <label class="form-labels">Typ kontenera</label>
+                                    </div>
+                                    <div>
+                                        <select v-model="containerTypeForm">
+                                            <option value="N/A">N/A</option>
+                                            <option value="20ft">20ft</option>
+                                            <option value="40ft">40ft</option>
+                                            <option value="40ft">40ft HQ</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <label class="form-labels">Ilość palet: {{palletQtyForm}}</label>
-            <input type="range" step="1" name="vol" min="0" max="100" v-model="palletQtyForm">
-            <div class="form-double-ctnr">
-                <div class="double-ctnr-item">
-                    <label class="form-labels">Obszar magazynowy</label>
-                    <select v-if="!areasError" v-model="warehouseAreaIdForm">
-                        <option :value="area.id" v-for="area in areas" :key="area.id">
-                            {{area.name}}
-                        </option>
-                    </select>
+                
+                <div>
+                    <div>
+                        <div class="form-double-ctnr">
+                            <div>
+                                <div>
+                                    <label class="form-labels">Nr kontenera</label>
+                                </div>
+                                <div>
+                                    <input type="text" v-model="containerNumberForm">
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    <label class="form-labels">Nr plomby</label>
+                                </div>
+                                <div>
+                                    <input type="text" v-model="containerSealNumberForm">
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div>
+                                <label class="form-labels">Komentarz</label>
+                            </div>
+                            <div class="comment-ctnr">
+                                <textarea class="comment" name="comment" rows="4" cols="1" v-model="commentForm"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+
                 </div>
-                <div class="double-ctnr-item">
-                    <label class="form-labels">Typ kontenera</label>
-                    <select v-model="containerTypeForm">
-                        <option value="N/A">N/A</option>
-                        <option value="20ft">20ft</option>
-                        <option value="40ft">40ft</option>
-                        <option value="40ft">40ft HQ</option>
-                    </select>
-                </div>
+
+
             </div>
-            <label class="form-labels">Nr kontenera (opcjonalnie)</label>
-            <input type="text" v-model="containerNumberForm">
-            <label class="form-labels">Nr plomby (opcjonalnie)</label>
-            <input type="text" v-model="containerSealNumberForm">
-            <label class="form-labels">Komentarz (opcjonalnie)</label>
-            <textarea class="comment" name="comment" rows="4" cols="1" v-model="commentForm"></textarea>
-            
             <div id="add-btn-container">
                 <button>Zapisz</button>
             </div>
-            <div v-if="addShipmentError || forwardersError" class="error" >
+            <div v-if="addShipmentError" class="error" >
                 <p>{{addShipmentError}}</p>
-                <p>{{forwardersError}}</p>
             </div>
             <div v-if="createdFlag" class="success">
                 <p>Dane wysyłki zostały zapisane.</p>
             </div>
-            
+            <div style="border-bottom: solid 1px #fff; margin: 40px 0"></div>
         </form>
+    </div>
+<!--         
         <form class="form-add" @submit.prevent="handleSearchForwarder()">
             <label class="form-labels">Aktualny kierowca</label>
             <div class="chosen-one" v-if="newForwarder">
@@ -101,8 +160,7 @@
                         <p class="red">Znaleziono więcej wyników spełniających kryteria wyszukiwania.</p>
                     </div>
             </div>
-        </form>
-    </div>
+        </form> -->
 </template>
 
 <script>
@@ -215,161 +273,43 @@ export default {
 </script>
 
 <style scoped>
+input[type="range" ]{
+    width: 100%;
+    padding: 0;
+}
+input[type="text" ]{
+    width: 100%;
+    padding: 0;
+}
+select{
+    width: 100%;
+    padding:0 0px;
+}
+.add-shipment-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5vh;
+    
+}
+.double-ctnr-item{
+    display: grid;
+    grid-template-columns: 1fr 1fr ;
+    gap: 3vh;
+    justify-self: stretch;
+}
+.form-add{
+    max-width: none;
+}
+.comment-ctnr{
+    display: grid;
+}
 .comment{
+    height: 100%;
     font-family: 'Poppins', sans-serif;
     font-weight: 400;
     font-size: 0.8em;
-    padding: 8px 12px;
-}
-.form-labels{
-    font-size: 0.9em;
-    margin: 14px 0 4px 0;
-    
-}
-.form-add{
-    margin:14px 0;
-}
-
-.form-double-ctnr{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    align-items: end;
-}
-.form-double-ctnr .double-ctnr-item{
-    display: flex;
-    flex-flow: column;
-}
-
-.chosen-one{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-width: 280;
-    height: 34px;
-    margin: 0px 0px 20px 0;
-    padding: 2px 10px;
-    /* border-bottom: 1px solid #fff; */
-    border: 1px solid #fff;
-    font-size: 0.8em;
-    background: #1f3659;
+    padding: 8px 8px;
     border-radius: 4px;
-}
-.chosen-one .remove-btn{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 16px;
-    width: 16px;
-    background-color: #e14c27;
-    border-radius: 50%;
-    cursor: pointer;
-}
-.chosen-one .remove-btn:hover{
-    transform: scale(1.4);
-    transition: ease-in-out 100ms;
-
-}
-.chosen-one .remove-btn span{
-    font-size: 1.8em;
-    font-weight: 200;
-    pointer-events: none;
-}
-.search-ctnr{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 6px;
-}
-.search-ctnr button{
-    height: 39px;
-    margin: 2px 0px 20px 0;
-    padding: 2px 10px;
-}
-.search-ctnr input{
-    /* height: 34px; */
-    min-width: 260px;
-    margin: 2px 0px 20px 0;
-    padding: 2px 10px;
-}
-
-.forwarder-list-ctnr{
-    min-height: 244px;
-    max-height: 244px;
-    overflow-y: auto;
-    background: #fff;
-    border-radius: 4px;
-}
-.forwarder-list-ctnr #no-result{
-    padding: 10px 20px;
-    color: #666;
-    font-size: 0.9em;
-
-}
-
-.driver-line{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #fff;
-    color: #333;
-    padding:2px 10px;
-    font-size: 0.8em;
-    border-bottom: 1px solid #333;
-    cursor: pointer;
-}
-.driver-line:hover{
-    background-color: #eee;
-}
-.driver-line p{
-    padding: 0;
-    margin: 4px 0px;
-}
-.add-driver-btn{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 16px;
-    width: 16px;
-    background-color: #ffffff;
-    border-radius: 50%;
-    /* pointer-events: none; */
-}
-.add-driver-btn:hover{
-    transform: scale(1.4);
-    transition: ease-in-out 100ms;
-    background-color: #b3ff00;
-}
-
-
-.add-driver-btn span{
-    font-size: 1.8em;
-    font-weight: 300;
-}
-
-.form-add .red{
-    color: rgb(228, 67, 52);
-    font-size: 0.8em;
-    font-weight: 400;
-}
-.add-shipment-ctnr{
-    display: grid;
-    grid-template-columns: 1fr 1fr ;
-    gap: 40px;
-}
-
-.prio-ctnr{
-    display: flex;
-    margin-bottom: 10px;
-    align-content: center;
-}
-.prio-ctnr p{
-    display: flex;
-    align-items: center;
-    margin: 0 14px 0 0;
-    padding: 0;
-    
-    font-size: 1.2em;
 }
 
 .userSwitch {
