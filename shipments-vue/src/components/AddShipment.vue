@@ -110,7 +110,7 @@
 
 
             </div>
-            <div id="add-btn-container">
+            <div v-if="!createdFlag" id="add-btn-container">
                 <button>Zapisz</button>
             </div>
             <div v-if="addShipmentError" class="error" >
@@ -119,58 +119,19 @@
             <div v-if="createdFlag" class="success">
                 <p>Dane wysyłki zostały zapisane.</p>
             </div>
-            <div style="border-bottom: solid 1px #fff; margin: 40px 0"></div>
         </form>
     </div>
-<!--         
-        <form class="form-add" @submit.prevent="handleSearchForwarder()">
-            <label class="form-labels">Aktualny kierowca</label>
-            <div class="chosen-one" v-if="newForwarder">
-                <div  >{{newForwarder.lastName + ' ' + newForwarder.firstName + ' - ' + newForwarder.carPlates}}</div>
-                <div class="remove-btn" @click="handleRemoveDriver()">
-                    <span class="material-symbols-outlined">
-                        remove_circle
-                    </span>
-                </div>
-            </div>
-            <div class="chosen-one red" v-else>
-                <div >Brak kierowcy</div>
-            </div >
 
-            <label class="form-labels">Wybierz nowego kierowcę</label>
-            <div class="search-ctnr">
-                <input type="text" v-model="search_phrase">
-                <button>Szukaj</button>
-            </div>
-            <div v-if="forwarders != null">
-                    <div class="forwarder-list-ctnr">
-                        <div v-if="forwarders.length == 0">
-                            <p id="no-result">Brak wyników wyszukiwania...</p>
-                        </div>
-                        <div v-else class="driver-line" v-for="forwarder in forwarders" :key="forwarder.id">
-                            <p>{{forwarder.lastName + ' ' + forwarder.firstName + ' - ' + forwarder.carPlates}}</p>
-                            <div class="add-driver-btn" @click="handleChoise(forwarder)">
-                                <span class="material-symbols-outlined">
-                                    add_circle
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div v-if="totalItemsCount > 20">
-                        <p class="red">Znaleziono więcej wyników spełniających kryteria wyszukiwania.</p>
-                    </div>
-            </div>
-        </form> -->
 </template>
 
 <script>
 import addShipment from '../js-components/addShipment.js'
 import getAreas from '../js-components/getAreas.js'
-import getForwarders from '../js-components/getForwarders.js'
 import { onMounted, ref } from 'vue'
 import moment from 'moment'
 export default {
-    setup(){
+    emits:["new-shipment-event"],
+    setup(props,context){
         const url = 'https://localhost:44331/api/'
         const etdForm = ref(null)
         const hasPriorityForm = ref(false)
@@ -181,14 +142,13 @@ export default {
         const commentForm = ref('')
         const warehouseAreaIdForm = ref(null)
         const forwarderIdForm = ref(null)
-        const newForwarder = ref(null)
         const search_phrase = ref('')
         const createdFlag = ref(false)
 
-        const { addNewShipment, error:addShipmentError} = addShipment(url)
+        const { addNewShipment, error:addShipmentError, createdId} = addShipment(url)
         const { loadAreas, error:areasError, areas} = getAreas(url)
-        const {loadForwarders, error:forwardersError, forwarders, totalPages, itemsFrom, itemsTo, totalItemsCount} = getForwarders(url)
         onMounted(()=>{
+            createdFlag.value = false
             loadAreas()
         })
 
@@ -203,14 +163,9 @@ export default {
                 containerType : containerTypeForm.value,
                 comment : commentForm.value
                 }
-            console.log(warehouseAreaIdForm.value)
             if(warehouseAreaIdForm.value != null){
                 shipmentData['warehouseAreaId'] = warehouseAreaIdForm.value
             }
-            if(newForwarder.value != null){
-                shipmentData['forwarderId'] = newForwarder.value['id']
-            }
-  
         
         addNewShipment(shipmentData).then(()=>{
                 if(addShipmentError.value == null){
@@ -223,33 +178,18 @@ export default {
                     commentForm.value = ''
                     warehouseAreaIdForm.value = null
                     forwarderIdForm.value = null
-                    handleRemoveDriver()
                     createdFlag.value = true
-                    setTimeout(()=>{createdFlag.value = false},5000)
+                    // setTimeout(()=>{createdFlag.value = false},5000)
+                    context.emit('new-shipment-event', createdId.value)
                 }
             })
         }
         const handlePrio = ()=>{
             hasPriorityForm.value = !hasPriorityForm.value
         }
-
-        const handleSearchForwarder = ()=>{
-            loadForwarders(search_phrase.value,20,1,'',0)
-        }
-        const handleChoise = (forwarder)=>{
-            newForwarder.value = forwarder
-        }
-        const handleRemoveDriver = ()=>{
-            newForwarder.value = null
-        }
        
         return {
-            handleChoise,
-            handleRemoveDriver,
-            forwardersError, forwarders, totalPages, itemsFrom, itemsTo, totalItemsCount,
             search_phrase,
-            handleSearchForwarder,
-            newForwarder,
             handlePrio,
             handleSubmit,
             moment,

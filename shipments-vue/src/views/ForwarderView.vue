@@ -3,7 +3,7 @@
    <div class="frame">
      <div class="view-container">
         <div class="sub-page-header item-e ">
-            <p>KIEROWCY</p>
+            <p>PRZEWOŹNICY</p>
         </div>
          <div class="item-a" >
             <div class="item-container main-list-btn" @click="openListComponent">

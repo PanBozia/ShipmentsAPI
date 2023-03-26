@@ -19,7 +19,7 @@
             </div>
             <div>
                     <router-link :to="{name:'ForwarderView'}">
-                    <p>KIEROWCY</p>
+                    <p>PRZEWOŹNICY</p>
                 </router-link>
             </div>
             <div>

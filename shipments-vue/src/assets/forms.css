@@ -45,21 +45,23 @@ button{
     padding: 2px 10px;
 }
 
-.form-add button{
+.form-add button, .form-add .btn{
     display: flex;
     justify-content: center;
     align-items: center;
     background: linear-gradient(to right bottom, #42c231,#07531e);
     border: none;
     color:#fff;
-    padding: 5px 30px;
-    margin: 0px 10px;
-    cursor: pointer;
+    padding: 0px 10px;
     height: 34px;
+    margin: 0px;
+    cursor: pointer;
+    font-size: 12px;
     width: 100px;
     font-family: 'Poppins', sans-serif;
+    border-radius: 4px;   
 }
-.form-add  button:hover{
+.form-add  button:hover, .form-add .btn:hover{
     background: linear-gradient(to right bottom, #fdd700,#c58001);
 
 }

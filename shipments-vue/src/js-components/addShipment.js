@@ -25,7 +25,7 @@ const addShipment = (url) =>{
             if (resp.status <200 & resp.status > 300){
                 throw Error('Coś poszło nie tak..')
             }
-            createdId.value = resp.data.customerId
+            createdId.value = resp.data
         } catch (err) {
             error.value = err.response.data
             console.log(error.value)

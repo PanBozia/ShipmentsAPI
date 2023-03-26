@@ -1,289 +1,386 @@
 <template>
-  <h2>Aktualnie wysyłane zamówienia</h2>
-  <form class="form-add" @submit.prevent="handleSearchOrders()">
-    <label class="form-labels">Wybrane zamówienia</label>
-    <div v-if="shipment.purchaseOrders != 0">
-      <div
-        class="chosen-one"
-        v-for="po in shipment.purchaseOrders"
-        :key="po.id"
-      >
-        <div>
-          {{ po.poNumber + " - " + po.customerShortName }}
-        </div>
-        <div class="remove-btn" @click="handleRemoveOrder(po.id)">
-          <span class="material-symbols-outlined"> remove_circle </span>
-        </div>
-      </div>
-    </div>
-    <div class="chosen-one red" v-else>
-      <div>Brak zamówień</div>
-    </div>
-
-    <label class="form-labels">Wyszukaj i wybierz zamówienia</label>
-    <div class="search-ctnr">
-      <input class="search-input" type="text" v-model="searchOrderPhrase" />
-      <button class="search-button">Szukaj</button>
-    </div>
-    <div v-if="orders != null">
-      <div class="forwarder-list-ctnr">
-        <div v-if="orders.length == 0">
-          <p id="no-result">Brak wyników wyszukiwania...</p>
-        </div>
-        <div v-else class="driver-line" v-for="order in orders" :key="order.id">
-          <p>{{ order.poNumber + " - " + order.customerShortName }}</p>
-          <div class="add-driver-btn" @click="handleAddOrder(order.id)">
-            <span class="material-symbols-outlined"> add_circle </span>
+  <div class="choose-order-container">
+    <div>
+      <h2>Aktualnie wysyłane zamówienia</h2>
+      <form class="form-add" @submit.prevent="handleSearchOrders()">
+        <label class="form-labels">Wybrane zamówienia</label>
+        <div v-if="ordersList.length != 0">
+          <div class="chosen-one" v-for="po in ordersList" :key="po.id">
+            <div>
+              {{ po.poNumber + " - " + po.customerShortName }}
+            </div>
+            <div class="remove-btn" @click="handleRemoveOrder(po)">
+              <span class="material-symbols-outlined"> remove_circle </span>
+            </div>
           </div>
         </div>
-      </div>
-      <div v-if="totalItemsCountPo > 20">
-        <p class="red">
-          Znaleziono więcej wyników spełniających kryteria wyszukiwania.
-        </p>
-      </div>
-      <div v-if="addOrderError">
-        <p class="red">
-          {{addOrderError}}
-        </p>
+        <div class="chosen-one red" v-else>
+          <div>Brak zamówień</div>
+        </div>
+
+        <label class="form-labels">Wyszukaj i wybierz zamówienia</label>
+        <div class="search-ctnr">
+          <input class="search-input" type="text" v-model="searchOrderPhrase" />
+          <div class="search-button btn" @click="handleSearchOrders">
+            Szukaj
+          </div>
+        </div>
+        <div v-if="orders != null">
+          <div class="forwarder-list-ctnr">
+            <div v-if="orders.length == 0">
+              <p id="no-result">Brak wyników wyszukiwania...</p>
+            </div>
+            <div
+              v-else
+              class="driver-line"
+              v-for="order in orders"
+              :key="order.id"
+            >
+              <p>{{ order.poNumber + " - " + order.customerShortName }}</p>
+              <div class="add-driver-btn" @click="handleAddOrder(order)">
+                <span class="material-symbols-outlined"> add_circle </span>
+              </div>
+            </div>
+          </div>
+          <div v-if="totalItemsCountPo > 20">
+            <p class="red">
+              Znaleziono więcej wyników spełniających kryteria wyszukiwania.
+            </p>
+          </div>
+        </div>
+        <div>
+          
+        </div>
+      </form>
+    </div>
+
+    <div>
+      <h2>Dodaj nowe zamówienie</h2>
+      <div class="add-container">
+        <form @submit.prevent="" class="form-add">
+          <label class="form-labels">Numer zamówienia</label>
+          <input type="text" v-model="poNumberForm" required />
+          <label class="form-labels">Kategoria</label>
+          <select v-model="categoryForm">
+            <option class="option-para" value="Sample">Sample</option>
+            <option class="option-para" value="Standard">Standard</option>
+            <option class="option-para" value="Inne">Inne</option>
+          </select>
+
+          <label class="form-labels">Data dostawy</label>
+          <input type="datetime-local" v-model="deliveryDateForm" required />
+          <label class="form-labels">Incoterms</label>
+          <select v-if="!incotermsError" v-model="incotermIdForm">
+            <option
+              class="option-para"
+              v-for="inco in incoterms"
+              :key="inco.id"
+              :value="inco.id"
+            >
+              {{ inco.shortName }} - {{ inco.name }}
+            </option>
+          </select>
+          <label class="form-labels">Klient</label>
+          <select v-if="!customersError" v-model="customerIdForm">
+            <option
+              class="option-para"
+              v-for="customer in customers"
+              :key="customer.id"
+              :value="customer.id"
+            >
+              {{ customer.shortName }} ({{ customer.cityAddress }} -
+              {{ customer.countryAddress }})
+            </option>
+          </select>
+          <div v-if="!addPoError" id="add-btn-container">
+            <div class="btn" @click="handleCreatePo">Dodaj</div>
+          </div>
+          <div
+            v-if="addPoError || customersError || incotermsError"
+            class="error"
+          >
+            <p>{{ addPoError }}</p>
+            <p>{{ customersError }}</p>
+            <p>{{ incotermsError }}</p>
+          </div>
+          <div v-if="createdFlag" class="success">
+            <p>Zamówienie zostało zapisane.</p>
+          </div>
+        </form>
       </div>
     </div>
-  </form>
+    <button class="btn" @click="handleSubmitOrdersList()">
+        Zapisz
+    </button>
+  </div>
 </template>
 
 <script>
-import getPurchaseOrders from '../js-components/getPurchaseOrders.js'
-import addOrderToShipment from '../js-components/addOrderToShipment.js'
-import removeOrderFromShipment from '../js-components/removeOrderFromShipment.js'
-import getShipmentById from '../js-components/getShipmentById.js'
-import { onBeforeMount, ref, watch } from 'vue'
-
+import getPurchaseOrders from "../js-components/getPurchaseOrders.js";
+import { onBeforeMount, ref } from "vue";
+import getIncoterms from '../js-components/getIncoterms.js'
+import getAllCustomers from '../js-components/getAllCustomers.js'
+import addPurchaseOrder from '../js-components/addPurchaseOrder.js'
+import getPurchaseOrderById from '../js-components/getPurchaseOrderById.js'
+import moment from 'moment'
 export default {
-    props:['shipmentId', 'addedPoNumber'],
-    setup(props){
-        const url = 'https://localhost:44331/api/'
-        const {loadShipment, error:loadShipmentError, shipment} = getShipmentById(url)
-        const {addOrder, error:addOrderError} = addOrderToShipment(url)
-        const {removeOrder, error:removeOrderError} = removeOrderFromShipment(url)
-        const {loadOrders, error:loadOrdersError, orders, totalItemsCount:totalItemsCountPo} = getPurchaseOrders(url)
-        const searchOrderPhrase = ref('')
-        const firstOrderFromListId = ref('')
-        const hardCodedId = '37747698-82b5-4c36-b524-dc5b5327bc88'
-        onBeforeMount(()=>{
-           //loadShipment(props.shipmentId)
-            loadShipment(hardCodedId)
+    emits:['add-orders-event'],
+    setup(props, context) {
+    const url = "https://localhost:44331/api/";
+    const { loadOrders, error: loadOrdersError, orders, totalItemsCount: totalItemsCountPo } = getPurchaseOrders(url);
+    const searchOrderPhrase = ref("");
+    const ordersList = ref([]);
+
+    const handleSearchOrders = () => {
+      loadOrders(searchOrderPhrase.value, 20, 1, "DeliveryDate", 1);
+    };
+    const handleAddOrder = (order) => {
+      ordersList.value.push(order);
+    };
+    const handleRemoveOrder = (order) => {
+      ordersList.value = ordersList.value.filter((po) => po != order);
+    };
+
+    const handleSubmitOrdersList = () => {
+      context.emit("add-orders-event", ordersList.value);
+    };
+
+    //add order
+        const {loadOrder, order:newOrder} = getPurchaseOrderById(url)
+        const poNumberForm = ref('')
+        const categoryForm = ref('Standard')
+        const deliveryDateForm = ref()
+        const incotermIdForm = ref(1)
+        const customerIdForm = ref()
+        const createdFlag = ref(false)
+
+        const {loadIncoterms, incoterms, error:incotermsError} = getIncoterms(url)
+        const {loadAllCustomers, customers, error:customersError} = getAllCustomers(url)
+        const {addNewPO, error:addPoError, createdId} = addPurchaseOrder(url)
+        
+        onBeforeMount (()=>{
+            loadIncoterms();
+            loadAllCustomers();
         })
 
-        const handleSearchOrders = () =>{
-            loadOrders(searchOrderPhrase.value,20,1,'DeliveryDate',1)
-            // .then(()=>{
-            //     if(orders.value){
-            //         //console.log(orders.value[0].id)
-            //         firstOrderFromListId.value = orders.value[0].id
-            //     }
-            // })
-        }
-        const handleAddOrder = (orderId) =>{
-            //addOrder(props.shipmentId, orderId)
-            addOrder(hardCodedId, orderId).then(()=>{
-                loadShipment(hardCodedId)
-            })
-        }
-        const handleRemoveOrder = (orderId) =>{
-            //removeOrder(props.shipmentId, orderId)
-            removeOrder(hardCodedId, orderId).then(()=>{
-                loadShipment(hardCodedId)
-            })
-        }
-
-        watch (orders,()=>{
-                if(orders.value){
-                    console.log(orders.value[0].id)
-                    firstOrderFromListId.value = orders.value[0].id
-                }
-        })
-
-        watch(props, ()=>{
-            if(props.addedPoNumber != null){
-                searchOrderPhrase.value = props.addedPoNumber
-                loadOrders(searchOrderPhrase.value,20,1,'DeliveryDate',1).then(()=>{
-                    addOrder(hardCodedId, firstOrderFromListId.value).then(()=>{
-                        loadShipment(hardCodedId)
-                    })
-                })
+        const handleCreatePo = ()=>{
+            const poData = {
+                poNumber : poNumberForm.value,
+                category : categoryForm.value,
+                deliveryDate : deliveryDateForm.value,
+                incotermId : incotermIdForm.value,
+                customerId : customerIdForm.value
             }
-        })
+            addNewPO(poData).then(()=>{
+                if(addPoError.value == null){
+                    poData['id'] = createdId.value
+                    
+                    // loadOrders(searchOrderPhrase.value, 20, 1, "DeliveryDate", 1)
+                    loadOrder(createdId.value).then(()=>{
+                        ordersList.value.push(newOrder.value)
 
-        return {
-                handleSearchOrders, handleAddOrder, handleRemoveOrder,
-                addOrderError, removeOrderError, loadOrdersError, loadShipmentError,
-                totalItemsCountPo,
-                shipment,
-                orders,
-                searchOrderPhrase
+                        poNumberForm.value = ''
+                        deliveryDateForm.value = null
+                        customerIdForm.value = null
+                        categoryForm.value = 'Standard'
+                        incotermIdForm.value = 1
+                        addPoError.value = ''
+                        customersError.value = ''
+                        createdFlag.value = true
+                        setTimeout(()=>{createdFlag.value = false},5000)
+                    })
+                }else{
+                    setTimeout(()=>{addPoError.value = null},4000)
+                }
+            })
         }
+
+    return {
+      handleSearchOrders,
+      handleAddOrder,
+      handleRemoveOrder,
+      loadOrdersError,
+      totalItemsCountPo,
+      orders,
+      searchOrderPhrase,
+      ordersList,
+      handleSubmitOrdersList,
+
+        handleCreatePo,
+        moment,
+        poNumberForm,
+        categoryForm,
+        deliveryDateForm,
+        incotermIdForm,
+        customerIdForm,
+        incoterms,
+        incotermsError,
+        customers,
+        customersError,
+        addPoError,
+        createdFlag
     }
+  }
 }
+
 </script>
 
 <style>
-
-#header-edit-shipment{
-    display: flex;
-    justify-content: center;
+.choose-order-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5vh;
 }
-.edit-shipment-container{
-    display: flex;
-    justify-content: center;
+#header-edit-shipment {
+  display: flex;
+  justify-content: center;
 }
-
-
-
-.form-double-ctnr{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2vh;
-    align-items: end;
+.edit-shipment-container {
+  display: flex;
+  justify-content: center;
 }
 
-
-.chosen-one{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    
-    height: 34px;
-    margin: 0px 0px 10px 0;
-    padding: 2px 10px;
-    /* border-bottom: 1px solid #fff; */
-    border: 1px solid #fff;
-    font-size: 0.8em;
-    background: #1f3659;
-    border-radius: 4px;
-}
-.chosen-one .remove-btn{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 16px;
-    width: 16px;
-    background-color: #e14c27;
-    border-radius: 50%;
-    cursor: pointer;
-}
-.chosen-one .remove-btn:hover{
-    transform: scale(1.4);
-    transition: ease-in-out 100ms;
-
-}
-.chosen-one .remove-btn span{
-    font-size: 1.8em;
-    font-weight: 200;
-    pointer-events: none;
-}
-.search-ctnr{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-}
-.search-ctnr .search-button{
-    height: 34px;
-    margin: 0px;
-    padding: 2px 6px;
-}
-.search-ctnr .search-input{
-    height: 30px;
-    margin: 0px;
-    padding: 2px 6px;
+.form-double-ctnr {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2vh;
+  align-items: end;
 }
 
-.forwarder-list-ctnr{
-    min-height: 244px;
-    max-height: 244px;
-    overflow-y: auto;
-    background: #fff;
-    border-radius: 4px;
-}
-.forwarder-list-ctnr #no-result{
-    padding: 10px 20px;
-    color: #666;
-    font-size: 0.9em;
+.chosen-one {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
+  height: 34px;
+  margin: 0px 0px 10px 0;
+  padding: 2px 10px;
+  /* border-bottom: 1px solid #fff; */
+  border: 1px solid #fff;
+  font-size: 0.8em;
+  background: #1f3659;
+  border-radius: 4px;
 }
-
-.driver-line{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #fff;
-    color: #333;
-    padding:2px 10px;
-    font-size: 0.8em;
-    border-bottom: 1px solid #333;
-    cursor: pointer;
+.chosen-one .remove-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 16px;
+  width: 16px;
+  background-color: #e14c27;
+  border-radius: 50%;
+  cursor: pointer;
 }
-.driver-line:hover{
-    background-color: #eee;
+.chosen-one .remove-btn:hover {
+  transform: scale(1.4);
+  transition: ease-in-out 100ms;
 }
-.driver-line p{
-    padding: 0;
-    margin: 4px 0px;
+.chosen-one .remove-btn span {
+  font-size: 1.8em;
+  font-weight: 200;
+  pointer-events: none;
 }
-.add-driver-btn{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 16px;
-    width: 16px;
-    background-color: #ffffff;
-    border-radius: 50%;
-    /* pointer-events: none; */
+.search-ctnr {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
 }
-.add-driver-btn:hover{
-    transform: scale(1.4);
-    transition: ease-in-out 100ms;
-    background-color: #b3ff00;
+.search-ctnr .search-button {
+  margin: 0px;
 }
-
-
-.add-driver-btn span{
-    font-size: 1.8em;
-    font-weight: 300;
+.search-ctnr .search-input {
+  height: 30px;
+  margin-right: 2vh;
+  padding: 2px 6px;
+  width: 100%;
+  margin-bottom: 0;
 }
 
-.form-add .red{
-    color: rgb(228, 67, 52);
-    font-size: 0.8em;
-    font-weight: 400;
+.forwarder-list-ctnr {
+  min-height: 244px;
+  max-height: 244px;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 4px;
 }
-.add-shipment-ctnr{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 40px;
+.forwarder-list-ctnr #no-result {
+  padding: 10px 20px;
+  color: #666;
+  font-size: 0.9em;
 }
 
-.prio-ctnr{
-    display: flex;
-    margin-bottom: 10px;
-    align-content: center;
+.driver-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+  color: #333;
+  padding: 2px 10px;
+  font-size: 0.8em;
+  border-bottom: 1px solid #333;
+  cursor: pointer;
 }
-.prio-ctnr p{
-    display: flex;
-    align-items: center;
-    margin: 0 14px 0 0;
-    padding: 0;
-    
-    font-size: 1.2em;
+.driver-line:hover {
+  background-color: #eee;
+}
+.driver-line p {
+  padding: 0;
+  margin: 4px 0px;
+}
+.add-driver-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 16px;
+  width: 16px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  /* pointer-events: none; */
+}
+.add-driver-btn:hover {
+  transform: scale(1.4);
+  transition: ease-in-out 100ms;
+  background-color: #b3ff00;
+}
+
+.add-driver-btn span {
+  font-size: 1.8em;
+  font-weight: 300;
+}
+
+.form-add .red {
+  color: rgb(228, 67, 52);
+  font-size: 0.8em;
+  font-weight: 400;
+}
+.add-shipment-ctnr {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 40px;
+}
+
+.prio-ctnr {
+  display: flex;
+  margin-bottom: 10px;
+  align-content: center;
+}
+.prio-ctnr p {
+  display: flex;
+  align-items: center;
+  margin: 0 14px 0 0;
+  padding: 0;
+
+  font-size: 1.2em;
 }
 
 .userSwitch {
-    margin: 2px 0;
-    position: relative;
-    width: 94px;
-    align-self: center;
+  margin: 2px 0;
+  position: relative;
+  width: 94px;
+  align-self: center;
 }
-.userSwitch input[type=checkbox] {
+.userSwitch input[type="checkbox"] {
   display: none;
 }
 .userSwitch-label {
@@ -297,9 +394,9 @@ export default {
   width: 200%;
   margin-left: -100%;
   transition: margin 0.2s ease-in 0s;
-  
 }
-.userSwitch-inner:before, .userSwitch-inner:after {
+.userSwitch-inner:before,
+.userSwitch-inner:after {
   float: left;
   width: 50%;
   height: 24px;
@@ -310,33 +407,31 @@ export default {
   /* font-family: Trebuchet, Arial, sans-serif; */
   /* font-weight: bold; */
   box-sizing: border-box;
-  
 }
 .userSwitch-inner:before {
   content: "PRIO";
   padding-left: 10px;
   background-color: #fff;
   color: #000000;
-  box-shadow: inset 2px 2px 4px rgba(0,0,0,0.4);
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.4);
 }
 .switches .flipswitch-inner:after {
-    content: "";
-
+  content: "";
 }
 .userSwitch-inner:after {
-    content: "STANDARD";
-    padding-right: 8px;
-    background-color: #003e6a;
-    color: #E8E8E8;
-    text-align: right;
-    box-shadow: inset 2px 2px 4px rgba(0,0,0,0.4);
+  content: "STANDARD";
+  padding-right: 8px;
+  background-color: #003e6a;
+  color: #e8e8e8;
+  text-align: right;
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.4);
 }
 .userSwitch-switch {
   width: 24px;
   height: 24px;
   margin: 0px;
-  background: #F5B727;
-  box-shadow: 1px 1px 3px rgba(4,4,4,0.4), -1px -1px 3px rgba(4,4,4,0.4);
+  background: #f5b727;
+  box-shadow: 1px 1px 3px rgba(4, 4, 4, 0.4), -1px -1px 3px rgba(4, 4, 4, 0.4);
   border-radius: 50px;
   position: absolute;
   top: 0;
