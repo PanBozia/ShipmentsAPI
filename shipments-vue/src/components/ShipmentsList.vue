@@ -153,7 +153,7 @@
             </p>
         </div>
         <!-- :class="{'prio-shipment' : shipment.hasPriority}" -->
-        <div class="list-item shipment-list "  v-for="shipment in shipments" :key=shipment.id >
+        <div class="list-item shipment-list "  v-for="shipment in shipments" :key="shipment.id"  >
             <div>
                 <div v-if="shipment.purchaseOrders.length == 0">
                     <p>N/A</p>
