@@ -26,7 +26,7 @@
     <!-- 2nd column -->
     <div v-if="chosenShipment != null" class="forward-arrow done">
         <span class="material-symbols-outlined">
-            check_circle
+            task_alt
         </span>
     </div>
     <div v-else class="forward-arrow undone">
@@ -61,18 +61,18 @@
         </div>
     </div>
     <!-- 4th column -->
-     <div v-if="chosenOrders != null" class="forward-arrow done">
+     <div v-if="chosenOrders != null" class="forward-arrow done seven-item">
         <span class="material-symbols-outlined">
-            check_circle
+            task_alt
         </span>
     </div>
-    <div v-else class="forward-arrow undone">
+    <div v-else class="forward-arrow undone seven-item">
         <span class="material-symbols-outlined">
             unpublished
         </span>
     </div>
     <!-- 5th column -->
-    <div>
+    <div class="seven-item">
         <div>
             <div class="chosen-summary">
                 
@@ -100,22 +100,90 @@
         </div>
     </div>
     <!-- 6th column -->
-     <div v-if="chosenForwarder != null" class="forward-arrow done">
-        <span class="material-symbols-outlined">
-            check_circle
+     <div v-if="chosenForwarder != null" class="forward-arrow done seven-item">
+       <span class="material-symbols-outlined">
+            task_alt
         </span>
     </div>
-    <div v-else class="forward-arrow undone">
+    <div v-else class="forward-arrow undone seven-item">
         <span class="material-symbols-outlined">
             unpublished
         </span>
     </div>
     <!-- 7th column -->
-    <div class="save-all-btn" v-if="chosenShipment != null" @click="handleSaveShipmentData">
-            Zapisz wysyłkę
+    <div v-if="createdId ==''" class="button-ctnr">
+        <div class="save-all-btn seven-item" v-if="chosenShipment != null && chosenOrders != null" @click="handleSaveShipmentData">
+                Zapisz wysyłkę
+        </div>
+
+    </div>
+    <div v-else class="button-ctnr">
+        <div >
+            <p>
+                Dane wysyłki zostały zapisane.
+
+            </p>
+            
+        </div>
     </div>
   </div>
+    
+    <!-- <div class="row-container-seven bar">
+        <div class="uncompleatedbar" :class="{compleatedbar:chosenShipment != null}">
+            <span class="material-symbols-outlined lifted">
+                forklift
+            </span>
+        </div>
+        <div class="uncompleatedbar" :class="{compleatedbar:chosenShipment != null}"></div>
+        <div class="uncompleatedbar" :class="{compleatedbar:chosenOrders != null}"></div>
+        <div class="uncompleatedbar" :class="{compleatedbar:chosenOrders != null}"></div>
+        <div class="uncompleatedbar" :class="{compleatedbar:chosenForwarder != null}"></div>
+        <div class="uncompleatedbar" :class="{compleatedbar:chosenForwarder != null}"></div>
+        <div class="uncompleatedbar" :class="{compleatedbar:createdId != ''}"></div>
+    </div> -->
+    <div class="row-container-seven bar">
+        <div v-if="chosenShipment == null" class="uncompleatedbar">
+            <span class="material-symbols-outlined lifted">
+                forklift
+            </span>
+        </div>
+        <div v-else class="compleatedbar"></div>
+        <div v-if="chosenShipment == null" class="uncompleatedbar"></div>
+        <div v-else class="compleatedbar endline">
+            <span v-if="chosenShipment != null && chosenOrders == null & chosenForwarder == null " class="material-symbols-outlined lifted">
+                forklift
+            </span>
+        </div>
 
+
+        <div v-if="chosenOrders == null" class="uncompleatedbar">
+        </div>
+        <div v-else class="compleatedbar"></div>
+        <div v-if="chosenOrders == null" class="uncompleatedbar"></div>
+        <div v-else class="compleatedbar endline">
+            <span v-if="chosenShipment != null && chosenOrders != null && chosenForwarder == null " class="material-symbols-outlined lifted">
+                forklift
+            </span>
+        </div>
+
+
+        <div v-if="chosenForwarder == null" class="uncompleatedbar">
+        </div>
+        <div v-else class="compleatedbar"></div>
+        <div v-if="chosenForwarder == null" class="uncompleatedbar"></div>
+        <div v-else class="compleatedbar endline">
+            <span v-if="chosenShipment != null && chosenOrders != null && chosenForwarder !== null && createdId == '' " class="material-symbols-outlined lifted">
+                forklift
+            </span>
+        </div>
+        
+        <div v-if="createdId == ''" class="uncompleatedbar"></div>
+        <div v-else class="compleatedbar endline">
+            <span v-if="chosenShipment != null && chosenOrders != null && chosenForwarder !== null && createdId != '' " class="material-symbols-outlined lifted endline">
+                local_shipping
+            </span>
+        </div>
+    </div>
 
   <div class="row-container-one" v-if="chosenShipment == null">
     <div class="description">
@@ -170,9 +238,7 @@
         <div v-if="!createdId">
             <p>Dane zostały wprowadzone. Zapisz wysyłkę lub wróć do edycji.</p>
         </div>
-        <div v-else class="done">
-            <p>Wysyłka została zapisana</p>
-        </div>
+        
         <div v-if="addShipmentError">
             {{addShipmentError}}
         </div>
@@ -262,6 +328,48 @@ export default {
 </script>
 
 <style>
+.lifted{
+    /* transform: translateY(-1.5vh); */
+    
+    color: #fff;
+    padding: 0.6vh 0.6vh;
+    border-radius: 50%;
+    border: solid 0.2vh #fff;
+    background-color: #14224f;
+    box-shadow: 0 0 1vh rgba(0, 0, 0, 0.8);
+    transition: 500ms ease-in;
+}
+.lifted.material-symbols-outlined{
+    font-size: 2vh;
+}
+.endline{
+    text-align: right;
+}
+.uncompleatedbar{
+    min-height: 0.8vh;
+    max-height: 0.8vh;
+    margin: 0;
+    background: #364b6c;
+    transition: 500ms ease-in;
+    /* justify-self: stretch;     */
+    overflow: visible;
+     display: flex;
+    align-items: center;
+}
+.compleatedbar{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-height: 0.8vh;
+    max-height: 0.8vh;
+    margin: 0;
+    background: #42c231;
+    transition: 500ms ease-in;
+    /* justify-self: stretch; */
+}
+.color-done{
+    background-color: #42c231;
+}
 .forward-arrow{
     display: flex;
     justify-content: center;
@@ -274,14 +382,19 @@ export default {
 .undone{
     color: #364b6c;
 }
+.button-ctnr{
+    display:flex;
+    justify-content: center;
+    align-self: center;
+}
 .save-all-btn{
     display: flex;
     box-shadow: 0.2vh 0.2vh 0.8vh rgba(0,0,0,0.5);
     border-radius: 0.8vh;
     justify-content: center;
     align-items: center;
-    padding: 1.4vh 3vh;
-    margin: auto;
+    padding: 1.2vh 3vh;
+    /* margin: auto; */
     background: linear-gradient(to right bottom, #42c231,#07531e);
     align-self: center;
     cursor: pointer;
@@ -296,7 +409,7 @@ export default {
     padding:0 6vh 0 6vh;
 }
 .chosen-summary p{
-    font-size: 1.4vh;
+    font-size: 1.2vh;
     font-weight: 300;
     padding: 0;
     margin:0;
@@ -319,12 +432,12 @@ export default {
 }
 
 .row-container-one {
-  display: grid;
+    display: grid;
   grid-template-columns: 1fr 42.5vw 1fr;
   gap: 5vh;
     /* max-width: 50vw; */
     /* margin: auto; */
-    border-bottom: solid 1px #fff; 
+    
     margin: 40px 0;
     padding-bottom: 40px;
 }
@@ -334,7 +447,7 @@ export default {
   gap: 5vh;
   /* max-width: 100vw; */
   /* margin: auto; */
-  border-bottom: solid 1px #fff; 
+  
     margin: 40px 0;
     padding-bottom: 40px;
 }
@@ -343,7 +456,7 @@ export default {
     grid-template-columns: 30vh 30vh 30vh;
     /* max-width: 50vw; */
     /* margin: auto; */
-    border-bottom: solid 1px #fff; 
+    
     margin: 25px 0;
     padding-bottom: 25px;
     min-height: 12vh;
@@ -352,15 +465,26 @@ export default {
 }
 .row-container-seven{
     display: grid;
-    grid-template-columns: 36vh 6vh 38vh 6vh 30vh 6vh 30vh;
+    justify-content: stretch;
+    justify-items: stretch;
+    grid-template-columns: 34vh 7vh 34vh 7vh 34vh 7vh auto;
     /* max-width: 50vw; */
     /* margin: auto; */
-    border-bottom: solid 1px #fff; 
+    /* border-bottom: solid 1px #fff;  */
     margin: 0;
-    padding: 2vh 0;
-    min-height: 14vh;
+    padding: 2vh 0vh;
+    min-height: 16vh;
     /* position: relative; */
-     background: linear-gradient(to right bottom, #272d36,#13182c);
+    background: linear-gradient(to right bottom, #272d36,#13182c);
     
 }
+.seven-item{
+    margin: 0 2vh;
+}
+.bar{
+    margin:0;
+    min-height: 0;
+    padding: 0;
+
+    }
 </style>
