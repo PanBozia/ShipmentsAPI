@@ -1,11 +1,6 @@
 input, select{
     color: #222;
-    border-radius: 4px;    
 }
-button{
-    border-radius: 4px;    
-}
-
 
 .form-add{
     margin:0;
@@ -59,7 +54,6 @@ button{
     font-size: 12px;
     width: 100px;
     font-family: 'Poppins', sans-serif;
-    border-radius: 4px;   
 }
 .form-add  button:hover, .form-add .btn:hover{
     background: linear-gradient(to right bottom, #fdd700,#c58001);

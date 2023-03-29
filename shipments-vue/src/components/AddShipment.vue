@@ -249,7 +249,6 @@ select{
     font-weight: 400;
     font-size: 0.8em;
     padding: 8px 8px;
-    border-radius: 4px;
 }
 
 .userSwitch {

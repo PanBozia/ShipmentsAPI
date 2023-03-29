@@ -187,13 +187,6 @@
 
   <div class="row-container-one" v-if="chosenShipment == null">
     <div class="description">
-        <h1>1 - WYSYŁKA</h1>
-        <p>
-            Wprowadź dane nowej wysyłki/transportu.
-            Podaj estymowaną datę wyjazdu. 
-            Jeżeli nie jest to transport kontenerowy, to wybierz opcję N/A jako typ kontenera.
-            Pola numer kontenera, numer plomby, komentarz, to pola opcjonalne - ich uzupełnienie nie jest wymagane.
-        </p>
     </div>
     <div>
         <AddShipmentData @new-shipment-event="handleNewShipment"/>
@@ -203,12 +196,6 @@
 
   <div class="row-container-one" v-if="chosenShipment !=null && chosenOrders == null">
     <div class="description">
-        <h1>2 - ZAMÓWIENIA</h1>
-        <p>
-            Wyszukaj i wybierz z listy zamówienia, które chcesz dodać do wysyłki, lub wprowadź dane nowego zamówienia.
-            <br>
-            Jeżeli nie dodasz zamówienia do wysyłki, możesz to zrobić później, edytując dane wysyłki.
-        </p>
     </div>
     <div >
       <ChooseOrder @add-orders-event="handleAddOrders"/>
@@ -218,12 +205,6 @@
 
    <div class="row-container-two" v-if="chosenShipment !=null && chosenOrders != null && chosenForwarder == null">
         <div class="description">
-            <h1>3 - PRZEWOŹNIK</h1>
-            <p>
-                Wyszukaj i wybierz z listy kierowcę, który realizuje transport/wysyłkę, lub wprowadź dane nowego kierowcy.
-                <br>
-                Jeżeli nie dodasz kierowcy do wysyłki, możesz to zrobić później, edytując dane wysyłki.
-            </p>
         </div>
         <div>
         <ChooseForwarder @forwarder-chosen-event="handleChoosenForwarder"/>
