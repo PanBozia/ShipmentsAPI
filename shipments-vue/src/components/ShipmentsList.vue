@@ -9,7 +9,7 @@
         <div class="search-item">
             <label>Data Wyjścia</label>
             <div class="item-row">
-                <input type="datetime-local" v-model="timeOfDeparture">
+                <input type="date" v-model="timeOfDeparture">
                 <span class="material-symbols-outlined cancel-btn" @click="timeOfDeparture = null">
                     backspace
                 </span>
@@ -453,15 +453,17 @@ input{
 .shipment-search-form .search-item{
     display: grid;
     justify-items: stretch;
-    max-width: 180px;
+    max-width: 14vh;
 }
 .shipment-search-form .search-item input, select{
     padding: 5px 8px;
     border: none;
-    min-width: 60px;
+    min-width: 8vh;
+    margin: 0;
 }
 .shipment-search-form option{
     font-size: 0.8em;
+    margin: 0;
 }
 .shipment-search-form .prio-item{
     align-self: end;
@@ -486,12 +488,15 @@ input{
     justify-items: stretch;
     margin:0px;
 }
+.shipment-search-form  .item-row input, select{
+    box-shadow: none;
+}
 .cancel-btn{
     background: #fff;
     font-size: 1.5em;
     border: 0;
     border-radius: 0 4px 4px 0;
-    font-weight: 100;
+    
     cursor: pointer;
     color: #aaa;
     display: flex;

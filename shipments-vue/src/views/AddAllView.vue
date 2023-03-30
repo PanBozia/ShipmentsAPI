@@ -5,7 +5,7 @@
     <div> 
         <div>
             <div class="chosen-summary">
-                <h2>DANE NOWEJ WYSYŁKI</h2>
+                <h3>DANE NOWEJ WYSYŁKI</h3>
                 <div v-if="chosenShipment != null">
                     <p v-if="chosenShipment.hasPriority"> PRIORYTETOWA</p>
                     <p><span class="yellow">ETD:</span> {{moment(chosenShipment.etd).format("YYYY-MM-DD / hh:mm")}}</p>
@@ -37,7 +37,7 @@
     <!-- 3rd column -->
     <div>
         <div class="chosen-summary">
-            <h2>WYBRANE ZAMÓWIENIA</h2>
+            <h3>WYBRANE ZAMÓWIENIA</h3>
             <div v-if="chosenOrders != null">
                 <div v-if="chosenOrders.length == 0">
                     <p>Wysyłka bez zamówień</p>
@@ -76,7 +76,7 @@
         <div>
             <div class="chosen-summary">
                 
-                <h2>Wybrany przwoźnik</h2>
+                <h3>Wybrany przwoźnik</h3>
                 <div v-if="chosenForwarder != null">
                     <div v-if="chosenOrders.length == 0">
                         <p>Wysyłka bez przewoźnika</p>
@@ -355,10 +355,12 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 4vh; 
+    font-size: 3vh; 
+    
 }
 .done{
     color: #42c231;
+    
     }
 .undone{
     color: #364b6c;
@@ -402,9 +404,10 @@ export default {
 .yellow{
     color: #e6b800;
 }
-.chosen-summary h2{
+.chosen-summary h2, .chosen-summary h3{
     color: #e6b800;
     margin-top: 0;
+    margin-bottom: 1vh;
 }
 .description{
     font-weight: 200;
@@ -418,45 +421,33 @@ export default {
   gap: 5vh;
     /* max-width: 50vw; */
     /* margin: auto; */
-    
-    margin: 40px 0;
+    justify-items: center;
+    margin: 2vh 0;
     padding-bottom: 40px;
 }
 .row-container-two {
     display: grid;
-  grid-template-columns: 1fr 20vw 20vw 1fr;
-  gap: 5vh;
-  /* max-width: 100vw; */
-  /* margin: auto; */
-  
+    grid-template-columns: 1fr 20vw 20vw 1fr;
+    gap: 5vh;
     margin: 40px 0;
     padding-bottom: 40px;
 }
 .row-container-three{
     display: grid;
     grid-template-columns: 30vh 30vh 30vh;
-    /* max-width: 50vw; */
-    /* margin: auto; */
-    
     margin: 25px 0;
     padding-bottom: 25px;
     min-height: 12vh;
-    position: relative;
-    
 }
 .row-container-seven{
     display: grid;
     justify-content: stretch;
     justify-items: stretch;
     grid-template-columns: 34vh 7vh 34vh 7vh 34vh 7vh auto;
-    /* max-width: 50vw; */
-    /* margin: auto; */
-    /* border-bottom: solid 1px #fff;  */
     margin: 0;
     padding: 2vh 0vh;
-    min-height: 16vh;
-    /* position: relative; */
-    background: linear-gradient(to right bottom, #272d36,#13182c);
+    min-height: 10.3vh;
+    /* background: #00000085 */
     
 }
 .seven-item{

@@ -5,15 +5,8 @@
         <form class="form-add" @submit.prevent="handleSubmit">
             <div class="add-shipment-grid">
                 <div>
-                    <div class="double-ctnr-item">
-                        <div>
-                            <div>
-                                <label class="form-labels">ETD</label>
-                            </div>
-                            <div>
-                                <input type="datetime-local" v-model="etdForm" required>
-                            </div>
-                        </div>
+                    
+
                         <div>
                             <div>
                                 <label class="form-labels"> Wysyłka priorytetowa</label>    
@@ -30,86 +23,83 @@
                                     </div>
                                 </div>
                         </div>
-                    </div>
+                        <div>
+                            <div>
+                                <label class="form-labels">ETD</label>
+                            </div>
+                            <div class="double-in">
+                                <input type="datetime-local" v-model="etdForm" required>
+                            </div>
+                        </div>
 
-                    <div>
+                    
+
+                    <div >
                         <div>
                             <label class="form-labels">Ilość palet: {{palletQtyForm}}</label>
                         </div>
-                        <div>
+                        <div class="double-in">
                             <input type="range" step="1" name="vol" min="0" max="100" v-model="palletQtyForm">
                         </div>
-                        <div class="form-double-ctnr">
-                            <div >
+                        
+                            <div>
                                 <div>
                                     <div>
                                         <label class="form-labels">Lokacja</label>
                                     </div>
-                                    <div>
-                                        <select v-if="!areasError" v-model="warehouseAreaIdForm">
+                                    <div class="double-in">
+                                        <select  v-if="!areasError" v-model="warehouseAreaIdForm">
                                             <option :value="area.id" v-for="area in areas" :key="area.id">
                                                 {{area.name}}
                                             </option>
                                         </select>
                                     </div>
                                 </div>
-
+                                <div>
+                                        <div>
+                                            <label class="form-labels">Typ kontenera</label>
+                                        </div>
+                                        <div class="double-in">
+                                            <select v-model="containerTypeForm">
+                                                <option value="N/A">N/A</option>
+                                                <option value="20ft">20ft</option>
+                                                <option value="40ft">40ft</option>
+                                                <option value="40ft">40ft HQ</option>
+                                            </select>
+                                        </div>
+                                </div>
+                                <div>
+                                        <div>
+                                            <label class="form-labels">Nr kontenera</label>
+                                        </div>
+                                        <div class="double-in">
+                                            <input type="text" v-model="containerNumberForm">
+                                        </div>
+                                </div>
+                                <div>
+                                        <div>
+                                            <label class="form-labels">Nr plomby</label>
+                                        </div>
+                                        <div class="double-in">
+                                            <input type="text" v-model="containerSealNumberForm">
+                                        </div>
+                                </div>
                             </div>
                             <div>
                                 <div>
-                                    <div>
-                                        <label class="form-labels">Typ kontenera</label>
-                                    </div>
-                                    <div>
-                                        <select v-model="containerTypeForm">
-                                            <option value="N/A">N/A</option>
-                                            <option value="20ft">20ft</option>
-                                            <option value="40ft">40ft</option>
-                                            <option value="40ft">40ft HQ</option>
-                                        </select>
-                                    </div>
-
+                                    <label class="form-labels">Komentarz</label>
+                                </div>
+                                <div class="comment-ctnr">
+                                    <textarea class="comment" name="comment" rows="4" cols="1" v-model="commentForm"></textarea>
                                 </div>
                             </div>
-                        </div>
+                        
+                       
                     </div>
                 </div>
-                
-                <div>
-                    <div>
-                        <div class="form-double-ctnr">
-                            <div>
-                                <div>
-                                    <label class="form-labels">Nr kontenera</label>
-                                </div>
-                                <div>
-                                    <input type="text" v-model="containerNumberForm">
-                                </div>
-                            </div>
-                            <div>
-                                <div>
-                                    <label class="form-labels">Nr plomby</label>
-                                </div>
-                                <div>
-                                    <input type="text" v-model="containerSealNumberForm">
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div>
-                                <label class="form-labels">Komentarz</label>
-                            </div>
-                            <div class="comment-ctnr">
-                                <textarea class="comment" name="comment" rows="4" cols="1" v-model="commentForm"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    
-
-                </div>
-
-
             </div>
+                        
+
             <div v-if="!createdFlag" id="add-btn-container">
                 <button>Zapisz</button>
             </div>
@@ -211,23 +201,16 @@ export default {
 </script>
 
 <style scoped>
-input[type="range" ]{
-    width: 100%;
-    padding: 0;
+
+.double-in{
+    display: grid;
+    
 }
-input[type="text" ]{
-    width: 100%;
-    padding: 0;
-}
-select{
-    width: 100%;
-    padding:0 0px;
-}
+
+
 .add-shipment-grid{
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 5vh;
-    
+    grid-template-columns: 1fr;
 }
 .double-ctnr-item{
     display: grid;
@@ -240,14 +223,14 @@ select{
 }
 .comment-ctnr{
     display: grid;
+    justify-items: stretch; 
 }
 .comment{
-    height: 100%;
+    
     font-family: 'Poppins', sans-serif;
     font-weight: 400;
     font-size: 0.8em;
     padding: 8px 8px;
-    border-radius: 4px;
 }
 
 .userSwitch {
@@ -322,6 +305,125 @@ select{
 }
 .userSwitch-cb:checked + .userSwitch-label .userSwitch-switch {
   right: 0;
+}
+
+
+
+input[type=range] {
+  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+  margin: 0;
+  padding: 0;
+  width: 100%; /* Specific width is required for Firefox. */
+  background: transparent; /* Otherwise white in Chrome */
+  box-shadow: none;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+}
+
+input[type=range]:focus {
+  outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+}
+
+input[type=range]::-ms-track {
+  width: 100%;
+  cursor: pointer;
+
+  /* Hides the slider so custom styles can be added */
+  background: transparent; 
+  border-color: transparent;
+  color: transparent;
+  box-shadow: none;
+}
+
+/* Special styling for WebKit/Blink */
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  box-shadow: 0 0 0.6vh #0d0d0d;
+  height: 2.5vh;
+  width: 2.5vh;
+  border-radius: 50%;
+  background: #ffffff;
+  background: #F5B727;
+  cursor: pointer;
+  margin-top: -0.65vh; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+}
+
+/* All the same stuff for Firefox */
+input[type=range]::-moz-range-thumb {
+  box-shadow: 0 0 0.6vh #0d0d0d;
+  height: 2.5vh;
+  width: 2.5vh;
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+/* All the same stuff for IE */
+input[type=range]::-ms-thumb {
+  box-shadow: 0 0 0.6vh #0d0d0d;
+  height: 2.5vh;
+  width: 2.5vh;
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 1.2vh;
+  cursor: pointer;
+  box-shadow:inset 0px 0px 6px rgba(0,0,0,0.3);
+  /* background: #f5c400; */
+  background: #fff;
+   
+  border-radius: 1.3px;
+  border: none;
+    transition: 500ms ease-in-out;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+    /* background: #f5c400; */
+    background: #bbff34;
+    transition: 500ms ease-in-out;
+}
+
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 8.4px;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: #1e2551;
+  border-radius: 1.3px;
+  border: 0.2px solid #010101;
+}
+
+input[type=range]::-ms-track {
+  width: 100%;
+  height: 8.4px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  border-width: 16px 0;
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background: #2a6495;
+  border: 0.2px solid #010101;
+  border-radius: 2.6px;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+input[type=range]:focus::-ms-fill-lower {
+  background: #3071a9;
+}
+input[type=range]::-ms-fill-upper {
+  background: #3071a9;
+  border: 0.2px solid #010101;
+  border-radius: 2.6px;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: #367ebd;
 }
 </style>
 

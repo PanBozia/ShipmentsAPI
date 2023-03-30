@@ -18,6 +18,7 @@
 }
 html{
     scroll-behavior: smooth;
+    
 }
 ::-webkit-scrollbar {
     width: 12px;
@@ -36,6 +37,9 @@ html{
 
 body{
     background-color: var(--back);
+    background-color: #1f0f2c;
+    background: linear-gradient(to right, #202635,#303552, #202635);
+    
     color: #eee;
     margin: 0;
     padding: 0;
@@ -61,13 +65,14 @@ h1, h2, h3, h4 {
 #app .main-container {
     display: grid;
     grid-template-rows: 120px, auto;
+    background-color: none;
 }
 #app .main-container .nav-container {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     /* background: linear-gradient(to right, #101E32, #213D67); */
-    
+
     margin: 0;
     padding: 0;
 }

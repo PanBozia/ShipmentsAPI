@@ -109,10 +109,12 @@
         </form>
       </div>
     </div>
+  </div>
+<div class="btn-ctnr">
     <button class="btn" @click="handleSubmitOrdersList()">
         Zapisz
     </button>
-  </div>
+</div>
 </template>
 
 <script>
@@ -226,6 +228,26 @@ export default {
 </script>
 
 <style>
+.btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to right bottom, #42c231,#07531e);
+    border: none;
+    color: #fff;
+    padding: 0px 10px;
+    height: 34px;
+    margin: 0px;
+    cursor: pointer;
+    font-size: 12px;
+    width: 100px;
+    font-family: 'Poppins', sans-serif;
+}
+.btn-ctnr{
+    padding: 3vh 0;
+    display: flex;
+    justify-content: center;
+}
 .choose-order-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -245,6 +267,12 @@ export default {
   grid-template-columns: 1fr 1fr;
   gap: 2vh;
   align-items: end;
+}
+.form-big-double-ctnr{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2vh;
+    
 }
 
 .chosen-one {

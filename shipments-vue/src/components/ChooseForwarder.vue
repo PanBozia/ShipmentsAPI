@@ -37,9 +37,11 @@
                 <p class="red">Znaleziono więcej wyników spełniających kryteria wyszukiwania.</p>
             </div>
     </div>
-    <div>
-        <button>Zapisz</button>
-    </div>
+    <div class="btn-ctnr">
+</div>
+<button class="btn">
+    Zapisz
+</button>
 </form>
   
   

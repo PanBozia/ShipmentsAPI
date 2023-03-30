@@ -227,7 +227,7 @@ select{
 }
 .add-shipment-grid{
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 5vh;
     
 }
