@@ -7,7 +7,7 @@ const addShipment = (url) =>{
     const createdId = ref('')
 
     const addNewShipment =  async (shipmentData) => {
-
+        
         var requestOptions = {
         method: 'POST',
         headers: {
@@ -27,7 +27,7 @@ const addShipment = (url) =>{
             }
             createdId.value = resp.data
         } catch (err) {
-            error.value = err.response.data
+            error.value = err.response.data.errors
             console.log(error.value)
         }    
     }

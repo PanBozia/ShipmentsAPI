@@ -25,9 +25,9 @@ const addForwarder = (url) =>{
             if (resp.status <200 & resp.status > 300){
                 throw Error('Coś poszło nie tak..')
             }
-            createdId.value = resp.data.forwarderId
+            createdId.value = resp.data
         } catch (err) {
-            error.value = err.response.data
+            error.value = err.response.data.errors
             console.log(error.value)
         }    
     }

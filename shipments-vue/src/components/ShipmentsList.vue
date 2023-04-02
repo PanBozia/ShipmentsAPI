@@ -232,7 +232,7 @@ export default {
         const sortBy = ref('')
         const sortDirection = ref(0)
         
-        const timeOfDeparture = ref()
+        const timeOfDeparture = ref(moment(new Date()).format("YYYY-MM-DD"))
         const hasPriority = ref(false)
         const comment =ref('')
         const warehouseAreaId = ref()
@@ -299,6 +299,7 @@ export default {
         })
 
         onMounted (()=>{
+            
             loadAreas();
             loadStatuses();
             loadShipments(queryData.value);

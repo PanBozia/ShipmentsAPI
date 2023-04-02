@@ -11,7 +11,8 @@
                     <p><span class="yellow">ETD:</span> {{moment(chosenShipment.etd).format("YYYY-MM-DD / hh:mm")}}</p>
                     <p v-if="chosenShipment.containerNumber"><span class="yellow">Nr kontenera: </span>{{chosenShipment.containerNumber}}</p>
                     <p v-if="chosenShipment.containerType"><span class="yellow">Typ kontenera: </span>{{chosenShipment.containerType}}</p>
-                    <p v-if="chosenShipment.warehouseArea != 'N/A'"><span class="yellow">TPA: </span>{{chosenShipment.warehouseArea}} ( {{chosenShipment.palletQty}} palet )</p>
+                    <p v-if="chosenShipment.warehouseArea != null"><span class="yellow">TPA: </span>{{chosenShipment.warehouseArea}}</p>
+                    <p><span class="yellow">Ilość palet: </span>{{chosenShipment.palletQty}}</p>
                 </div>
                 <div v-else>
                     <div>
@@ -27,6 +28,9 @@
     <div v-if="chosenShipment != null" class="forward-arrow done">
         <span class="material-symbols-outlined">
             task_alt
+        </span>
+        <span class="material-symbols-outlined edit">
+            edit
         </span>
     </div>
     <div v-else class="forward-arrow undone">
@@ -203,15 +207,15 @@
     <div></div>
   </div>
 
-   <div class="row-container-two" v-if="chosenShipment !=null && chosenOrders != null && chosenForwarder == null">
+   <div class="row-container-one" v-if="chosenShipment !=null && chosenOrders != null && chosenForwarder == null">
         <div class="description">
         </div>
         <div>
         <ChooseForwarder @forwarder-chosen-event="handleChoosenForwarder"/>
         </div>
-        <div>
+        <!-- <div>
         <AddForwarder @forwarder-chosen-event="handleChoosenForwarder" />
-        </div>
+        </div> -->
         <div></div>
   </div>
     <div class="row-container-one" v-if="chosenShipment !=null && chosenOrders != null && chosenForwarder != null">
@@ -237,14 +241,14 @@ import ChooseOrder from "../components/ChooseOrder.vue";
 import NavbarComponent from "../components/NavbarComponent.vue";
 import AddShipmentData from "../components/AddShipmentData.vue";
 import ChooseForwarder from "../components/ChooseForwarder.vue";
-import AddForwarder from "../components/AddForwarder.vue";
+import addForwarder from "../js-components/addForwarder.js"
 import getForwarderById from "../js-components/getForwarderById.js"
 //import getShipmentById from "../js-components/getShipmentById.js"
 import addShipment from '../js-components/addShipment.js'
 import addOrderToShipment from '../js-components/addOrderToShipment.js'
 import moment from 'moment'
 export default {
-  components: { NavbarComponent, ChooseOrder, AddShipmentData, ChooseForwarder, AddForwarder },
+  components: { NavbarComponent, ChooseOrder, AddShipmentData, ChooseForwarder },
   setup() {
     const url = 'https://localhost:44331/api/'
     const {loadForwarder, error:loadForwarderError, forwarder} = getForwarderById(url)
@@ -255,22 +259,24 @@ export default {
     const { addNewShipment, error:addShipmentError, createdId} = addShipment(url)
     const {addOrder, error:addOrderError} = addOrderToShipment(url)
     const addedPoNumber = ref("");
+    const {addNewForwarder, error:newForwarderError, createdId:createdForwarderId} = addForwarder(url)
 
     const handleAddOrders = (ordersList) => {
-        console.log(ordersList)
       chosenOrders.value = ordersList
     };
 
     const handleNewShipment = (shipmentData) =>{
-        console.log(shipmentData)
         chosenShipment.value = shipmentData
     }
-
+    
     const handleSaveShipmentData = ()=>{
         
         if(chosenForwarder.value['id']){
                 chosenShipment.value['forwarderId'] = chosenForwarder.value['id']
             }
+        chosenShipment.value.etd = moment(chosenShipment.value.etd).format("YYYY-MM-DDThh:mm")
+        chosenShipment.value.timeOfDeparture = moment(chosenShipment.value.timeOfDeparture).format("YYYY-MM-DDThh:mm")
+        console.log(moment(chosenShipment.value.etd))
         addNewShipment(chosenShipment.value)
         .then(()=>{
             if(chosenOrders.value.length != 0){
@@ -282,11 +288,12 @@ export default {
             
     }
 
-    const handleChoosenForwarder = (forwarderId)=>{
-        console.log('Added forwarder was emmited')
-        console.log(forwarderId)
-        loadForwarder(forwarderId).then(()=>{
-            chosenForwarder.value = forwarder.value
+    const handleChoosenForwarder = (newForwarder)=>{
+        addNewForwarder(newForwarder).then(()=>{
+            loadForwarder(createdForwarderId.value).then(()=>{
+                chosenForwarder.value = forwarder.value
+
+            })
         })
     }
 
@@ -302,7 +309,8 @@ export default {
       chosenOrders, handleAddOrders,
 
       addShipmentError, createdId, handleSaveShipmentData,
-      addOrderError
+      addOrderError,
+      newForwarderError
     };
   },
 };
@@ -364,6 +372,10 @@ export default {
     }
 .undone{
     color: #364b6c;
+}
+.edit span{
+    font-size: 1vh;
+    color: #c58001 ;
 }
 .button-ctnr{
     display:flex;

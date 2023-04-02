@@ -45,6 +45,12 @@
 
 <script>
 export default {
+    // setup(){
+    //     const reloadPage = ()=>{
+    //         location.reload()
+    //     }
+    //     return { reloadPage}
+    // }
 
 }
 </script>

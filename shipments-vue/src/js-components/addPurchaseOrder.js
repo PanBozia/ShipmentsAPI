@@ -27,7 +27,7 @@ const addPurchaseOrder = (url) =>{
             }
             createdId.value = resp.data
         } catch (err) {
-            error.value = err.response.data
+            error.value = err.response.data.errors
             console.log(error.value)
         }    
     }

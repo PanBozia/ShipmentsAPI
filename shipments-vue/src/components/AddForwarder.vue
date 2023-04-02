@@ -1,18 +1,28 @@
 <template>
    
-    <div class="add-container">
+    <div>
         <form class="form-add" @submit.prevent="handleSubmit">
-            <p>Dodaj nowego kierowcę</p>
-            <label>Imię</label>
-            <input type="text" v-model="firstNameForm" required>
-            <label>Nazwisko</label>
-            <input type="text" v-model="lastNameForm" required>
-            <label>Spedycja</label>
-            <input type="text" v-model="speditionForm" required>
-            <label>Numer telefonu</label>
-            <input type="text" v-model="phoneForm">
-            <label>Numery rejestracyjne</label>
-            <input type="text" v-model="platesForm" required>
+            <h2>Dodaj nowego przewoźnika</h2>
+            <div class="form-set">
+                <label class="form-labels">Numery rejestracyjne</label>
+                <input type="text" v-model="platesForm" required>
+            </div>
+            <div class="form-set">
+                <label class="form-labels">Spedycja</label>
+                <input type="text" v-model="speditionForm" required>
+            </div>
+            <div class="form-set">
+                <label class="form-labels">Imię</label>
+                <input type="text" v-model="firstNameForm" required>
+            </div>
+            <div class="form-set">
+                <label class="form-labels">Nazwisko</label>
+                <input type="text" v-model="lastNameForm" required>
+            </div>
+            <div class="form-set">
+                <label class="form-labels">Numer telefonu</label>
+                <input type="text" v-model="phoneForm">
+            </div>
             <div id="add-btn-container">
                 <button>Zapisz</button>
             </div>

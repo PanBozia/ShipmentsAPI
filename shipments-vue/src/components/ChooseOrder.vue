@@ -1,7 +1,7 @@
 <template>
   <div class="choose-order-container">
     <div>
-      <h2>Aktualnie wysyłane zamówienia</h2>
+      <h2>Wybierz zamówienia</h2>
       <form class="form-add" @submit.prevent="handleSearchOrders()">
         <label class="form-labels">Wybrane zamówienia</label>
         <div v-if="ordersList.length != 0">
@@ -10,7 +10,7 @@
               {{ po.poNumber + " - " + po.customerShortName }}
             </div>
             <div class="remove-btn" @click="handleRemoveOrder(po)">
-              <span class="material-symbols-outlined"> remove_circle </span>
+              <span class="material-symbols-outlined">close</span>
             </div>
           </div>
         </div>
@@ -38,7 +38,7 @@
             >
               <p>{{ order.poNumber + " - " + order.customerShortName }}</p>
               <div class="add-driver-btn" @click="handleAddOrder(order)">
-                <span class="material-symbols-outlined"> add_circle </span>
+                <div class="add-item-btn"><span>DODAJ</span></div>
               </div>
             </div>
           </div>
@@ -56,19 +56,19 @@
 
     <div>
       <h2>Dodaj nowe zamówienie</h2>
-      <div class="add-container">
+      <div >
         <form @submit.prevent="" class="form-add">
           <label class="form-labels">Numer zamówienia</label>
           <input type="text" v-model="poNumberForm" required />
           <label class="form-labels">Kategoria</label>
-          <select v-model="categoryForm">
+          <select v-model="categoryForm" required>
             <option class="option-para" value="Sample">Sample</option>
             <option class="option-para" value="Standard">Standard</option>
             <option class="option-para" value="Inne">Inne</option>
           </select>
 
           <label class="form-labels">Data dostawy</label>
-          <input type="datetime-local" v-model="deliveryDateForm" required />
+          <input type="date" v-model="deliveryDateForm" required />
           <label class="form-labels">Incoterms</label>
           <select v-if="!incotermsError" v-model="incotermIdForm">
             <option
@@ -173,6 +173,11 @@ export default {
                 incotermId : incotermIdForm.value,
                 customerId : customerIdForm.value
             }
+            if(poNumberForm.value == '' || deliveryDateForm.value == null || incotermIdForm.value == null || customerIdForm.value == null ){
+                    addPoError.value = 'Wypełnij wymagane pola: Nr zamówienia, Data dostawy, Klient.'
+                    setTimeout(()=>{addPoError.value = null},4000)
+                }
+            else{
             addNewPO(poData).then(()=>{
                 if(addPoError.value == null){
                     poData['id'] = createdId.value
@@ -195,8 +200,8 @@ export default {
                     setTimeout(()=>{addPoError.value = null},4000)
                 }
             })
+            }
         }
-
     return {
       handleSearchOrders,
       handleAddOrder,
@@ -250,8 +255,8 @@ export default {
 }
 .choose-order-container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 5vh;
+  grid-template-columns: 22vh 22vh;
+  gap: 6vh;
 }
 #header-edit-shipment {
   display: flex;
@@ -279,15 +284,14 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  height: 34px;
+  height: 12px;
   margin: 0px 0px 10px 0;
-  padding: 2px 10px;
+  padding: 8px 10px 8px 24px;
   /* border-bottom: 1px solid #fff; */
-  border: 1px solid #fff;
+  /* border: 1px solid #fff; */
   font-size: 0.8em;
-  background: #1f3659;
-  border-radius: 4px;
+  background-color: #3d496a;
+  color:#ffffff
 }
 .chosen-one .remove-btn {
   display: flex;
@@ -295,17 +299,20 @@ export default {
   align-items: center;
   height: 16px;
   width: 16px;
-  background-color: #e14c27;
+  
+  color: #ffffff;
   border-radius: 50%;
   cursor: pointer;
 }
 .chosen-one .remove-btn:hover {
   transform: scale(1.4);
   transition: ease-in-out 100ms;
+  color: #ff0000;
+  
 }
 .chosen-one .remove-btn span {
   font-size: 1.8em;
-  font-weight: 200;
+  font-weight: 300;
   pointer-events: none;
 }
 .search-ctnr {
@@ -330,7 +337,7 @@ export default {
   max-height: 244px;
   overflow-y: auto;
   background: #fff;
-  border-radius: 4px;
+  box-shadow: inset 0 0 0.9vh #00000080;
 }
 .forwarder-list-ctnr #no-result {
   padding: 10px 20px;
@@ -350,33 +357,42 @@ export default {
   cursor: pointer;
 }
 .driver-line:hover {
-  background-color: #eee;
+  color: #15ac24;
 }
 .driver-line p {
   padding: 0;
   margin: 4px 0px;
 }
+.add-item-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 6px;
+    font-size: 0.8vh;
+    font-weight: 500;
+    color: #505050;
+    background-color: #e2e2e2;
+    /* border-radius: 2px; */
+    /* border:solid 1px #000000; */
+    margin: 0;
+}
+.add-item-btn:hover{
+    background-color: #3a901b;
+    color:#ffffff;
+    
+    font-weight: 800;
+}
 .add-driver-btn {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 16px;
-  width: 16px;
-  background-color: #ffffff;
   border-radius: 50%;
+  
   /* pointer-events: none; */
 }
 .add-driver-btn:hover {
-  transform: scale(1.4);
-  transition: ease-in-out 100ms;
-  background-color: #b3ff00;
+    transition: ease-in-out 100ms;
 }
-
-.add-driver-btn span {
-  font-size: 1.8em;
-  font-weight: 300;
-}
-
 .form-add .red {
   color: rgb(228, 67, 52);
   font-size: 0.8em;
@@ -388,19 +404,6 @@ export default {
   gap: 40px;
 }
 
-.prio-ctnr {
-  display: flex;
-  margin-bottom: 10px;
-  align-content: center;
-}
-.prio-ctnr p {
-  display: flex;
-  align-items: center;
-  margin: 0 14px 0 0;
-  padding: 0;
-
-  font-size: 1.2em;
-}
 
 .userSwitch {
   margin: 2px 0;

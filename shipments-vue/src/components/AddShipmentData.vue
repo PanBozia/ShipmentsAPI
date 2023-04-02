@@ -1,115 +1,114 @@
 <template>
     <h2>Dodaj nową wysyłkę</h2>
     
-   <div >
+   <div>
         <form class="form-add" @submit.prevent="handleSubmit">
-            <div class="add-shipment-grid">
-                <div>
-                    
-
-                        <div>
-                            <div>
-                                <label class="form-labels"> Wysyłka priorytetowa</label>    
-                            </div>
-                                <div class="prio-ctnr">
-                                    <p><span class="material-symbols-outlined timer">timer</span> </p>
-                                    <div class="userSwitch">
-                                        <input type="checkbox" name="userSwitch" :checked="hasPriorityForm" class="userSwitch-cb"  :id="hasPriorityForm" v-model="hasPriorityForm">
-                                        <label class="userSwitch-label" @click="handlePrio()">
-                                        <div class="userSwitch-inner"></div>
-                                        <div class="userSwitch-switch"></div>
-                                        </label>
-                                    
-                                    </div>
-                                </div>
-                        </div>
-                        <div>
-                            <div>
-                                <label class="form-labels">ETD</label>
-                            </div>
-                            <div class="double-in">
-                                <input type="datetime-local" v-model="etdForm" required>
-                            </div>
-                        </div>
-
-                    
-
-                    <div >
-                        <div>
-                            <label class="form-labels">Ilość palet: {{palletQtyForm}}</label>
-                        </div>
-                        <div class="double-in">
-                            <input type="range" step="1" name="vol" min="0" max="100" v-model="palletQtyForm">
-                        </div>
-                        
-                            <div>
-                                <div>
-                                    <div>
-                                        <label class="form-labels">Lokacja</label>
-                                    </div>
-                                    <div class="double-in">
-                                        <select  v-if="!areasError" v-model="warehouseAreaIdForm">
-                                            <option :value="area.id" v-for="area in areas" :key="area.id">
-                                                {{area.name}}
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div>
+            <div class="choose-order-container">
+                 <div>
+                                    <div class="form-set">
                                         <div>
-                                            <label class="form-labels">Typ kontenera</label>
+                                            <label class="form-labels"> Wysyłka priorytetowa</label>    
+                                        </div>
+                                        <div class="prio-ctnr">
+                                            <div class="userSwitch">
+                                                <input type="checkbox" name="userSwitch" :checked="hasPriorityForm" class="userSwitch-cb"  :id="hasPriorityForm" v-model="hasPriorityForm">
+                                                <label class="userSwitch-label" @click="handlePrio()">
+                                                <div class="userSwitch-inner"></div>
+                                                <div class="userSwitch-switch"></div>
+                                                </label>
+                                            
+                                            </div>
+                                            <p><span class="material-symbols-outlined timer">timer</span> </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-set">
+                                        <div>
+                                            <label class="form-labels">ETD</label>
                                         </div>
                                         <div class="double-in">
-                                            <select v-model="containerTypeForm">
-                                                <option value="N/A">N/A</option>
-                                                <option value="20ft">20ft</option>
-                                                <option value="40ft">40ft</option>
-                                                <option value="40ft">40ft HQ</option>
+                                            <input type="datetime-local" v-model="etdForm" required>
+                                        </div>
+                                    </div>
+                                
+                                    <div class="form-set">
+                                        <div>
+                                            <label class="form-labels">Ilość palet: {{palletQtyForm}}</label>
+                                        </div>
+                                        <div class="double-in">
+                                            <input type="range" step="1" name="vol" min="0" max="100" v-model="palletQtyForm">
+                                        </div>
+
+                                    </div>
+                                    
+                                    <div class="form-set">
+                                        <div>
+                                            <label class="form-labels">Lokacja</label>
+                                        </div>
+                                        <div class="double-in">
+                                            <select  v-if="!areasError" v-model="warehouseAreaIdForm">
+                                                <option :value="area.id" v-for="area in areas" :key="area.id">
+                                                    {{area.name}}
+                                                </option>
                                             </select>
                                         </div>
-                                </div>
-                                <div>
-                                        <div>
-                                            <label class="form-labels">Nr kontenera</label>
-                                        </div>
-                                        <div class="double-in">
-                                            <input type="text" v-model="containerNumberForm">
-                                        </div>
-                                </div>
-                                <div>
-                                        <div>
-                                            <label class="form-labels">Nr plomby</label>
-                                        </div>
-                                        <div class="double-in">
-                                            <input type="text" v-model="containerSealNumberForm">
-                                        </div>
-                                </div>
-                            </div>
-                            <div>
-                                <div>
-                                    <label class="form-labels">Komentarz</label>
-                                </div>
-                                <div class="comment-ctnr">
-                                    <textarea class="comment" name="comment" rows="4" cols="1" v-model="commentForm"></textarea>
-                                </div>
-                            </div>
-                        
-                       
-                    </div>
-                </div>
-            </div>
-                        
+                                    </div>
 
-            <div v-if="!createdFlag" id="add-btn-container">
-                <button>Zapisz</button>
+                                    <div class="form-set">
+                                            <div>
+                                                <label class="form-labels">Typ kontenera</label>
+                                            </div>
+                                            <div class="double-in">
+                                                <select v-model="containerTypeForm">
+                                                    <option value="N/A">N/A</option>
+                                                    <option value="20ft">20ft</option>
+                                                    <option value="40ft">40ft</option>
+                                                    <option value="40ft">40ft HQ</option>
+                                                </select>
+                                            </div>
+                                    </div>
+                </div>
+                <div>
+                                    <div class="form-set">
+                                            <div>
+                                                <label class="form-labels">Nr kontenera</label>
+                                            </div>
+                                            <div class="double-in">
+                                                <input type="text" v-model="containerNumberForm">
+                                            </div>
+                                    </div>
+
+                                    <div class="form-set">
+                                            <div>
+                                                <label class="form-labels">Nr plomby</label>
+                                            </div>
+                                            <div class="double-in">
+                                                <input type="text" v-model="containerSealNumberForm">
+                                            </div>
+                                    </div>
+                                        
+                                    <div class="form-set"> 
+                                        <div>
+                                            <label class="form-labels">Komentarz</label>
+                                        </div>
+                                        <div class="comment-ctnr">
+                                            <textarea class="comment" name="comment" rows="4" cols="1" v-model="commentForm"></textarea>
+                                        </div>
+                                    </div>
+                </div>      
             </div>
-            
-            <div v-if="createdFlag" class="success">
-                <p>Dane wysyłki zostały zapisane.</p>
-            </div>
+            <!-- choose-order-ctnr -->
+                                    <div>
+                                        <div v-if="!createdFlag" id="add-btn-container">
+                                            <button>Zapisz</button>
+                                        </div>
+                                        
+                                        <div v-if="createdFlag" class="success">
+                                            <p>Dane wysyłki zostały zapisane.</p>
+                                        </div>
+                                    </div>
         </form>
     </div>
-
 </template>
 
 <script>
@@ -138,6 +137,7 @@ export default {
         onMounted(()=>{
             createdFlag.value = false
             loadAreas()
+            etdForm.value = moment(new Date()).format("YYYY-MM-DD hh:mm")
         })
 
         const handleSubmit = ()=>{
@@ -202,9 +202,14 @@ export default {
 
 <style scoped>
 
+.timer{
+    margin-left: 2vh;
+    align-self: center;
+    font-size: 3.5vh;
+}
+
 .double-in{
     display: grid;
-    
 }
 
 
@@ -231,12 +236,13 @@ export default {
     font-weight: 400;
     font-size: 0.8em;
     padding: 8px 8px;
+    
 }
 
 .userSwitch {
     margin: 2px 0;
     position: relative;
-    width: 94px;
+    width: 140px;
     align-self: center;
 }
 .userSwitch input[type=checkbox] {
@@ -269,11 +275,12 @@ export default {
   
 }
 .userSwitch-inner:before {
-  content: "PRIO";
-  padding-left: 10px;
-  background-color: #fff;
-  color: #000000;
+  content: "PRIORYTET";
+  padding-left: 36px;
+  background-color: #98483f;
+  color: #fff;
   box-shadow: inset 2px 2px 4px rgba(0,0,0,0.4);
+  font-weight: 400;
 }
 .switches .flipswitch-inner:after {
     content: "";
@@ -281,11 +288,12 @@ export default {
 }
 .userSwitch-inner:after {
     content: "STANDARD";
-    padding-right: 8px;
-    background-color: #003e6a;
-    color: #E8E8E8;
+    padding-right: 36px;
+    background-color: #6d9f27;
+    color: #fff;
     text-align: right;
     box-shadow: inset 2px 2px 4px rgba(0,0,0,0.4);
+    font-weight: 400;
 }
 .userSwitch-switch {
   width: 24px;
@@ -297,7 +305,7 @@ export default {
   position: absolute;
   top: 0;
   bottom: 0;
-  right: 70px;
+  right: 116px;
   transition: all 0.2s ease-in 0s;
 }
 .userSwitch-cb:checked + .userSwitch-label .userSwitch-inner {
@@ -311,7 +319,7 @@ export default {
 
 input[type=range] {
   -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
-  margin: 0;
+  margin: 10px 0;
   padding: 0;
   width: 100%; /* Specific width is required for Firefox. */
   background: transparent; /* Otherwise white in Chrome */
@@ -340,21 +348,21 @@ input[type=range]::-ms-track {
 /* Special styling for WebKit/Blink */
 input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  box-shadow: 0 0 0.6vh #0d0d0d;
-  height: 2.5vh;
-  width: 2.5vh;
+  box-shadow: 0 0 0.2vh #0d0d0d;
+  height: 2.4vh;
+  width: 2.4vh;
   border-radius: 50%;
   background: #ffffff;
   background: #F5B727;
   cursor: pointer;
-  margin-top: -0.65vh; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+  margin-top: 0.0vh; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
 }
 
 /* All the same stuff for Firefox */
 input[type=range]::-moz-range-thumb {
   box-shadow: 0 0 0.6vh #0d0d0d;
-  height: 2.5vh;
-  width: 2.5vh;
+  height: 2.4vh;
+  width: 2.4vh;
   border-radius: 50%;
   background: #ffffff;
   cursor: pointer;
@@ -363,28 +371,30 @@ input[type=range]::-moz-range-thumb {
 /* All the same stuff for IE */
 input[type=range]::-ms-thumb {
   box-shadow: 0 0 0.6vh #0d0d0d;
-  height: 2.5vh;
-  width: 2.5vh;
+  height: 2.4vh;
+  width: 2.4vh;
   border-radius: 50%;
   background: #ffffff;
   cursor: pointer;
+  
 }
 input[type=range]::-webkit-slider-runnable-track {
   width: 100%;
-  height: 1.2vh;
+  height: 2.4vh;
   cursor: pointer;
   box-shadow:inset 0px 0px 6px rgba(0,0,0,0.3);
   /* background: #f5c400; */
-  background: #fff;
+    background: #6b75a0;
    
-  border-radius: 1.3px;
+  border-radius: 20px;
   border: none;
     transition: 500ms ease-in-out;
 }
 
 input[type=range]:focus::-webkit-slider-runnable-track {
     /* background: #f5c400; */
-    background: #bbff34;
+    
+    background: #fff;
     transition: 500ms ease-in-out;
 }
 
