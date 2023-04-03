@@ -18,6 +18,13 @@
                 <h3>Obsługa wysyłek</h3>
             </div>
         </router-link>
+        <router-link :to="{name:'ScheduleView'}" class="test-image first">
+            <img src="../assets/img/harmonogram.jpg">
+            <div>
+                <h1>Wysyłki</h1>
+                <h3>Harmonogram</h3>
+            </div>
+        </router-link>
         <div></div>
     </div>
 
@@ -53,10 +60,10 @@ export default {
     display: grid;
     grid-template-columns: auto auto;
     gap: 3vh;
-    width: 50vh;
+    width: 45vh;
     height: 24vh;
     border-radius: 0vh;
-    margin: 10vh 3vh;
+    margin: 10vh 2vh;
     border: solid 0.3vh #ffffff;
     justify-content: start;
     align-items: center;

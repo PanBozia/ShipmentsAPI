@@ -128,7 +128,7 @@
 </template>
 
 <script>
-import { onBeforeMount } from 'vue'
+import { onBeforeMount, onMounted } from 'vue'
 import getShipments from '../js-components/getShipments'
 import moment from 'moment'
 export default {
@@ -162,7 +162,16 @@ export default {
             })
             moment.locale("pl")
         })
-
+        onMounted(()=>{
+            var elem = document.getElementById("app")
+             if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) { /* Safari */
+                    elem.webkitRequestFullscreen();
+                } else if (elem.msRequestFullscreen) { /* IE11 */
+                    elem.msRequestFullscreen();
+                }
+        })
         return{
              error, shipments, totalPages, itemsFrom, itemsTo, totalItemsCount, moment
         }
