@@ -1,6 +1,6 @@
 <template>
   <NavbarComponent />
-  <div class="row-container-seven">
+  <div class="row-container-seven" >
     <!-- 1st column -->
     <div> 
         <div>
@@ -25,12 +25,12 @@
         </div>
     </div>
     <!-- 2nd column -->
-    <div v-if="chosenShipment != null" class="forward-arrow done">
-        <span class="material-symbols-outlined">
+    <div v-if="chosenShipment != null" class="forward-arrow done" >
+        <span class="material-symbols-outlined edit" >
             task_alt
         </span>
-        <span class="material-symbols-outlined edit">
-            edit
+        <span v-if="createdId == ''" class="edit-label" @click="handleEdit(1,0,0)">
+            EDYTUJ
         </span>
     </div>
     <div v-else class="forward-arrow undone">
@@ -65,9 +65,12 @@
         </div>
     </div>
     <!-- 4th column -->
-     <div v-if="chosenOrders != null" class="forward-arrow done seven-item">
-        <span class="material-symbols-outlined">
+     <div v-if="chosenOrders != null" class="forward-arrow done seven-item" >
+        <span class="material-symbols-outlined edit" >
             task_alt
+        </span>
+        <span v-if="createdId ==''" class="edit-label" @click="handleEdit(0,1,0)">
+            EDYTUJ
         </span>
     </div>
     <div v-else class="forward-arrow undone seven-item">
@@ -104,28 +107,30 @@
         </div>
     </div>
     <!-- 6th column -->
-     <div v-if="chosenForwarder != null" class="forward-arrow done seven-item">
-       <span class="material-symbols-outlined">
+     <div v-if="chosenForwarder != null" class="forward-arrow done seven-item" >
+        <span class="material-symbols-outlined edit" >
             task_alt
         </span>
+        <span v-if="createdId == ''" class="edit-label" @click="handleEdit(0,0,1)">
+            EDYTUJ
+        </span>
     </div>
-    <div v-else class="forward-arrow undone seven-item">
+    <div v-if="chosenForwarder == null" class="forward-arrow undone seven-item">
         <span class="material-symbols-outlined">
             unpublished
         </span>
+        {{chosenForwarder}}
     </div>
     <!-- 7th column -->
     <div v-if="createdId ==''" class="button-ctnr">
         <div class="save-all-btn seven-item" v-if="chosenShipment != null && chosenOrders != null" @click="handleSaveShipmentData">
                 Zapisz wysyłkę
         </div>
-
     </div>
     <div v-else class="button-ctnr">
         <div >
             <p>
                 Dane wysyłki zostały zapisane.
-
             </p>
             
         </div>
@@ -189,7 +194,7 @@
         </div>
     </div>
 
-  <div class="row-container-one" v-if="chosenShipment == null">
+  <div class="row-container-one" v-if="editShipment">
     <div class="description">
     </div>
     <div>
@@ -198,31 +203,135 @@
   </div>
 
 
-  <div class="row-container-one" v-if="chosenShipment !=null && chosenOrders == null">
+  <div class="row-container-one" v-if="!editShipment && editOrders">
     <div class="description">
     </div>
-    <div >
+    <div>
       <ChooseOrder @add-orders-event="handleAddOrders"/>
     </div>
     <div></div>
   </div>
 
-   <div class="row-container-one" v-if="chosenShipment !=null && chosenOrders != null && chosenForwarder == null">
+   <div class="row-container-one" v-if="!editShipment && !editOrders && editForwarder">
         <div class="description">
         </div>
         <div>
         <ChooseForwarder @forwarder-chosen-event="handleChoosenForwarder"/>
         </div>
-        <!-- <div>
-        <AddForwarder @forwarder-chosen-event="handleChoosenForwarder" />
-        </div> -->
         <div></div>
   </div>
-    <div class="row-container-one" v-if="chosenShipment !=null && chosenOrders != null && chosenForwarder != null">
+    <div class="row-container-two" v-if="chosenShipment !=null && chosenOrders != null && chosenForwarder != null">
         <div></div>
         <div v-if="!createdId">
             <p>Dane zostały wprowadzone. Zapisz wysyłkę lub wróć do edycji.</p>
         </div>
+        <div v-else>
+            <div class="chosen-summary bigger">
+                <div>
+                    <h2>Podsumowanie:</h2>
+                </div>
+                <div>
+                    <p>
+                        <span class="yellow">ETD: </span>
+                        {{moment(chosenShipment.timeOfDeparture).format("YYY-MM-DD / mm:hh")}}
+                    </p>
+                    <p>
+                        <span class="yellow">Nr kontenera: </span>
+                        {{chosenShipment.containerNumber}}
+                    </p>
+                    <p>
+                        <span class="yellow">Nr plomby: </span>
+                        {{chosenShipment.containerSealNumber}}
+                    </p>
+                    <p>
+                        <span class="yellow">Typ kontenera: </span>
+                        {{chosenShipment.containerType}}
+                    </p>
+                    <p>
+                        <span class="yellow">Komentarz: </span>
+                        <span v-if="chosenShipment.comment != ''"> {{chosenShipment.comment}}</span>
+                                    <span v-else> Brak</span>
+                    </p>
+                    <p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p>
+                    <h3>Zamówienia:</h3>
+                    <div v-for="order in chosenOrders" :key="order.id">
+                        <p></p>
+                        <p>
+                            <span class="yellow">PO#: </span>
+                            {{order.poNumber}}
+                        </p>
+                        <p>
+                            <span class="yellow">Kategoria: </span>
+                            {{order.category}}
+                        </p>
+                        <p>
+                            <span class="yellow">Klient: </span>
+                            {{order.customerName}}
+                        </p>
+                       
+                       
+                    </div>
+                    <div>
+                        <p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p>
+                        <h3>Przewoźnik:</h3>
+                        <p>
+                            <span class="yellow">Spedycja: </span>
+                            {{chosenForwarder.speditor}}
+                        </p>
+                        <p>
+                            <span class="yellow">Tablice rejestracyjne: </span>
+                            {{chosenForwarder.carPlates}}
+                        </p>
+                        <p>
+                            <span class="yellow">Kierowca: </span>
+                            {{chosenForwarder.firstName}} {{chosenForwarder.lastName}}
+                        </p>
+                        <p>
+                            <span class="yellow">Nr telefonu: </span>
+                            {{chosenForwarder.phoneNumber}}
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+            <div class="chosen-summary bigger">
+                <div>
+                    <h2>Transporty wybranych zamówień</h2>
+                    <div v-for="order in chosenOrders" :key="order.id">
+                        <p></p>
+                        <p>
+                            <span class="yellow">PO#: </span>
+                            {{order.poNumber}}
+                        </p>
+                        <p class="underlined-para">
+                            <span class="yellow">Klient: </span>
+                            {{order.customerName}}
+                        </p>
+                        <div v-for="poShipment in order.shipments" :key="poShipment.id">
+                            <p class="underlined-para"></p>
+                            <p>
+                                <span class="yellow">ETD: </span>
+                                {{moment(poShipment.etd).format("YYYY-MM-DD / hh:mm")}}
+                            </p>
+                            <p>
+                                <span class="yellow">ATD: </span>
+                                {{moment(poShipment.atd).format("YYYY-MM-DD / hh:mm")}}
+                            </p>
+                            <p>
+                                <span class="yellow">Nr kontenera: </span>
+                                {{poShipment.containerNumber}}
+                            </p>
+                            <p>
+                                <span class="yellow">Ilość palet: </span>
+                                {{poShipment.palletQty}}
+                            </p>
+                        </div>
+                       
+                       
+                    </div>
+                </div>
+            </div>
         
         <div v-if="addShipmentError">
             {{addShipmentError}}
@@ -260,13 +369,38 @@ export default {
     const {addOrder, error:addOrderError} = addOrderToShipment(url)
     const addedPoNumber = ref("");
     const {addNewForwarder, error:newForwarderError, createdId:createdForwarderId} = addForwarder(url)
+    
+    const editShipment = ref(true)
+    const editOrders = ref(false)
+    const editForwarder = ref(false)
+    
+    const handleNewShipment = (shipmentData) =>{
+        chosenShipment.value = shipmentData
+        editShipment.value = false
+        console.log(chosenOrders.value)
+        if(chosenOrders.value == null){editOrders.value = true}
+        if(chosenForwarder.value == null && chosenOrders.value != null){editForwarder.value = true}
+    }
 
     const handleAddOrders = (ordersList) => {
       chosenOrders.value = ordersList
+      editOrders.value = false
+      if(chosenForwarder.value == null){editForwarder.value = true}
     };
 
-    const handleNewShipment = (shipmentData) =>{
-        chosenShipment.value = shipmentData
+    const handleChoosenForwarder = (newForwarder)=>{
+        addNewForwarder(newForwarder).then(()=>{
+            loadForwarder(createdForwarderId.value).then(()=>{
+                chosenForwarder.value = forwarder.value
+                editForwarder.value = false
+            })
+        })
+    }
+
+    const handleEdit = (shipment, order, forwarder)=>{
+        editShipment.value = shipment
+        editOrders.value = order
+        editForwarder.value = forwarder
     }
     
     const handleSaveShipmentData = ()=>{
@@ -288,14 +422,6 @@ export default {
             
     }
 
-    const handleChoosenForwarder = (newForwarder)=>{
-        addNewForwarder(newForwarder).then(()=>{
-            loadForwarder(createdForwarderId.value).then(()=>{
-                chosenForwarder.value = forwarder.value
-
-            })
-        })
-    }
 
     // watch(forwarder,()=>{
     //     console.log(forwarder)
@@ -310,7 +436,9 @@ export default {
 
       addShipmentError, createdId, handleSaveShipmentData,
       addOrderError,
-      newForwarderError
+      newForwarderError,
+
+      editShipment, editOrders, editForwarder, handleEdit
     };
   },
 };
@@ -331,6 +459,12 @@ export default {
 .lifted.material-symbols-outlined{
     font-size: 2vh;
 }
+.material-symbols-outlined.edit{
+        display: flex;
+        font-size: 4.5vh;
+        color: #42c231 ;
+}
+
 .endline{
     text-align: right;
 }
@@ -361,21 +495,29 @@ export default {
 }
 .forward-arrow{
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     font-size: 3vh; 
-    
 }
+.forward-arrow .edit-label:hover{
+    color: #f8f8f8;
+    cursor: pointer;
+}
+
 .done{
     color: #42c231;
-    
     }
+
+.edit-label{
+    font-size: 1.2vh;
+    border: solid 0.25vh;
+    border-radius: 1vh;
+    padding: 0.5vh 1.0vh;
+    margin-top: 1vh;
+}
 .undone{
     color: #364b6c;
-}
-.edit span{
-    font-size: 1vh;
-    color: #c58001 ;
 }
 .button-ctnr{
     display:flex;
@@ -409,6 +551,14 @@ export default {
     padding: 0;
     margin:0;
 
+}
+.chosen-summary .underlined-para{
+    border-bottom: solid #fff 1px;
+    
+}
+.chosen-summary.bigger p{
+    font-size: 1.5vh;
+    padding: 0.2vh 0;
 }
 .chosen-orders{
     margin-bottom: 0.8vh ;
@@ -460,7 +610,7 @@ export default {
     padding: 2vh 0vh;
     min-height: 10.3vh;
     /* background: #00000085 */
-    
+    transition: 300ms ease-in-out;
 }
 .seven-item{
     margin: 0 2vh;

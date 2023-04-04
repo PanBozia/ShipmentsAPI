@@ -12,6 +12,11 @@
                     <p>MAGAZYN</p>
                 </router-link>
             </div>
+            <div>
+                <router-link :to="{name:'ScheduleView'}">
+                    <p>HARMONOGRAM</p>
+                </router-link>
+            </div>
             
         </div>
         <div class="navbar-line"></div>

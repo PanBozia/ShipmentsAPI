@@ -111,6 +111,7 @@ export default {
 
         const handleEmitForwarder = ()=>{
             context.emit('forwarder-chosen-event',  newForwarder.value)
+            console.log(newForwarder.value)
         }
 
         //Add new forwarder
