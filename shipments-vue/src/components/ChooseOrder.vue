@@ -1,5 +1,5 @@
 <template>
-  <div class="choose-order-container">
+  <div class="choose-order-container non-symertic">
     <div>
       <h2>Wybierz zamówienia</h2>
       <form class="form-add" @submit.prevent="handleSearchOrders()">
@@ -58,43 +58,53 @@
       <h2>Dodaj nowe zamówienie</h2>
       <div >
         <form @submit.prevent="" class="form-add">
-          <label class="form-labels">Numer zamówienia</label>
-          <input type="text" v-model="poNumberForm" required />
-          <label class="form-labels">Kategoria</label>
-          <select v-model="categoryForm" required>
-            <option class="option-para" value="Sample">Sample</option>
-            <option class="option-para" value="Standard">Standard</option>
-            <option class="option-para" value="Inne">Inne</option>
-          </select>
+            <div class="form-set">
+                <label class="form-labels">Numer zamówienia</label>
+                <input type="text" v-model="poNumberForm" required />
+            </div>
+            <div class="form-set">
+                <label class="form-labels">Kategoria</label>
+                <select v-model="categoryForm" required>
+                    <option class="option-para" value="Sample">Sample</option>
+                    <option class="option-para" value="Standard">Standard</option>
+                    <option class="option-para" value="Inne">Inne</option>
+                </select>
+            </div>
+            <div class="form-set">
+                <label class="form-labels">Data dostawy</label>
+                <input type="date" v-model="deliveryDateForm" required />
+            </div>
+            <div class="form-set">
+                <label class="form-labels">Incoterms</label>
+                <select class="incoterms" v-if="!incotermsError" v-model="incotermIdForm">
+                    <option
+                    class="option-para"
+                    v-for="inco in incoterms"
+                    :key="inco.id"
+                    :value="inco.id"
+                    >
+                    {{ inco.shortName }} - {{ inco.name }}
+                    </option>
+                </select>
+            </div>
+                <label class="form-labels">Klient</label>
+                <select v-if="!customersError" v-model="customerIdForm">
+                    <option
+                    class="option-para"
+                    v-for="customer in customers"
+                    :key="customer.id"
+                    :value="customer.id"
+                    >
+                    {{ customer.shortName }} ({{ customer.cityAddress }} -
+                    {{ customer.countryAddress }})
+                    </option>
+                </select>
+            <div class="form-set">
+                <div v-if="!addPoError" class="btn-ctnr">
+                    <div class="btn" @click="handleCreatePo">Dodaj</div>
+                </div>
+            </div>
 
-          <label class="form-labels">Data dostawy</label>
-          <input type="date" v-model="deliveryDateForm" required />
-          <label class="form-labels">Incoterms</label>
-          <select v-if="!incotermsError" v-model="incotermIdForm">
-            <option
-              class="option-para"
-              v-for="inco in incoterms"
-              :key="inco.id"
-              :value="inco.id"
-            >
-              {{ inco.shortName }} - {{ inco.name }}
-            </option>
-          </select>
-          <label class="form-labels">Klient</label>
-          <select v-if="!customersError" v-model="customerIdForm">
-            <option
-              class="option-para"
-              v-for="customer in customers"
-              :key="customer.id"
-              :value="customer.id"
-            >
-              {{ customer.shortName }} ({{ customer.cityAddress }} -
-              {{ customer.countryAddress }})
-            </option>
-          </select>
-          <div v-if="!addPoError" id="add-btn-container">
-            <div class="btn" @click="handleCreatePo">Dodaj</div>
-          </div>
           <div
             v-if="addPoError || customersError || incotermsError"
             class="error"
@@ -248,15 +258,21 @@ export default {
     width: 100px;
     font-family: 'Poppins', sans-serif;
 }
+.form-set select.incoterms{
+    width: 100%;
+}
 .btn-ctnr{
     padding: 3vh 0;
     display: flex;
     justify-content: center;
 }
 .choose-order-container {
-  display: grid;
+    display: grid;
   grid-template-columns: 22vh 22vh;
   gap: 6vh;
+}
+.choose-order-container.non-symertic{
+    grid-template-columns: 32vh 22vh;
 }
 #header-edit-shipment {
   display: flex;
@@ -284,7 +300,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 12px;
+ 
   margin: 0px 0px 10px 0;
   padding: 8px 10px 8px 24px;
   /* border-bottom: 1px solid #fff; */
@@ -308,7 +324,6 @@ export default {
   transform: scale(1.4);
   transition: ease-in-out 100ms;
   color: #ff0000;
-  
 }
 .chosen-one .remove-btn span {
   font-size: 1.8em;
@@ -333,7 +348,7 @@ export default {
 }
 
 .forwarder-list-ctnr {
-  min-height: 244px;
+  min-height: 280px;
   max-height: 244px;
   overflow-y: auto;
   background: #fff;
@@ -351,9 +366,9 @@ export default {
   justify-content: space-between;
   background-color: #fff;
   color: #333;
-  padding: 2px 10px;
-  font-size: 0.8em;
-  border-bottom: 1px solid #333;
+  padding: 4px 10px;
+  font-size: 1.0vh;
+  border-bottom: 1px solid #2e3649;
   cursor: pointer;
 }
 .driver-line:hover {
@@ -361,7 +376,7 @@ export default {
 }
 .driver-line p {
   padding: 0;
-  margin: 4px 0px;
+  margin: 0px 0px;
 }
 .add-item-btn{
     display: flex;

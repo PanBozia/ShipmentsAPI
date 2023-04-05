@@ -17,7 +17,7 @@ select{
     padding: 0;
     display: flex;
     flex-direction: column;
-    /* width: 46vh; */
+    
 }
 
 .form-labels{
@@ -46,14 +46,15 @@ select{
     
 }
 .form-add input {
-    /* height: 34px; */
+    
     border: none;
     font-family: 'Poppins', sans-serif;
-    
+    font-size: 1.3vh;
     padding: 6px 10px;
 }
 .form-add select{
-    /* height: 34px; */
+    
+    font-size: 1.3vh;
     border: none;
     font-family: 'Poppins', sans-serif;
     padding: 6px 10px;

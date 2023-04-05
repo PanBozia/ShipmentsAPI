@@ -1,47 +1,55 @@
 <template>
-  <h2>Wybierz przewoźnika z listy</h2>
-  <form class="form-add" @submit.prevent="handleSearchForwarder()">
-    <label class="form-labels">Aktualny przewoźnik</label>
-    <div class="chosen-one" v-if="newForwarder">
-        <div  >{{newForwarder.lastName + ' ' + newForwarder.firstName + ' - ' + newForwarder.carPlates}}</div>
-        <div class="remove-btn" @click="handleRemoveDriver()">
-            <span class="material-symbols-outlined">
-                close
-            </span>
-        </div>
-    </div>
-    <div class="chosen-one red" v-else>
-        <div >Brak przewoźnika</div>
-    </div >
+<div class="choose-order-container non-symertic">
+    <div>
 
-    <label class="form-labels">Wyszukaj</label>
-    <div class="search-ctnr">
-        <input class="search-input" type="text" v-model="search_phrase">
-        <div class="btn search-button" @click="handleSearchForwarder()">Szukaj</div>
-    </div>
-    <div v-if="forwarders != null">
-            <div class="forwarder-list-ctnr">
-                <div v-if="forwarders.length == 0">
-                    <p id="no-result">Brak wyników wyszukiwania...</p>
+        <h2>Wybierz przewoźnika z listy</h2>
+        <form class="form-add" @submit.prevent="handleSearchForwarder()">
+            <label class="form-labels">Aktualny przewoźnik</label>
+            <div class="chosen-one" v-if="newForwarder">
+                <div  >{{newForwarder.lastName + ' ' + newForwarder.firstName + ' - ' + newForwarder.carPlates}}</div>
+                <div class="remove-btn" @click="handleRemoveDriver()">
+                    <span class="material-symbols-outlined">
+                        close
+                    </span>
                 </div>
-                <div v-else class="driver-line" v-for="forwarder in forwarders" :key="forwarder.id">
-                    <p>{{forwarder.lastName + ' ' + forwarder.firstName + ' - ' + forwarder.carPlates}}</p>
-                    <div class="add-driver-btn" @click="handleChoise(forwarder)">
-                        
-                         <div class="add-item-btn"><span>DODAJ</span></div>
+            </div>
+            <div class="chosen-one red" v-else>
+                <div >Brak przewoźnika</div>
+            </div >
+
+            <label class="form-labels">Wyszukaj</label>
+            <div class="search-ctnr">
+                <input class="search-input" type="text" v-model="search_phrase">
+                <div class="btn search-button" @click="handleSearchForwarder()">Szukaj</div>
+            </div>
+            <div v-if="forwarders != null">
+                    <div class="forwarder-list-ctnr">
+                        <div v-if="forwarders.length == 0">
+                            <p id="no-result">Brak wyników wyszukiwania...</p>
+                        </div>
+                        <div v-else class="driver-line" v-for="forwarder in forwarders" :key="forwarder.id">
+                            <div>
+                                <p>{{forwarder.speditor}}</p>
+                                <p>{{forwarder.carPlates}} - {{forwarder.firstName + ' ' + forwarder.lastName}}</p>
+                            </div>
+                            <div class="add-driver-btn" @click="handleChoise(forwarder)">
+                                
+                                <div class="add-item-btn"><span>DODAJ</span></div>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                    <div v-if="totalItemsCountForwarders > 20">
+                        <p class="red">Znaleziono więcej wyników spełniających kryteria wyszukiwania.</p>
+                    </div>
             </div>
-            <div v-if="totalItemsCountForwarders > 20">
-                <p class="red">Znaleziono więcej wyników spełniających kryteria wyszukiwania.</p>
-            </div>
+            
+        </form>
     </div>
-    <div class="btn-ctnr">
-</div>
-</form>
 
+    <div>
 
- <form class="form-add" @submit.prevent="">
+        <form class="form-add" @submit.prevent="">
+
             <h2>Dodaj nowego przewoźnika</h2>
             <div class="form-set">
                 <label class="form-labels">Numery rejestracyjne</label>
@@ -64,7 +72,7 @@
                 <input type="text" v-model="phoneForm">
             </div>
             <div id="add-btn-container">
-                <button @click="handleAddNewForwarder">Zapisz</button>
+                <button @click="handleAddNewForwarder">Dodaj</button>
             </div>
             <div v-if="errorForm" class="error" >
                 <p>{{errorForm}}</p>
@@ -75,11 +83,14 @@
             </div>
             
         </form>
+    </div>
+</div>
 
-
-<button class="btn" @click="handleEmitForwarder()">
-    Zapisz
-</button>
+<div class="btn-ctnr">
+    <button class="btn" @click="handleEmitForwarder()">
+        Zapisz
+    </button>
+</div>
   
   
 </template>

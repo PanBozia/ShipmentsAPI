@@ -123,7 +123,7 @@
     </div>
     <!-- 7th column -->
     <div v-if="createdId ==''" class="button-ctnr">
-        <div class="save-all-btn seven-item" v-if="chosenShipment != null && chosenOrders != null" @click="handleSaveShipmentData">
+        <div class="save-all-btn seven-item" v-if="chosenShipment != null && chosenOrders != null && chosenOrders.length != 0" @click="handleSaveShipmentData">
                 Zapisz wysyłkę
         </div>
     </div>
@@ -195,7 +195,7 @@
     </div>
 
   <div class="row-container-one" v-if="editShipment">
-    <div class="description">
+    <div>
     </div>
     <div>
         <AddShipmentData @new-shipment-event="handleNewShipment"/>
@@ -204,7 +204,7 @@
 
 
   <div class="row-container-one" v-if="!editShipment && editOrders">
-    <div class="description">
+    <div>
     </div>
     <div>
       <ChooseOrder @add-orders-event="handleAddOrders"/>
@@ -213,19 +213,20 @@
   </div>
 
    <div class="row-container-one" v-if="!editShipment && !editOrders && editForwarder">
-        <div class="description">
+        <div>
         </div>
         <div>
         <ChooseForwarder @forwarder-chosen-event="handleChoosenForwarder"/>
         </div>
         <div></div>
   </div>
-    <div class="row-container-two" v-if="chosenShipment !=null && chosenOrders != null && chosenForwarder != null">
+    <div class="row-container-two larger" v-if="chosenShipment !=null && chosenOrders != null && chosenForwarder != null">
         <div></div>
-        <div v-if="!createdId">
-            <p>Dane zostały wprowadzone. Zapisz wysyłkę lub wróć do edycji.</p>
+        <div v-if="!createdId && !editShipment && !editOrders && !editForwarder">
+            <p>Dane zostały wprowadzone.</p>
+            <p> Zapisz wysyłkę lub edytuj.</p>
         </div>
-        <div v-else>
+        <div v-if="createdId && !editShipment && !editOrders && !editForwarder">
             <div class="chosen-summary bigger">
                 <div>
                     <h2>Podsumowanie:</h2>
@@ -295,43 +296,61 @@
                 </div>
             </div>
         </div>
-            <div class="chosen-summary bigger">
-                <div>
-                    <h2>Transporty wybranych zamówień</h2>
-                    <div v-for="order in chosenOrders" :key="order.id">
-                        <p></p>
-                        <p>
-                            <span class="yellow">PO#: </span>
-                            {{order.poNumber}}
-                        </p>
-                        <p class="underlined-para">
-                            <span class="yellow">Klient: </span>
-                            {{order.customerName}}
-                        </p>
-                        <div v-for="poShipment in order.shipments" :key="poShipment.id">
-                            <p class="underlined-para"></p>
-                            <p>
-                                <span class="yellow">ETD: </span>
-                                {{moment(poShipment.etd).format("YYYY-MM-DD / hh:mm")}}
-                            </p>
-                            <p>
-                                <span class="yellow">ATD: </span>
-                                {{moment(poShipment.atd).format("YYYY-MM-DD / hh:mm")}}
-                            </p>
-                            <p>
-                                <span class="yellow">Nr kontenera: </span>
-                                {{poShipment.containerNumber}}
-                            </p>
-                            <p>
-                                <span class="yellow">Ilość palet: </span>
-                                {{poShipment.palletQty}}
-                            </p>
-                        </div>
-                       
-                       
+        <div class="chosen-summary bigger" v-if="chosenOrders != null && chosenOrders.length != 0 && !editShipment && !editOrders && !editForwarder">
+            <div>
+                <h2>Transporty wybranych zamówień</h2>
+                <div v-for="order in chosenOrders" :key="order.id">
+                    <p ></p>
+                    
+                    <div class="summary-head">
+                        <span class="material-symbols-outlined">
+                            quick_reference
+                        </span>
+                        <h4>Zamówienie</h4>
                     </div>
+                    <p>
+                        <span class="yellow">PO#: </span>
+                        {{order.poNumber}}
+                    </p>
+                    <p>
+                        <span class="yellow">Klient: </span>
+                        {{order.customerName}}
+                    </p>
+                        <div v-if="order.shipments.length != 0" class="summary-head">
+                            <span class="material-symbols-outlined">
+                                local_shipping
+                            </span>
+                            <h4>Wysyłki</h4>
+                        </div>
+                        <div v-else class="summary-head">
+                            <span class="material-symbols-outlined">
+                                block
+                            </span>
+                            <h4>brak wysyłek</h4>
+                        </div>
+                    <div v-for="poShipment in order.shipments" :key="poShipment.id">
+                        <p>
+                            <span class="yellow">ETD: </span>
+                            {{moment(poShipment.etd).format("YYYY-MM-DD / hh:mm")}}
+                        </p>
+                        <p>
+                            <span class="yellow">ATD: </span>
+                            {{moment(poShipment.atd).format("YYYY-MM-DD / hh:mm")}}
+                        </p>
+                        <p>
+                            <span class="yellow">Nr kontenera: </span>
+                            {{poShipment.containerNumber}}
+                        </p>
+                        <p style="padding-bottom: 1vh">
+                            <span class="yellow">Ilość palet: </span>
+                            {{poShipment.palletQty}}
+                        </p>
+                    </div>
+                    
+                    
                 </div>
             </div>
+        </div>
         
         <div v-if="addShipmentError">
             {{addShipmentError}}
@@ -552,22 +571,36 @@ export default {
     margin:0;
 
 }
+.chosen-summary .summary-head{
+    display: flex;
+    align-items: center;
+    margin: 1vh 0;
+}
+.chosen-summary .summary-head h4{
+    margin: 0 0 0 1vh;
+    color: #eeeeee
+}
+.chosen-summary .summary-head span{
+    font-size: 2vh;
+}
+
 .chosen-summary .underlined-para{
     border-bottom: solid #fff 1px;
     
 }
 .chosen-summary.bigger p{
-    font-size: 1.5vh;
-    padding: 0.2vh 0;
+    font-size: 1.4vh;
+    padding: 0.1vh 0;
 }
 .chosen-orders{
     margin-bottom: 0.8vh ;
 }
 .yellow{
     color: #e6b800;
+    font-weight: 400;
 }
 .chosen-summary h2, .chosen-summary h3{
-    color: #e6b800;
+    color: #f0f0f0;
     margin-top: 0;
     margin-bottom: 1vh;
 }
@@ -593,6 +626,9 @@ export default {
     gap: 5vh;
     margin: 40px 0;
     padding-bottom: 40px;
+}
+.row-container-two.larger{
+    grid-template-columns: 1fr 30vw 30vw 1fr;
 }
 .row-container-three{
     display: grid;
