@@ -1,5 +1,5 @@
 <template>
-    <div class="navbar">
+    <div class="navbar" @click="handleFullScreen">
         <div class="navbar-line"></div>
         <div class="schedule-container schedule-bar">
             <div>
@@ -128,10 +128,11 @@
 </template>
 
 <script>
-import { onBeforeMount, onMounted } from 'vue'
+import { onBeforeMount } from 'vue'
 import getShipments from '../js-components/getShipments'
 import moment from 'moment'
 export default {
+    
     setup(){
         const url = 'https://localhost:44331/api/'
         const {loadShipments, error, shipments, totalPages, itemsFrom, itemsTo, totalItemsCount} = getShipments(url)
@@ -162,18 +163,22 @@ export default {
             })
             moment.locale("pl")
         })
-        onMounted(()=>{
+       
+        const handleFullScreen = ()=>{
             var elem = document.getElementById("app")
-             if (elem.requestFullscreen) {
+            if (elem.requestFullscreen) {
                     elem.requestFullscreen();
                 } else if (elem.webkitRequestFullscreen) { /* Safari */
                     elem.webkitRequestFullscreen();
                 } else if (elem.msRequestFullscreen) { /* IE11 */
                     elem.msRequestFullscreen();
                 }
-        })
+        }    
+          
+            
+        
         return{
-             error, shipments, totalPages, itemsFrom, itemsTo, totalItemsCount, moment
+             error, shipments, totalPages, itemsFrom, itemsTo, totalItemsCount, moment, handleFullScreen
         }
     }
 

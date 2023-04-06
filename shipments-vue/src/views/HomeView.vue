@@ -36,6 +36,7 @@ import NavbarStart from '../components/NavbarStart.vue'
 export default {
     components: {NavbarStart},
     setup(){
+        
         return{}
     }
 }

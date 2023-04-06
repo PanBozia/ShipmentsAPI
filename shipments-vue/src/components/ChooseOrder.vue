@@ -189,6 +189,7 @@ export default {
                 }
             else{
             addNewPO(poData).then(()=>{
+                console.log(addPoError.value)
                 if(addPoError.value == null){
                     poData['id'] = createdId.value
                     
@@ -204,7 +205,7 @@ export default {
                         addPoError.value = ''
                         customersError.value = ''
                         createdFlag.value = true
-                        setTimeout(()=>{createdFlag.value = false},5000)
+                        setTimeout(()=>{createdFlag.value = false},4000)
                     })
                 }else{
                     setTimeout(()=>{addPoError.value = null},4000)

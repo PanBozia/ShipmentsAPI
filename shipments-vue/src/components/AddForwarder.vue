@@ -42,7 +42,8 @@
 import { ref } from 'vue'
 import addForwarder from '../js-components/addForwarder.js'
 export default {
-setup(){
+emits:['created-forwarder-event'],
+setup(props, context){
     const url = 'https://localhost:44331/api/'
     const firstNameForm = ref('')
     const lastNameForm = ref('')
@@ -56,7 +57,7 @@ setup(){
     const {addNewForwarder, error, createdId} = addForwarder(url)
 
     const handleSubmit = ()=>{
-        if(firstNameForm.value == '' || lastNameForm.value =='' || speditionForm.value == '' || platesForm.value ==''){
+        if(firstNameForm.value == '' || lastNameForm.value == '' || speditionForm.value == '' || platesForm.value ==''){
             errorForm.value = "Nie wprowadzono wszystkich danych."
         }else{
             let formInputData = {
@@ -76,6 +77,7 @@ setup(){
                 platesForm.value = ''
                 if(error.value == ''){
                     createdFlag.value = true
+                    context.emit('created-forwarder-event', createdId.value)
                 }
                 setTimeout(()=>{createdFlag.value = false},5000)
             })

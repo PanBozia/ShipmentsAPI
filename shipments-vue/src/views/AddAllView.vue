@@ -369,9 +369,6 @@ import ChooseOrder from "../components/ChooseOrder.vue";
 import NavbarComponent from "../components/NavbarComponent.vue";
 import AddShipmentData from "../components/AddShipmentData.vue";
 import ChooseForwarder from "../components/ChooseForwarder.vue";
-import addForwarder from "../js-components/addForwarder.js"
-import getForwarderById from "../js-components/getForwarderById.js"
-//import getShipmentById from "../js-components/getShipmentById.js"
 import addShipment from '../js-components/addShipment.js'
 import addOrderToShipment from '../js-components/addOrderToShipment.js'
 import moment from 'moment'
@@ -379,7 +376,7 @@ export default {
   components: { NavbarComponent, ChooseOrder, AddShipmentData, ChooseForwarder },
   setup() {
     const url = 'https://localhost:44331/api/'
-    const {loadForwarder, error:loadForwarderError, forwarder} = getForwarderById(url)
+    
     //const {shipment, error:shipmentError, loadShipment} = getShipmentById(url)
     const chosenForwarder = ref(null)
     const chosenShipment = ref(null)
@@ -387,7 +384,6 @@ export default {
     const { addNewShipment, error:addShipmentError, createdId} = addShipment(url)
     const {addOrder, error:addOrderError} = addOrderToShipment(url)
     const addedPoNumber = ref("");
-    const {addNewForwarder, error:newForwarderError, createdId:createdForwarderId} = addForwarder(url)
     
     const editShipment = ref(true)
     const editOrders = ref(false)
@@ -408,12 +404,8 @@ export default {
     };
 
     const handleChoosenForwarder = (newForwarder)=>{
-        addNewForwarder(newForwarder).then(()=>{
-            loadForwarder(createdForwarderId.value).then(()=>{
-                chosenForwarder.value = forwarder.value
-                editForwarder.value = false
-            })
-        })
+        chosenForwarder.value = newForwarder
+        editForwarder.value = false
     }
 
     const handleEdit = (shipment, order, forwarder)=>{
@@ -448,15 +440,12 @@ export default {
 
     return {
       handleNewShipment, chosenShipment,
-      handleChoosenForwarder, loadForwarderError, chosenForwarder,
+      handleChoosenForwarder, chosenForwarder,
       addedPoNumber,
       moment,
       chosenOrders, handleAddOrders,
-
       addShipmentError, createdId, handleSaveShipmentData,
       addOrderError,
-      newForwarderError,
-
       editShipment, editOrders, editForwarder, handleEdit
     };
   },

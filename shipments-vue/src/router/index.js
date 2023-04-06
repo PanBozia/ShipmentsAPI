@@ -31,7 +31,8 @@ const router = createRouter({
     {
       path: '/schedule',
       name: 'ScheduleView',
-      component: ScheduleView
+      component: ScheduleView,
+      props: true
     },
     {
       path: '/forwarder',

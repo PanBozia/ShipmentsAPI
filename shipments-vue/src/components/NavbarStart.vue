@@ -13,7 +13,7 @@
                 </router-link>
             </div>
             <div>
-                <router-link :to="{name:'ScheduleView'}">
+                <router-link :to="{name:'ScheduleView'}" >
                     <p>HARMONOGRAM</p>
                 </router-link>
             </div>
@@ -24,15 +24,15 @@
 </template>
 
 <script>
-export default {
-    // setup(){
-    //     const reloadPage = ()=>{
-    //         location.reload()
-    //     }
-    //     return { reloadPage}
-    // }
+// export default {
+//     setup(){
+//         const reloadPage = ()=>{
+//             location.reload()
+//         }
+//         return { reloadPage }
+//     }
 
-}
+// }
 </script>
 
 
