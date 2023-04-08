@@ -93,6 +93,6 @@ select{
 }
 
 .add-single-form{
-    min-width: 30vh;
+    width: 30vh;
     margin: auto;
 }

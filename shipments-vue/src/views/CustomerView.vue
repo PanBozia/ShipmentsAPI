@@ -20,7 +20,7 @@
         <div v-if="addFlag" class="item-v">
             <AddCustomer/>
         </div>
-  </div>
+    </div>
   </div>
 </template>
 

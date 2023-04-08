@@ -1,26 +1,36 @@
 <template>
-    <h2>Dodaj nowe zamówienie</h2>
+
    <div class="add-container">
-        <form class="form-add" @submit.prevent="handleSubmit">
-            <label class="form-labels">Numer zamówienia</label>
-            <input type="text" v-model="poNumberForm" required>
-            <label class="form-labels">Kategoria</label>
-            <select v-model="categoryForm">
-                <option class="option-para" value="Sample">Sample</option>
-                <option class="option-para" value="Standard">Standard</option>
-                <option class="option-para" value="Inne">Inne</option>
-            </select>
-            
-            <label class="form-labels">Data dostawy</label>
-            <input type="datetime-local" v-model="deliveryDateForm" required>
-            <label class="form-labels">Incoterms</label>
-            <select v-if="!incotermsError" v-model="incotermIdForm">
-                <option class="option-para" v-for="inco in incoterms" :key="inco.id" :value="inco.id">{{inco.shortName}} - {{inco.name}}</option>
-            </select>
-            <label class="form-labels">Klient</label>
-            <select v-if="!customersError" v-model="customerIdForm">
-                <option class="option-para" v-for="customer in customers" :key="customer.id" :value="customer.id">{{customer.shortName}} ({{customer.cityAddress}} - {{customer.countryAddress}})</option>
-            </select>
+        <form class="form-add add-single-form" @submit.prevent="handleSubmit">
+            <h2>Dodaj nowe zamówienie</h2>
+            <div class="form-set">
+                <label class="form-labels">Numer zamówienia</label>
+                <input type="text" v-model="poNumberForm" required>
+            </div>
+            <div class="form-set">
+                <label class="form-labels">Kategoria</label>
+                <select v-model="categoryForm">
+                    <option class="option-para" value="Sample">Sample</option>
+                    <option class="option-para" value="Standard">Standard</option>
+                    <option class="option-para" value="Inne">Inne</option>
+                </select>
+            </div>
+            <div class="form-set">
+                <label class="form-labels">Data dostawy</label>
+                <input type="datetime-local" v-model="deliveryDateForm" required>
+            </div>
+            <div class="form-set">
+                <label class="form-labels">Incoterms</label>
+                <select class="incoterms" v-if="!incotermsError" v-model="incotermIdForm">
+                    <option class="option-para" v-for="inco in incoterms" :key="inco.id" :value="inco.id">{{inco.shortName}} - {{inco.name}}</option>
+                </select>
+            </div>
+            <div class="form-set">
+                <label class="form-labels">Klient</label>
+                <select v-if="!customersError" v-model="customerIdForm">
+                    <option class="option-para" v-for="customer in customers" :key="customer.id" :value="customer.id">{{customer.shortName}} ({{customer.cityAddress}} - {{customer.countryAddress}})</option>
+                </select>
+            </div>
             <div v-if="!addPoError" id="add-btn-container">
                 <button>Dodaj</button>
             </div>

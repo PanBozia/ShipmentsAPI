@@ -106,6 +106,7 @@ namespace ShipmentsAPI.Services
             {
                 throw new BadRequestException($"Klient z numerem {createCustomerDto.ClientNumber} już istnieje.");
             }
+            createCustomerDto.ShortName = createCustomerDto.ShortName.ToUpper();
             var newCustomer = mapper.Map<Customer>(createCustomerDto);
             newCustomer.Id = Guid.NewGuid();
             dbContext.Customers.Add(newCustomer);

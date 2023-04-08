@@ -23,7 +23,9 @@
                 </router-link>
             </div>
             <div>
-                <p>MAGAZYN</p>
+                <router-link :to="{name:'WarehouseView'}">
+                    <p>MAGAZYN</p>
+                </router-link>
             </div>
             
             <div>

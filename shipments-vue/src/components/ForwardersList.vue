@@ -48,7 +48,7 @@
             <p>{{forwarder.speditor}}</p>
             <p>{{forwarder.phoneNumber}}</p>
             <p>{{forwarder.carPlates}}</p>
-            <button>EDYTUJ</button>
+            <button @click="handleEditForwarder(forwarder.id)">EDYTUJ</button>
         </div>
         <div class="list-footer">
             <p>Ilość wszystkich pozycji: {{totalItemsCount}}</p>
@@ -86,11 +86,12 @@
 <script>
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import getForwarders from '../js-components/getForwarders.js'
+import {useRouter} from 'vue-router'
 export default {
     setup(){
         const url = 'https://localhost:44331/api/'
         const {loadForwarders, error, forwarders, totalPages, itemsFrom, itemsTo, totalItemsCount} = getForwarders(url)
-
+        const router = useRouter()
         const searchPhrase = ref('')
         const pageSize = ref(10)
         const pageNumber = ref(1)
@@ -159,6 +160,12 @@ export default {
             updateFowarders(pageSize, 1)
         }
 
+        const handleEditForwarder = (id) => {
+            router.push({ name:'EditForwarderView', 
+                      params:{ forwarderId:id } 
+        })
+        }
+
         onUnmounted(()=>{
             searchWatcher();
             sortDirectionWatcher();
@@ -178,7 +185,8 @@ export default {
                 error, 
                 pageNumber,
                 sortBy,
-                sortDirection }                          
+                sortDirection,
+                handleEditForwarder }                          
                 
     }
 }

@@ -67,7 +67,7 @@
                         <p>{{moment(shipment.etd).format("YYYY-MM-DD")}}</p>
                     </div>
                     <div>
-                        <p>TD:</p>
+                        <p>ATD:</p>
                         <p>{{moment(shipment.timeOfDeparture).format("YYYY-MM-DD")}}</p>
                     </div>
                 </div>

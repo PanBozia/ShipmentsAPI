@@ -1,7 +1,7 @@
 <template>
    
     <div>
-        <form class="form-add" @submit.prevent="handleSubmit">
+        <form class="form-add add-single-form" @submit.prevent="handleSubmit">
             <h2>Dodaj nowego przewoźnika</h2>
             <div class="form-set">
                 <label class="form-labels">Numery rejestracyjne</label>

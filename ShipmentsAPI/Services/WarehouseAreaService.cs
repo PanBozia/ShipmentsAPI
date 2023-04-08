@@ -31,7 +31,8 @@ namespace ShipmentsAPI.Services
 
         public List<WarehouseAreaDto> Get()
         {
-            var warehouseAreas = dbContext.WarehouseAreas.ToList();
+            var warehouseAreas = dbContext.WarehouseAreas.OrderBy(x => x.Name).ToList();
+            
             if (warehouseAreas == null)
             {
                 throw new NotFoundException("Warehouse area not found");
@@ -50,6 +51,12 @@ namespace ShipmentsAPI.Services
 
         public int Create(CreateWarehouseAreaDto dto)
         {
+            var result = dbContext.WarehouseAreas.Any(x => x.Name.ToUpper() == dto.Name.ToUpper());
+            if (result)
+            {
+                throw new BadRequestException($"Inne lokacja z nazwą {dto.Name} już istnieje.");
+            }
+            dto.Name = dto.Name.ToUpper();
             var warehouseArea = mapper.Map<WarehouseArea>(dto);
             dbContext.WarehouseAreas.Add(warehouseArea);
             dbContext.SaveChanges();

@@ -1,43 +1,87 @@
 <template>
     <NavbarComponent/>
     
-  <div class="add-container">
-        <form class="form-add" @submit.prevent="handleSubmit">
-            <p>Edytuj dane zamówienia</p>
-            <label>Numer zamówienia</label>
-            <input type="text" v-model="poNumberForm" required>
-            <label>Kategoria</label>
-            <select v-model="categoryForm">
-                <option value="Sample">Sample</option>
-                <option value="Standard">Standard</option>
-                <option value="Inne">Inne</option>
-            </select>
+    <div class="frame">
+        <div class="view-container">
+            <div class="sub-page-header item-e ">
+                <p>ZAMÓWIENIA</p>
+            </div>
+            <div class="item-a" >
+                <router-link :to="{name:'PurchaseOrderView'}" class="item-container main-list-btn">
+                    <p><span class="material-symbols-outlined">list_alt</span></p>
+                </router-link>
             
-            <label>Data dostawy</label>
-            <input type="datetime-local" v-model="deliveryDateForm" required>
-            <label>Incoterms</label>
-            <select v-if="!incotermsError" v-model="incotermIdForm">
-                <option v-for="inco in incoterms" :key="inco.id" :value="inco.id">{{inco.shortName}} - {{inco.name}}</option>
-            </select>
-            <label>Klient</label>
-            <select v-if="!customersError" v-model="customerIdForm">
-                <option v-for="customer in customers" :key="customer.id" :value="customer.id">{{customer.shortName}} ({{customer.cityAddress}} - {{customer.countryAddress}})</option>
-            </select>
-            <div v-if="!editOrderError" id="add-btn-container">
-                <button>Zapisz</button>
-            </div>
-            <div v-if="loadOrderError || editOrderError || customersError || incotermsError" class="error" >
-                <p>{{loadOrderError}}</p>
-                <p>{{customersError}}</p>
-                <p>{{incotermsError}}</p>
-                <p>{{editOrderError}}</p>
-            </div>
-            <div v-if="createdFlag" class="success">
-                <p>Zamówienie zostało zapisane.</p>
+                <div class="item-container main-add-btn" @click="openAddComponent">
+                    <p><span class="material-symbols-outlined">add</span></p>
+                </div>
             </div>
             
-        </form>
+            <div class="item-v">
+                <div v-if="order && !goToAddFlag">
+                    <div class="add-container">
+                        <form class="form-add add-single-form" @submit.prevent="handleSubmit">
+                            <h2>Edytuj dane zamówienia</h2>
+                            <div class="form-set">
+                                <label>Numer zamówienia</label>
+                                <input type="text" v-model="poNumberForm" required>
+                            </div>
+                            <div class="form-set">
+                                <label>Kategoria</label>
+                                <select v-model="categoryForm">
+                                    <option value="Sample">Sample</option>
+                                    <option value="Standard">Standard</option>
+                                    <option value="Inne">Inne</option>
+                                </select>
+                            </div>
+                            <div class="form-set">
+                                <label>Data dostawy</label>
+                                <input type="datetime-local" v-model="deliveryDateForm" required>
+                            </div>
+                                <label>Incoterms</label>
+                                <select class="incoterms" v-if="!incotermsError" v-model="incotermIdForm">
+                                    <option v-for="inco in incoterms" :key="inco.id" :value="inco.id">{{inco.shortName}} - {{inco.name}}</option>
+                                </select>
+                            <div class="form-set">
+                                <label>Klient</label>
+                                <select v-if="!customersError" v-model="customerIdForm">
+                                    <option v-for="customer in customers" :key="customer.id" :value="customer.id">{{customer.shortName}} ({{customer.cityAddress}} - {{customer.countryAddress}})</option>
+                                </select>
+                            </div>
+                            <div v-if="!editOrderError" id="add-btn-container">
+                                <button>Zapisz</button>
+                            </div>
+                            <div v-if="loadOrderError || editOrderError || customersError || incotermsError" class="error" >
+                                <p>{{loadOrderError}}</p>
+                                <p>{{customersError}}</p>
+                                <p>{{incotermsError}}</p>
+                                <p>{{editOrderError}}</p>
+                            </div>
+                            <div v-if="createdFlag" class="success">
+                                <p>Zamówienie zostało zapisane.</p>
+                            </div>
+                            
+                        </form>
+                    </div>
+
+
+                </div>
+                <div v-if="goToAddFlag">
+                    <AddPurchaseOrder />
+                </div>
+            </div>
+        </div>
     </div>
+
+
+
+
+
+
+
+
+
+    
+  
 </template>
 
 <script>
@@ -47,10 +91,12 @@ import NavbarComponent from '../components/NavbarComponent.vue'
 import getIncoterms from '../js-components/getIncoterms.js'
 import getAllCustomers from '../js-components/getAllCustomers.js'
 import editPurchaseOrder from '../js-components/editPurchaseOrder.js'
+import AddPurchaseOrder from '../components/AddPurchaseOrder.vue'
 import moment from 'moment'
+
 export default {
     props:['orderId'],
-    components:{NavbarComponent},
+    components:{NavbarComponent, AddPurchaseOrder},
     setup(props){
         const url = 'https://localhost:44331/api/'
         const {loadOrder, error:loadOrderError, order} = getPurchaseOrderById(url)
@@ -63,7 +109,8 @@ export default {
         const {loadIncoterms, incoterms, error:incotermsError} = getIncoterms(url)
         const {loadAllCustomers, customers, error:customersError} = getAllCustomers(url)
         const {editOrder, error:editOrderError} = editPurchaseOrder(url)
-       
+        const goToAddFlag = ref(false)
+
         onBeforeMount(()=>{
             loadOrder(props.orderId).then(()=>{
                 loadIncoterms().then(()=>{
@@ -99,6 +146,9 @@ export default {
             })
            
         }
+        const openAddComponent = ()=>{
+        goToAddFlag.value = true
+    }
 
         return{
             handleSubmit,
@@ -109,6 +159,8 @@ export default {
             incoterms, incotermsError,
             customers, customersError,
             editOrderError,
+            goToAddFlag,
+            openAddComponent
         }
     }
 }

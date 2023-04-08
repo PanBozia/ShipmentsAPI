@@ -9,7 +9,8 @@ import EditShipmentView from '../views/EditShipmentView.vue'
 import EditOrderView from '../views/EditOrderView.vue'
 import EditCustomerView from '../views/EditCustomerView.vue'
 import AddAllView from '../views/AddAllView.vue'
-
+import EditForwarderView from '../views/EditForwarderView.vue'
+import WarehouseView from '../views/WarehouseView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -46,6 +47,12 @@ const router = createRouter({
         props: true
     },
     {
+        path: '/warehouse',
+        name: 'WarehouseView',
+        component: WarehouseView,
+        props: true
+    },
+    {
         path: '/addall',
         name: 'AddAllView',
         component: AddAllView,
@@ -69,6 +76,13 @@ const router = createRouter({
         path: '/customer/edit/:customerId',
         name: 'EditCustomerView',
         component: EditCustomerView,
+        props: true
+        
+    },
+    {
+        path: '/forwarder/edit/:forwarderId',
+        name: 'EditForwarderView',
+        component: EditForwarderView,
         props: true
         
     }

@@ -1,41 +1,76 @@
 <template>
    <NavbarComponent />
-  <div>
-    
-    <div v-if="customer">
-        <div class="add-container">
-            <form class="form-add" @submit.prevent="handleSubmit">
-                <p>Edytuj dane klienta</p>
-                <label>Nazwa (skrót)</label>
-                <input type="text" v-model="shortNameForm" required>
-                <label>Pełna nazwa</label>
-                <input type="text" v-model="nameForm" required>
-                <label>Numer klienta</label>
-                <input type="text" v-model="clientNumberForm" required>
-                <label>Ulica</label>
-                <input type="text" v-model="streetForm">
-                <label>Miasto</label>
-                <input type="text" v-model="cityForm" required>
-                <label>Kod pocztowy</label>
-                <input type="text" v-model="zipCodeForm" required>
-                <label>Kod kraju</label>
-                <input type="text" v-model="countryForm" required>
-                <div id="add-btn-container">
-                    <button>Zapisz</button>
-                </div>
-                <div v-if="errorForm || getCustomerError" class="error" >
-                    <p>{{errorForm}}</p>
-                    <p>{{getCustomerError}}</p>
-                </div>
-                <div v-if="createdFlag" class="success">
-                    <p>Dane klienta zostały zapisane.</p>
-                </div>
-                
-            </form>
+  
+  <div class="frame">
+     <div class="view-container">
+        <div class="sub-page-header item-e ">
+            <p>KLIENCI</p>
         </div>
+        <div class="item-a" >
+            <router-link :to="{name:'CustomerView'}" class="item-container main-list-btn">
+                <p><span class="material-symbols-outlined">list_alt</span></p>
+            </router-link>
+           
+            <div class="item-container main-add-btn" @click="openAddComponent">
+                <p><span class="material-symbols-outlined">add</span></p>
+            </div>
+        </div>
+        
+        <div class="item-v">
+            <div v-if="customer && !goToAddFlag">
+                <div class="add-container">
+                    <form class="form-add add-single-form" @submit.prevent="handleSubmit">
+                        <h2>Edytuj dane klienta</h2>
+                        <div class="form-set">
+                            <label>Nazwa (skrót)</label>
+                            <input type="text" v-model="shortNameForm" required>
+                        </div>
+                        <div class="form-set">
+                            <label>Pełna nazwa</label>
+                            <input type="text" v-model="nameForm" required>
+                        </div>
+                        <div class="form-set">
+                            <label>Numer klienta</label>
+                            <input type="text" v-model="clientNumberForm" required>
+                        </div>
+                        <div class="form-set">
+                            <label>Ulica</label>
+                            <input type="text" v-model="streetForm">
+                        </div>
+                        <div class="form-set">
+                            <label>Miasto</label>
+                            <input type="text" v-model="cityForm" required>
+                        </div>
+                        <div class="form-set">
+                            <label>Kod pocztowy</label>
+                            <input type="text" v-model="zipCodeForm" required>
+                        </div>
+                        <div class="form-set">
+                            <label>Kod kraju</label>
+                            <input type="text" v-model="countryForm" required>
+                        </div>
+                        <div id="add-btn-container">
+                            <button>Zapisz</button>
+                        </div>
+                        <div v-if="errorForm || getCustomerError" class="error" >
+                            <p>{{errorForm}}</p>
+                            <p>{{getCustomerError}}</p>
+                        </div>
+                        <div v-if="createdFlag" class="success">
+                            <p>Dane klienta zostały zapisane.</p>
+                        </div>
+                        
+                    </form>
+                </div>
 
+            </div>
+            <div v-if="goToAddFlag">
+                <AddCustomer />
+            </div>
+        </div>
     </div>
   </div>
+ 
 </template>
 
 <script>
@@ -43,10 +78,10 @@ import { onBeforeMount, ref } from 'vue'
 import NavbarComponent from '../components/NavbarComponent.vue'
 import editCustomer from '../js-components/editCustomer.js'
 import getCustomerById from '../js-components/getCustomerById.js'
-
+import AddCustomer from '../components/AddCustomer.vue'
 export default {
     props:['customerId'],
-    components:{NavbarComponent},
+    components:{NavbarComponent, AddCustomer},
     setup(props){
     const url = 'https://localhost:44331/api/'
     const nameForm = ref('')
@@ -58,6 +93,7 @@ export default {
     const countryForm = ref('')
     const createdFlag = ref(false)
     const errorForm = ref('')
+    const goToAddFlag = ref(false)
 
     const {edit, error:editCustomerError} = editCustomer(url)
     const {loadCustomer, error:getCustomerError, customer} = getCustomerById(url)
@@ -96,6 +132,10 @@ export default {
         }
     }
 
+    const openAddComponent = ()=>{
+        goToAddFlag.value = true
+    }
+
     return {getCustomerError,
             editCustomerError,
             nameForm, 
@@ -108,7 +148,9 @@ export default {
             errorForm,
             handleSubmit,
             customer,
-            createdFlag
+            createdFlag,
+            openAddComponent,
+            goToAddFlag
             }
 }
 }
