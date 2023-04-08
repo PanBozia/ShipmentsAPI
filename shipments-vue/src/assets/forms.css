@@ -91,3 +91,8 @@ select{
     justify-content: center;
     margin-top: 20px;
 }
+
+.add-single-form{
+    min-width: 30vh;
+    margin: auto;
+}

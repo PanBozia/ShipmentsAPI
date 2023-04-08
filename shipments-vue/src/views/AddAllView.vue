@@ -304,7 +304,7 @@
                     
                     <div class="summary-head">
                         <span class="material-symbols-outlined">
-                            quick_reference
+                            description   
                         </span>
                         <h4>Zamówienie</h4>
                     </div>

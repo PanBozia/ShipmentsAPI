@@ -1,22 +1,36 @@
 <template>
    
     <div class="add-container">
-        <form class="form-add" @submit.prevent="handleSubmit">
-            <p>Dodaj nowego klienta</p>
-            <label>Nazwa (skrót)</label>
-            <input type="text" v-model="shortNameForm" required>
-            <label>Pełna nazwa</label>
-            <input type="text" v-model="nameForm" required>
-            <label>Numer klienta</label>
-            <input type="text" v-model="clientNumberForm" required>
-            <label>Ulica</label>
-            <input type="text" v-model="streetForm">
-            <label>Miasto</label>
-            <input type="text" v-model="cityForm" required>
-            <label>Kod pocztowy</label>
-            <input type="text" v-model="zipCodeForm" required>
-            <label>Kod kraju</label>
-            <input type="text" v-model="countryForm" required>
+        <form class="form-add add-single-form" @submit.prevent="handleSubmit">
+            <h2>Dodaj nowego klienta</h2>
+            <div class="form-set">
+                <label>Nazwa (skrót)</label>
+                <input type="text" v-model="shortNameForm" required>
+            </div>
+            <div class="form-set">
+                <label>Pełna nazwa</label>
+                <input type="text" v-model="nameForm" required>
+            </div>
+            <div class="form-set">
+                <label>Numer klienta</label>
+                <input type="text" v-model="clientNumberForm" required>
+            </div>
+            <div class="form-set">
+                <label>Ulica</label>
+                <input type="text" v-model="streetForm">
+            </div>
+            <div class="form-set">
+                <label>Miasto</label>
+                <input type="text" v-model="cityForm" required>
+            </div>
+            <div class="form-set">
+                <label>Kod pocztowy</label>
+                <input type="text" v-model="zipCodeForm" required>
+            </div>
+            <div class="form-set">
+                <label>Kod kraju</label>
+                <input type="text" v-model="countryForm" required>
+            </div>
             <div id="add-btn-container">
                 <button>Zapisz</button>
             </div>
