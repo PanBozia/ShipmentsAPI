@@ -420,7 +420,9 @@ export default {
                 chosenShipment.value['forwarderId'] = chosenForwarder.value['id']
             }
         chosenShipment.value.etd = moment(chosenShipment.value.etd).format("YYYY-MM-DDThh:mm")
-        chosenShipment.value.timeOfDeparture = moment(chosenShipment.value.timeOfDeparture).format("YYYY-MM-DDThh:mm")
+        if(chosenShipment.value.timeOfDeparture != null){
+            chosenShipment.value.timeOfDeparture = moment(chosenShipment.value.timeOfDeparture).format("YYYY-MM-DDThh:mm")
+        }
         console.log(moment(chosenShipment.value.etd))
         addNewShipment(chosenShipment.value)
         .then(()=>{

@@ -143,7 +143,7 @@ export default {
         const handleSubmit = ()=>{
             const shipmentData = {
                 etd : etdForm.value,
-                timeOfDeparture : etdForm.value,
+                timeOfDeparture : null,
                 hasPriority : hasPriorityForm.value,
                 palletQty : palletQtyForm.value,
                 containerNumber : containerNumberForm.value,

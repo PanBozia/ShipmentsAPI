@@ -33,13 +33,7 @@
                     <p>HARMONOGRAM</p>
                 </router-link>
             </div>
-             <div>
-                <router-link :to="{name: 'AddAllView'}">
-                    <span class="material-symbols-outlined">
-                        add_circle_outline
-                    </span>
-                </router-link>
-            </div>
+             
         </div>
         <div class="navbar-line"></div>
     </div>

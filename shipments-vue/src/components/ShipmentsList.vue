@@ -7,7 +7,7 @@
             <h2 class="filter-header">Filtrowanie</h2>
         </div>
         <div class="search-item">
-            <label>Data Wyjścia</label>
+            <label>Data wysyłki</label>
             <div class="item-row">
                 <input type="date" v-model="timeOfDeparture">
                 <span class="material-symbols-outlined cancel-btn" @click="timeOfDeparture = null">
@@ -153,31 +153,35 @@
             </p>
         </div>
         <!-- :class="{'prio-shipment' : shipment.hasPriority}" -->
-        <div class="list-item shipment-list "  v-for="shipment in shipments" :key="shipment.id"  >
-            <div>
-                <div v-if="shipment.purchaseOrders.length == 0">
-                    <p>N/A</p>
-                </div>
-                <div v-else v-for="order in shipment.purchaseOrders" :key="order.id" class="order-shipment">
-                    <div>
-                        <!-- <p>PO#: </p> -->
-                        <p>{{order.poNumber}} - {{order.customerShortName}} / {{order.customerCity[0]}}{{order.customerCity[1]}}</p>
+        <div class="list-item shipment-list "  v-for="shipment in shipments" :key="shipment.id" @click="gotoShipment(shipment.id)">
+                <div>
+                    <div v-if="shipment.purchaseOrders.length == 0">
+                        <p>N/A</p>
+                    </div>
+                    <div v-else v-for="order in shipment.purchaseOrders" :key="order.id" class="order-shipment">
+                        <div>
+                            <!-- <p>PO#: </p> -->
+                            <p>{{order.poNumber}} - {{order.customerShortName}} / {{order.customerCity[0]}}{{order.customerCity[1]}}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <p>{{moment(shipment.etd).format("YYYY-MM-DD")}} ETD<br>{{moment(shipment.timeOfDeparture).format("YYYY-MM-DD")}} ATD</p>
-            <p>TYP: {{shipment.containerType}} <br>CTNR#: {{shipment.containerNumber}}<br>SEAL#: {{shipment.containerSealNumber}}</p>
-            <p>{{shipment.warehouseArea}}</p>
-            <p>{{shipment.palletQty}}</p>
-            <p v-if="shipment.forwarder">{{shipment.forwarder.carPlates}}<br>{{shipment.forwarder.firstName +' '+ shipment.forwarder.lastName}}<br>{{shipment.forwarder.speditor}}</p>
-            <p v-else>N/A</p>
-            <!-- <p>{{shipment.createdByUser}}</p> -->
-            <p>{{shipment.status}}</p>
-            <div v-if="shipment.hasPriority"><p><span class="material-symbols-outlined">timer</span></p></div>
-            <div v-else></div>
-            <button class="shipment-add-btn" @click="handleEditShipment(shipment.id)">EDYTUJ</button>
-        </div>
+                <p>ETD: {{moment(shipment.etd).format("YYYY-MM-DD")}}
+                    <br>
+                    <span v-if="shipment.timeOfDeparture">ATD: {{moment(shipment.timeOfDeparture).format("YYYY-MM-DD")}}</span>
+                    
+                </p>
+                <p>TYP: {{shipment.containerType}} <br>CTNR#: {{shipment.containerNumber}}<br>SEAL#: {{shipment.containerSealNumber}}</p>
+                <p>{{shipment.warehouseArea}}</p>
+                <p>{{shipment.palletQty}}</p>
+                <p v-if="shipment.forwarder">{{shipment.forwarder.carPlates}}<br>{{shipment.forwarder.firstName +' '+ shipment.forwarder.lastName}}<br>{{shipment.forwarder.speditor}}</p>
+                <p v-else>N/A</p>
+                <!-- <p>{{shipment.createdByUser}}</p> -->
+                <p>{{shipment.status}}</p>
+                <div v-if="shipment.hasPriority"><p><span class="material-symbols-outlined">timer</span></p></div>
+                <div v-else></div>
+                <button class="shipment-add-btn" @click="handleEditShipment(shipment.id)">EDYTUJ</button>
+        </div>    
         <div class="list-footer">
             <p>Ilość wszystkich pozycji: {{totalItemsCount}}</p>
             <div class="icon-page-size-ctnr">
@@ -231,8 +235,8 @@ export default {
         const pageNumber = ref(1)
         const sortBy = ref('')
         const sortDirection = ref(0)
-        
-        const timeOfDeparture = ref(moment(new Date()).format("YYYY-MM-DD"))
+
+        const timeOfDeparture = ref(null)
         const hasPriority = ref(false)
         const comment =ref('')
         const warehouseAreaId = ref()
@@ -348,6 +352,12 @@ export default {
         })
         }
 
+        const gotoShipment = (shipmentId) =>{
+            router.push({ name:'SingleShipmentView', 
+                      params:{ shipmentId }
+                      }) 
+        }
+
         return{ pagesRange, 
                 palletsArray,
                 handlePageSize, 
@@ -377,7 +387,8 @@ export default {
                 statusId,
                 containerNumber,
                 purchaseOrderNumber,
-                handleEditShipment }                          
+                handleEditShipment,
+                gotoShipment }                          
                 
     }
 }

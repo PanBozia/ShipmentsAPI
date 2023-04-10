@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ShipmentsView from '../views/ShipmentsView.vue'
+import SingleShipmentView from '../views/SingleShipmentView.vue'
 import ScheduleView from '../views/ScheduleView.vue'
 import ForwarderView from '../views/ForwarderView.vue'
 import CustomerView from '../views/CustomerView.vue'
@@ -44,6 +45,12 @@ const router = createRouter({
         path: '/shipment',
         name: 'ShipmentsView',
         component: ShipmentsView,
+        props: true
+    },
+    {
+        path: '/shipment/:shipmentId',
+        name: 'SingleShipmentView',
+        component: SingleShipmentView,
         props: true
     },
     {
