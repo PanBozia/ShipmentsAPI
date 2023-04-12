@@ -51,6 +51,7 @@ body{
 #app {
     font-family: 'Poppins', sans-serif;
     font-weight: 400;
+    background: linear-gradient(to right, #202635,#303552, #202635);
 }
 
 /* #app .frame{
