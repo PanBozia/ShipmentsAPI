@@ -180,7 +180,7 @@
                 <p>{{shipment.status}}</p>
                 <div v-if="shipment.hasPriority"><p><span class="material-symbols-outlined">timer</span></p></div>
                 <div v-else></div>
-                <button class="shipment-add-btn" @click="handleEditShipment(shipment.id)">EDYTUJ</button>
+                
         </div>    
         <div class="list-footer">
             <p>Ilość wszystkich pozycji: {{totalItemsCount}}</p>
@@ -346,11 +346,7 @@ export default {
             searchWatcher(); //invoking the method ends watching
         })
 
-        const handleEditShipment = (id) => {
-            router.push({ name:'EditShipmentView', 
-                      params:{ shipmentId:id } 
-        })
-        }
+        
 
         const gotoShipment = (shipmentId) =>{
             router.push({ name:'SingleShipmentView', 
@@ -387,7 +383,6 @@ export default {
                 statusId,
                 containerNumber,
                 purchaseOrderNumber,
-                handleEditShipment,
                 gotoShipment }                          
                 
     }
@@ -406,7 +401,7 @@ input{
     font-family: 'Poppins', sans-serif;
 }
 .list-item.shipment-list{
-    grid-template-columns: 14% 11% 14% 6% 8% 16% 13% 2% 8% ;
+    grid-template-columns: 14% 14% 16% 6% 8% 16% 16% 2% 0% ;
     column-gap: 1%;
 }
 .list-item.shipment-list p{

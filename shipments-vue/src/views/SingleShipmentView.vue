@@ -15,10 +15,19 @@
                     <h2>{{po.customerShortName}} ( {{po.poNumber}} )</h2>
                 </div>
             </div>
-            <div class="item-main">
-                <div :class="{statusNew: shipment.status == 'Nowa'}">
-                    <p >{{shipment.status}}</p>
+            <div class="item-status" :class="{
+                                                statusNowa: shipment.status == 'Nowa',
+                                                statusKompletacja:shipment.status == 'Kompletacja',
+                                                statusGotowa:shipment.status == 'Gotowa',
+                                                statusZrealizowana:shipment.status == 'Zrealizowana',
+                                                statusWstrzymana:shipment.status == 'Wstrzymana',
+                                                statusAnulowana:shipment.status == 'Anulowana'
+                                            }">
+                <div>
+                    <h2 >{{shipment.status}}</h2>
                 </div>
+            </div>
+            <div class="item-main">
                 <div>
                     <p>{{moment(shipment.etd).format("YYYY MMMM DD - hh:mm")}}</p>
                 </div>
@@ -58,7 +67,7 @@
                         <br>
                     </span>
                 </div>
-                <div class="line-forwarder">
+                <div v-if="shipment.forwarder" class="line-forwarder">
                     <p><span class="order-desc">Nr rejestracyjne: </span>{{shipment.forwarder.carPlates}}</p>
                     <p><span class="order-desc">Spedytor: </span>{{shipment.forwarder.speditor}}</p>
                     <p><span class="order-desc">Kierowca: </span>{{shipment.forwarder.firstName}} {{shipment.forwarder.lastName}}</p>
@@ -67,9 +76,7 @@
                 
             </div>
             <div class="item-desc">
-                <div>
-                    <p>STATUS</p>
-                </div>
+             
                 <div>
                     <p>ETD</p>
                 </div>
@@ -110,27 +117,27 @@
             <div class="item-btns">
                 
                     <div class="content">
-                        <div class="content-btn">
+                        <div class="content-btn" @click="handleEditShipment(shipment.id)">
                         <p>Edytuj dane</p>    
                         </div>
                     </div>
                     <div class="content">
                         <div class="content-btn">
                             <p>
-                                Zmień status
+                                Edytuj status
                             </p>
                         </div>
                     </div>
                     
                     <div class="content">
                         <div class="content-btn">
-                            <p>Zmień zamówienia</p> 
+                            <p>Edytuj zamówienia</p> 
                         </div>
                     </div>
                     <div class="content">
                         <div class="content-btn">
                             <p>
-                                Zmień kierowcę
+                                Edytuj kierowcę
                             </p>
                         </div>
                     </div>
@@ -139,27 +146,41 @@
             </div>
     </div>
   </div>
+  <div>
+    <ChangeShipmentStatus />
+  </div>
 </template>
 
 <script>
 import { onBeforeMount} from 'vue'
 
 import NavbarComponent from '../components/NavbarComponent.vue'
+import ChangeShipmentStatus from '../components/ChangeShipmentStatus.vue'
+
 import getShipmentById from '../js-components/getShipmentById'
-import moment from 'moment'
+import moment from "moment/dist/moment"
+
+import { useRouter} from 'vue-router'
 export default {
-    components: { NavbarComponent},
+    components: { NavbarComponent, ChangeShipmentStatus},
     props:['shipmentId'],
     setup(props){
         const url = 'https://localhost:44331/api/'
         const { loadShipment, error, shipment} = getShipmentById(url)
-        
+        const router = useRouter()
+
         onBeforeMount(()=>{
-            
             loadShipment(props.shipmentId)
+            
         })
+
+        const handleEditShipment = (id) => {
+            router.push({ name:'EditShipmentView', 
+                      params:{ shipmentId:id } 
+        })
+        }
         
-        return{ error, shipment, moment }      
+        return{ error, shipment, moment, handleEditShipment }      
                 
     }
 
@@ -171,7 +192,7 @@ export default {
     display: grid;
     grid-template-columns: 20vh 20vh 20vh 20vh ;
     grid-template-areas:
-    "header header header header"
+    "header header header status"
     " desc main main btns ";
     margin-top: 4vh;
     justify-content: center;
@@ -186,7 +207,20 @@ export default {
     background-color: #fdc600;
     background: linear-gradient(to right, #ffdc60, #fdc600, #fdc600);
     color: #333;
-    border: solid #444 1px;
+    border: solid #444 0px;
+}
+.item-status {
+    grid-area: status;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fdc600;
+    color: #333;
+    border: solid #444 0px;
+    border-left: #fdc600 ;
+}
+.item-status p{
+    margin: 0;
 }
 .item-header div{
     padding: 0.5vh 2vh;
@@ -201,8 +235,20 @@ export default {
     display: flex;
     flex-direction: column;
     background-color: #282a39;
-    background: linear-gradient(to right, #202125, #282d39);
+    background: linear-gradient(to right, #22242b, #282d39);
     
+}
+.item-desc{
+    grid-area: desc;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background-color: #242424;
+    background: linear-gradient(to right, #202125, #22242b);
+    color: #ffcb0e;
+    border-left: solid #444 1px;
+    
+    /* box-shadow: 0.6vh 0vh 1.5vh #00000050; */
 }
 .item-btns{
     grid-area: btns;
@@ -211,7 +257,7 @@ export default {
     border-right: solid #444 1px;
     border-bottom: solid #444 1px;
     border-left: solid #444 1px;
-    background: linear-gradient(to right, #282d39, #202125);
+    background: linear-gradient(to right, #282d39, #26272f);
 }
 
 .item-btns div{
@@ -264,21 +310,6 @@ export default {
     font-weight: 400;
 }
 
-.item-desc{
-    grid-area: desc;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    background-color: #242424;
-    background: linear-gradient(to right, #252525, #222);
-    color: #ffcb0e;
-    border-left: solid #444 1px;
-    
-    /* box-shadow: 0.6vh 0vh 1.5vh #00000050; */
-}
-
-
-
 .item-main .line-forwarder, .item-main .line-comment, .item-main .line-orders, 
 .item-desc .line-forwarder, .item-desc .line-comment, .item-desc .line-orders {
     height: 10vh;
@@ -294,10 +325,29 @@ export default {
     color: #ffcb0e;
     color: #999;
 }
-  
 
-
-.statusNew{
-    background-color: #888
+.statusNowa{
+    background-color: #fff;
+    color: #008ddf;
+}
+.statusGotowa{
+    background-color: #3fb500;
+    color: #ffffff;
+}
+.statusZrealizowana{
+    background-color: #5f5f5f;
+    color: #89f722;
+}
+.statusKompletacja{
+    background-color: #008ddf;
+    color: #ffffff;
+}
+.statusWstrzymana{
+    background-color: #df3000;
+    color: #ffffff;
+}
+.statusAnulowana{
+    background-color: #5f5f5f;
+    color: #d3d3d3;
 }
 </style>
