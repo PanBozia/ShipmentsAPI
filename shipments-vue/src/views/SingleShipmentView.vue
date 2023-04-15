@@ -117,27 +117,27 @@
             <div class="item-btns">
                 
                     <div class="content">
-                        <div class="content-btn" @click="handleEditShipment(shipment.id)">
-                        <p>Edytuj dane</p>    
+                        <div class="content-btn" @click="changeFlagStatus=true">
+                            <p>
+                                Edytuj STATUS
+                            </p>
                         </div>
                     </div>
                     <div class="content">
-                        <div class="content-btn">
-                            <p>
-                                Edytuj status
-                            </p>
+                        <div class="content-btn" @click="changeFlagData=true">
+                        <p>Edytuj DANE</p>    
                         </div>
                     </div>
                     
                     <div class="content">
                         <div class="content-btn">
-                            <p>Edytuj zamówienia</p> 
+                            <p>Edytuj ZAMÓWIENIA</p> 
                         </div>
                     </div>
                     <div class="content">
                         <div class="content-btn">
                             <p>
-                                Edytuj kierowcę
+                                Edytuj PRZEWOŹNIKA
                             </p>
                         </div>
                     </div>
@@ -146,41 +146,62 @@
             </div>
     </div>
   </div>
-  <div>
-    <ChangeShipmentStatus />
+  
+  <div v-if="changeFlagStatus">
+    <ChangeShipmentStatus @changeStatusEvent="handleChangeStatus" :shipmentId="shipment.id" />
+  </div>
+  <div v-if="changeFlagData">
+    <ChangeShipmentComponent @changeShipmentDataEvent="handleChangeShipmentData" :shipmentId="shipment.id" />
   </div>
 </template>
 
 <script>
-import { onBeforeMount} from 'vue'
+import { onBeforeMount, ref} from 'vue'
 
 import NavbarComponent from '../components/NavbarComponent.vue'
 import ChangeShipmentStatus from '../components/ChangeShipmentStatus.vue'
+import ChangeShipmentComponent from '../components/ChangeShipmentComponent.vue'
 
 import getShipmentById from '../js-components/getShipmentById'
 import moment from "moment/dist/moment"
 
-import { useRouter} from 'vue-router'
+//import { useRouter} from 'vue-router'
 export default {
-    components: { NavbarComponent, ChangeShipmentStatus},
+    components: { NavbarComponent, ChangeShipmentStatus, ChangeShipmentComponent},
     props:['shipmentId'],
     setup(props){
         const url = 'https://localhost:44331/api/'
         const { loadShipment, error, shipment} = getShipmentById(url)
-        const router = useRouter()
+        //const router = useRouter()
+
+        const changeFlagStatus = ref(false)
+        const changeFlagData = ref(false)
 
         onBeforeMount(()=>{
             loadShipment(props.shipmentId)
             
         })
 
-        const handleEditShipment = (id) => {
-            router.push({ name:'EditShipmentView', 
-                      params:{ shipmentId:id } 
-        })
+        const handleChangeStatus = (flag) =>{
+            if (flag == true){
+                loadShipment(props.shipmentId)
+            }
+            changeFlagStatus.value = false
+        }
+        const handleChangeShipmentData = (flag) =>{
+            if (flag == true){
+                loadShipment(props.shipmentId)
+            }
+            changeFlagData.value = false
         }
         
-        return{ error, shipment, moment, handleEditShipment }      
+        return{ 
+                error, 
+                shipment, 
+                moment, 
+                handleChangeStatus, handleChangeShipmentData,
+                changeFlagStatus, changeFlagData,
+                }      
                 
     }
 
