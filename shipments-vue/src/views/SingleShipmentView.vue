@@ -8,11 +8,22 @@
                         inventory
                     </span>
                 </div>
-                <div>
-                    <h2>{{moment(shipment.etd).format("YYYY MMMM DD - hh:mm")}}</h2>
+                <div class="poHearders" v-if="shipment.purchaseOrders.length < 4">
+                    <div v-for="po in shipment.purchaseOrders" :key="po.id">
+                        <h3>{{po.customerShortName}}</h3><h3> ({{po.poNumber}})</h3>
+                    </div>
                 </div>
-                <div v-for="po in shipment.purchaseOrders" :key="po.id">
-                    <h2>{{po.customerShortName}} ( {{po.poNumber}} )</h2>
+                <div v-if="shipment.purchaseOrders.length >= 4" >
+                    <div>
+                        <h3>
+                           Wiele zamówień ( {{shipment.purchaseOrders[0].customerShortName}} ... )
+                        </h3>
+                    </div>
+
+                </div>
+                <div>
+                    <h1 v-if="shipment.timeOfDeparture == null">{{moment(shipment.etd).format("YYYY MMM DD")}}</h1>
+                    <h1 v-else class="green">{{moment(shipment.timeOfDeparture).format("YYYY MMM DD")}}</h1>
                 </div>
             </div>
             <div class="item-status" :class="{
@@ -29,14 +40,22 @@
             </div>
             <div class="item-main">
                 <div>
-                    <p>{{moment(shipment.etd).format("YYYY MMMM DD - hh:mm")}}</p>
+                    <p>{{moment(shipment.etd).format("YYYY-MM-DD dddd hh:mm")}}</p>
                 </div>
                 <div>
-                    <p v-if="shipment.timeOfDeparture = null">{{shipment.timeOfDeparture}}</p>
+                    <p v-if="shipment.timeOfDeparture != null">{{moment(shipment.timeOfDeparture).format("YYYY-MM-DD dddd hh:mm")}}</p>
                     <p v-else>Brak</p>
                 </div>
                 <div>
-                    <p>{{shipment.hasPriority}}</p>
+                    <p class="prio-line" v-if="shipment.hasPriority">
+                        <span>TAK</span>
+                        <span class="material-symbols-outlined">
+                            timer
+                        </span>
+                    </p>
+                    <p v-else>
+                        NIE
+                    </p>
                 </div>
                 <div>
                     <p>{{shipment.palletQty}}</p>
@@ -135,7 +154,7 @@
                         </div>
                     </div>
                     <div class="content">
-                        <div class="content-btn">
+                        <div class="content-btn"  @click="changeFlagForwarder=true">
                             <p>
                                 Edytuj PRZEWOŹNIKA
                             </p>
@@ -153,6 +172,9 @@
   <div v-if="changeFlagData">
     <ChangeShipmentComponent @changeShipmentDataEvent="handleChangeShipmentData" :shipmentId="shipment.id" />
   </div>
+  <div v-if="changeFlagForwarder">
+    <ChangeForwarder @changeForwarderEvent="handleChangeForwarder" :shipmentId="shipmentId"/>
+  </div>
 </template>
 
 <script>
@@ -161,13 +183,14 @@ import { onBeforeMount, ref} from 'vue'
 import NavbarComponent from '../components/NavbarComponent.vue'
 import ChangeShipmentStatus from '../components/ChangeShipmentStatus.vue'
 import ChangeShipmentComponent from '../components/ChangeShipmentComponent.vue'
+import ChangeForwarder from '../components/ChangeForwarder.vue'
 
 import getShipmentById from '../js-components/getShipmentById'
 import moment from "moment/dist/moment"
 
 //import { useRouter} from 'vue-router'
 export default {
-    components: { NavbarComponent, ChangeShipmentStatus, ChangeShipmentComponent},
+    components: { NavbarComponent, ChangeShipmentStatus, ChangeShipmentComponent, ChangeForwarder},
     props:['shipmentId'],
     setup(props){
         const url = 'https://localhost:44331/api/'
@@ -176,6 +199,7 @@ export default {
 
         const changeFlagStatus = ref(false)
         const changeFlagData = ref(false)
+        const changeFlagForwarder = ref(false)
 
         onBeforeMount(()=>{
             loadShipment(props.shipmentId)
@@ -194,13 +218,20 @@ export default {
             }
             changeFlagData.value = false
         }
+        const handleChangeForwarder = (flag) =>{
+            if (flag == true){
+                loadShipment(props.shipmentId)
+            }
+            changeFlagForwarder.value = false
+        }
         
         return{ 
                 error, 
                 shipment, 
                 moment, 
-                handleChangeStatus, handleChangeShipmentData,
-                changeFlagStatus, changeFlagData,
+                handleChangeStatus, handleChangeShipmentData, handleChangeForwarder,
+                changeFlagStatus, changeFlagData, changeFlagForwarder,
+                
                 }      
                 
     }
@@ -223,12 +254,22 @@ export default {
 .item-header {
     grid-area: header;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     background-color: #fdc600;
     background: linear-gradient(to right, #ffdc60, #fdc600, #fdc600);
-    color: #333;
+    background: #fcfcfc;
+    color: #3e3e3e;
     border: solid #444 0px;
+}
+.item-header h3{
+    margin: 0;
+}
+.poHearders{
+    display: flex;
+}
+.green{
+    color:#565656
 }
 .item-status {
     grid-area: status;
@@ -370,5 +411,16 @@ export default {
 .statusAnulowana{
     background-color: #5f5f5f;
     color: #d3d3d3;
+}
+
+.prio-line{
+    display: flex;
+    align-items: center;
+}
+.prio-line .material-symbols-outlined{
+    font-size: 2.4vh;
+    margin: 0 0 0 2vh;
+    padding: 0;
+    color: #90f01b;
 }
 </style>

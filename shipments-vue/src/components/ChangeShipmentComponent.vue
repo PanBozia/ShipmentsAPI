@@ -4,12 +4,8 @@
             <h2>Edytuj dane wysyłki</h2>
         
         
-            <div class="row-container-one">
-                <div></div>
+            <div class="change-shipment-data-ctnr">
                 <div>
-                    
-                    
-
                         <div>
                             <form class="form-add" @submit.prevent="handleSubmit">
                                 <div class="choose-order-container">
@@ -105,10 +101,6 @@
                                                         </div>
                             </form>
                         </div>
-
-
-
-
                 </div>
             </div>
 
@@ -162,7 +154,6 @@ export default {
                     containerTypeForm.value = shipment.value.containerType
                     containerSealNumberForm.value = shipment.value.containerSealNumber
                     commentForm.value = shipment.value.comment
-
                 })
             })
         onMounted(()=>{
@@ -176,7 +167,7 @@ export default {
         const handleSubmit = ()=>{
             const shipmentData = {
                 etd :etdForm.value,
-                timeOfDeparture : null,
+                timeOfDeparture : shipment.value.timeOfDeparture,
                 hasPriority : hasPriorityForm.value,
                 palletQty : palletQtyForm.value,
                 containerNumber : containerNumberForm.value,
@@ -236,7 +227,11 @@ export default {
 </script>
 
 <style scoped>
-
+.change-shipment-data-ctnr{
+    display: flex;
+    justify-content: center;
+    
+}
 .edit-shipment-screen{
      position: absolute;
     width: 100%;
@@ -249,7 +244,7 @@ export default {
 .edit-shipment-ctnr{
     display: block;
     width: 70vh;
-    height: 50vh;
+    height: 48vh;
     margin:16vh auto 1vh auto;
     padding: 1.5vh 0vh;
     background: linear-gradient(to right bottom, #232323, #383838);
@@ -260,7 +255,7 @@ export default {
 }
 .edit-shipment-ctnr h2{
     padding: 0;
-    margin: 0.8vh  0;
+    margin: 1vh  0 3vh 0;
     text-align: center;
 }
 

@@ -473,6 +473,8 @@ button:hover{
 }
 .success p{
     color: #d0ff35;
+    font-weight: 200;
+    font-size: 1.3vh;
 }
 
 .sort-icon-label{

@@ -69,6 +69,18 @@ namespace ShipmentsAPI.Controllers
             shipmentService.ChangeStatus(shipmentId, statusId);
             return Ok();
         }
+        [HttpPut("forwarder/{shipmentId}/{forwarderId}")]
+        public ActionResult ChangeStatus([FromRoute] Guid shipmentId, [FromRoute] Guid forwarderId)
+        {
+            shipmentService.ChangeForwarder(shipmentId, forwarderId);
+            return Ok();
+        }
+        [HttpPut("atd/{shipmentId}")]
+        public ActionResult ChangeTimeOfDeparture([FromRoute] Guid shipmentId, [FromBody] DateTime? dateTime)
+        {
+            shipmentService.ChangeDepartureDate(shipmentId, dateTime);
+            return Ok();
+        }
 
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] Guid id)

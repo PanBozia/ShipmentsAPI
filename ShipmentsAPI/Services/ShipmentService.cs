@@ -22,6 +22,8 @@ namespace ShipmentsAPI.Services
         ShipmentBriefDto Update(Guid id, UpdateShipmentDto dto);
         void ChangeStatus(Guid shipmentId, int statusId);
         void RemoveOrderFromShipment(Guid shipmentId, Guid purchaseOrderId);
+        void ChangeForwarder(Guid shipmentId, Guid forwarderId);
+        void ChangeDepartureDate(Guid shipmentId, DateTime? dateTime);
     }
 
     public class ShipmentService : IShipmentService
@@ -238,7 +240,51 @@ namespace ShipmentsAPI.Services
             dbContext.SaveChanges();
 
         }
+        public void ChangeForwarder(Guid shipmentId, Guid forwarderId)
+        {
+            var shipment = dbContext.Shipments
+               .Include(x => x.Forwarder)
+               .Include(z => z.WarehouseArea)
+               .Include(y => y.Status)
+               .Include(s => s.PurchaseOrders)
+               .ThenInclude(c => c.Customer)
+               .FirstOrDefault(x => x.Id == shipmentId);
 
+            if (shipment is null)
+            {
+                throw new NotFoundException($"Wysyłka z nr id: {shipmentId} nie została odnaleziona.");
+            }
+
+            var forwarderExists = dbContext.Forwarders.Any(x => x.Id == forwarderId);
+            if (!forwarderExists)
+            {
+                throw new NotFoundException($"Przewoźnik z nr id: {forwarderId} nie został odnaleziony.");
+            }
+
+            shipment.ForwarderId = forwarderId;
+            dbContext.Shipments.Update(shipment);
+            dbContext.SaveChanges();
+
+        }
+        public void ChangeDepartureDate(Guid shipmentId, DateTime? dateTime)
+        {
+            var shipment = dbContext.Shipments
+               .Include(x => x.Forwarder)
+               .Include(z => z.WarehouseArea)
+               .Include(y => y.Status)
+               .Include(s => s.PurchaseOrders)
+               .ThenInclude(c => c.Customer)
+               .FirstOrDefault(x => x.Id == shipmentId);
+
+            if (shipment is null)
+            {
+                throw new NotFoundException($"Wysyłka z nr id: {shipmentId} nie została odnaleziona.");
+            }
+
+            shipment.TimeOfDeparture = dateTime;
+            dbContext.Shipments.Update(shipment);
+            dbContext.SaveChanges();
+        }
         public void Delete(Guid id)
         {
             var shipment = dbContext.Shipments

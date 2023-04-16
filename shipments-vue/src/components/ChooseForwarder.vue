@@ -4,7 +4,7 @@
 
         <h2>Wybierz przewoźnika z listy</h2>
         <form class="form-add" @submit.prevent="handleSearchForwarder()">
-            <label class="form-labels">Aktualny przewoźnik</label>
+            <label class="form-labels">Wybrany przewoźnik</label>
             <div class="chosen-one" v-if="newForwarder">
                 <div  >{{newForwarder.lastName + ' ' + newForwarder.firstName + ' - ' + newForwarder.carPlates}}</div>
                 <div class="remove-btn" @click="handleRemoveDriver()">
@@ -131,12 +131,8 @@ export default {
 
         const handleAddNewForwarder = (createdId)=>{
             loadForwarder(createdId).then(()=>{
-                console.log(forwarder.value)
                 newForwarder.value = forwarder.value
             })
-                // newForwarder.value =  
-                
-            
         }
 
         return {

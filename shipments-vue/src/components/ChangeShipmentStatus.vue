@@ -1,10 +1,18 @@
 <template>
     <div class="status-screen">
-        <div class="status-ctnr">
+        <div   class="status-ctnr" >
             <h2>wybierz status</h2>
-            <div v-for="status in statuses" :key="status.id" @click="handleEmitStatusChangeEvent(status.id)" >
-                <StatusComponent  :statusName="status.name" />
+            <div class="status-ctnr-item" v-for="status in statuses" :key="status.id"  >
+                <StatusComponent  :statusName="status.name" @click="handleEmitStatusChangeEvent(status)"/>
+
             </div>    
+            <div class="done-date" >
+                <p>Jeżeli wybierasz status "Zrealizowana", musisz wybrać datę i godzinę wyjazdu:</p>
+                <input type="datetime-local" v-model="dateOfDepartureForm">
+            </div>
+            <div v-if="departureError">
+                {{departureError}}
+            </div>
             <div class="exit-btn" @click="handleExit">
                 <p>
                     Anuluj
@@ -15,10 +23,13 @@
 </template>
 
 <script>
-import { onBeforeMount } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import changeStatus from '../js-components/changeStatus.js'
+import changeDepartureTime from '../js-components/changeDepartureTime.js'
+
 import getStatuses from '../js-components/getStatuses.js'
 import StatusComponent from '../components/StatusComponent.vue'
+import moment from 'moment'
 export default {
 props:['shipmentId'],
 components:{StatusComponent},
@@ -26,13 +37,20 @@ setup(props, context){
     const url = 'https://localhost:44331/api/'
     const { change, error} = changeStatus(url)
     const { loadStatuses, error:loadError, statuses} = getStatuses(url)
+    const {changeDeparture, error:departureError} = changeDepartureTime(url)
+    const dateOfDepartureForm = ref(moment(new Date()).format("YYYY-MM-DDThh:mm"))
     
     onBeforeMount(()=>{
         loadStatuses()
     })
 
-    const handleEmitStatusChangeEvent = (statusId)=>{
-        change(props.shipmentId, statusId).then(()=>{
+    const handleEmitStatusChangeEvent = (status)=>{
+        if(status.name != 'Zrealizowana'){
+            changeDeparture(props.shipmentId)
+        }else{
+            changeDeparture(props.shipmentId, moment(dateOfDepartureForm.value).format("YYYY-MM-DDThh:mm"))
+        }
+        change(props.shipmentId, status.id).then(()=>{
             context.emit('changeStatusEvent', true)
         })
     }
@@ -41,9 +59,10 @@ setup(props, context){
     }
 
     return {
-        error, loadError,
+        error, loadError, departureError,
         statuses,
-        handleEmitStatusChangeEvent, handleExit
+        handleEmitStatusChangeEvent, handleExit,
+        dateOfDepartureForm
     }
 }
 }
@@ -69,6 +88,28 @@ setup(props, context){
     box-shadow: 0.6vh 0.6vh 1.0vh #000000dd;
     
 
+}
+.status-ctnr .done-date{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2vh;
+}
+.status-ctnr .done-date p{
+    padding: 0 6.0vh;
+    font-size: 1.2vh;
+    text-align: center;
+}
+.status-ctnr input{
+    font-family: 'Poppins', sans-serif;
+    background-color: #585858;
+    color: #fff;
+    padding: 0.6vh;
+    font-size: 1.3vh;
+    text-align: center;
+    width: 20.8vh;
+    
 }
 .status-ctnr h2{
     padding: 0;

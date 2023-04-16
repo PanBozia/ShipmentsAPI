@@ -22,8 +22,8 @@ export default {
     flex-direction: column;
     
     /* width: 24vh; */
-    margin: 0.2vh 4vh;
-    padding: 0.5vh 3vh;
+    margin: 0.2vh 7vh;
+    padding: 0.5vh 0vh;
     
 }
 .status-line div{
