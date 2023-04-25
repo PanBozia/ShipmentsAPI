@@ -7,7 +7,7 @@ const changeDepartureTime = (url) =>{
     
 
     const changeDeparture =  async (shipmentId, atd) => {
-
+        
         var requestOptions = {
         method: 'PUT',
         headers: {
@@ -18,14 +18,16 @@ const changeDepartureTime = (url) =>{
             'Access-Control-Allow-Credentials': 'true'
             
         },
-        mode:'cors',
-        };
+        mode:'cors'
         
+        };
+
         try {
-            let resp = await axios.put( url + 'Shipment/atd/'+shipmentId, atd, requestOptions)
-            if (resp.status <200 & resp.status > 300){
-                throw Error('Coś poszło nie tak..')
-            }
+                let resp = await axios.put( url + 'Shipment/atd/' + shipmentId + '/' + atd, requestOptions)
+            
+                if (resp.status <200 & resp.status > 300){
+                    throw Error('Coś poszło nie tak..')
+                }
             
         } catch (err) {
             error.value = err.response.data

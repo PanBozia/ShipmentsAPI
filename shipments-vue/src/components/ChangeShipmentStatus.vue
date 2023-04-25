@@ -46,13 +46,19 @@ setup(props, context){
 
     const handleEmitStatusChangeEvent = (status)=>{
         if(status.name != 'Zrealizowana'){
-            changeDeparture(props.shipmentId)
+            changeDeparture(props.shipmentId, null).then(()=>{
+                change(props.shipmentId, status.id).then(()=>{
+                    context.emit('changeStatusEvent', true)
+                })
+
+            })
         }else{
-            changeDeparture(props.shipmentId, moment(dateOfDepartureForm.value).format("YYYY-MM-DDThh:mm"))
+            changeDeparture(props.shipmentId, moment(dateOfDepartureForm.value).format("YYYY-MM-DDThh:mm")).then(()=>{
+                change(props.shipmentId, status.id).then(()=>{
+                    context.emit('changeStatusEvent', true)
+                })
+            })
         }
-        change(props.shipmentId, status.id).then(()=>{
-            context.emit('changeStatusEvent', true)
-        })
     }
     const handleExit = ()=>{    
         context.emit('changeStatusEvent', false)

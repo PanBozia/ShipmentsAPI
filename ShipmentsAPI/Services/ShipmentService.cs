@@ -23,7 +23,7 @@ namespace ShipmentsAPI.Services
         void ChangeStatus(Guid shipmentId, int statusId);
         void RemoveOrderFromShipment(Guid shipmentId, Guid purchaseOrderId);
         void ChangeForwarder(Guid shipmentId, Guid forwarderId);
-        void ChangeDepartureDate(Guid shipmentId, DateTime? dateTime);
+        void ChangeDepartureDate(Guid shipmentId, string dateTime);
     }
 
     public class ShipmentService : IShipmentService
@@ -266,7 +266,7 @@ namespace ShipmentsAPI.Services
             dbContext.SaveChanges();
 
         }
-        public void ChangeDepartureDate(Guid shipmentId, DateTime? dateTime)
+        public void ChangeDepartureDate(Guid shipmentId, string dateTime)
         {
             var shipment = dbContext.Shipments
                .Include(x => x.Forwarder)
@@ -280,8 +280,26 @@ namespace ShipmentsAPI.Services
             {
                 throw new NotFoundException($"Wysyłka z nr id: {shipmentId} nie została odnaleziona.");
             }
+            if(dateTime is null || dateTime == "" || dateTime.ToUpper() == "NULL")
+            {
+                shipment.TimeOfDeparture = null;
+            }
+            else
+            {
+                try
+                {
+                    var parsedDate = DateTime.Parse(dateTime.ToString());
+                    shipment.TimeOfDeparture = parsedDate;
+                }
+                catch (Exception)
+                {
 
-            shipment.TimeOfDeparture = dateTime;
+                    throw new BadRequestException($"Podana data jest błędna: {dateTime}");
+                }
+
+            }
+            //if (dateTime.GetType() == typeof(DateTime))
+            
             dbContext.Shipments.Update(shipment);
             dbContext.SaveChanges();
         }
