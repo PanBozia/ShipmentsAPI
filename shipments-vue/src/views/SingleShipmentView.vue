@@ -1,7 +1,7 @@
 <template>
     <NavbarComponent />
    <div class="frame">
-     <div class="shipment-view-container" v-if="shipment">
+     <div class="shipment-view-container" v-if="shipment != null">
             <div class="item-header">
                 <div>
                     <span class="material-symbols-outlined">
@@ -149,7 +149,7 @@
                     </div>
                     
                     <div class="content">
-                        <div class="content-btn">
+                        <div class="content-btn" @click="changeFlagOrders=true">
                             <p>Edytuj ZAMÓWIENIA</p> 
                         </div>
                     </div>
@@ -175,6 +175,9 @@
   <div v-if="changeFlagForwarder">
     <ChangeForwarder @changeForwarderEvent="handleChangeForwarder" :shipmentId="shipmentId"/>
   </div>
+  <div v-if="changeFlagOrders">
+    <ChangeOrders @changeOrdersEvent="handleChangeOrders" :shipmentId="shipmentId"/>
+  </div>
 </template>
 
 <script>
@@ -184,13 +187,14 @@ import NavbarComponent from '../components/NavbarComponent.vue'
 import ChangeShipmentStatus from '../components/ChangeShipmentStatus.vue'
 import ChangeShipmentComponent from '../components/ChangeShipmentComponent.vue'
 import ChangeForwarder from '../components/ChangeForwarder.vue'
+import ChangeOrders from '../components/ChangeOrders.vue'
 import { useLinksStore } from '../stores/linksStore.js'
 import getShipmentById from '../js-components/getShipmentById'
 import moment from "moment/dist/moment"
 
 //import { useRouter} from 'vue-router'
 export default {
-    components: { NavbarComponent, ChangeShipmentStatus, ChangeShipmentComponent, ChangeForwarder},
+    components: { NavbarComponent, ChangeShipmentStatus, ChangeShipmentComponent, ChangeForwarder, ChangeOrders},
     props:['shipmentId'],
     setup(props){
         const linksStore = useLinksStore()
@@ -200,6 +204,7 @@ export default {
         const changeFlagStatus = ref(false)
         const changeFlagData = ref(false)
         const changeFlagForwarder = ref(false)
+        const changeFlagOrders = ref(false)
 
         onBeforeMount(()=>{
             loadShipment(props.shipmentId)
@@ -224,13 +229,19 @@ export default {
             }
             changeFlagForwarder.value = false
         }
+        const handleChangeOrders = (flag) =>{
+            if (flag == true){
+                loadShipment(props.shipmentId)
+            }
+            changeFlagOrders.value = false
+        }
         
         return{ 
                 error, 
                 shipment, 
                 moment, 
-                handleChangeStatus, handleChangeShipmentData, handleChangeForwarder,
-                changeFlagStatus, changeFlagData, changeFlagForwarder,
+                handleChangeStatus, handleChangeShipmentData, handleChangeForwarder, handleChangeOrders,
+                changeFlagStatus, changeFlagData, changeFlagForwarder, changeFlagOrders
                 
                 }      
                 
