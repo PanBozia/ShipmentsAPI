@@ -41,10 +41,11 @@
 <script>
 import { ref } from 'vue'
 import addForwarder from '../js-components/addForwarder.js'
+import { useLinksStore } from '../stores/linksStore.js'
 export default {
 emits:['created-forwarder-event'],
 setup(props, context){
-    const url = 'https://localhost:44331/api/'
+    const linksStore = useLinksStore()
     const firstNameForm = ref('')
     const lastNameForm = ref('')
     const speditionForm = ref('')
@@ -54,7 +55,7 @@ setup(props, context){
 
     const errorForm = ref('')
 
-    const {addNewForwarder, error, createdId} = addForwarder(url)
+    const {addNewForwarder, error, createdId} = addForwarder(linksStore.url)
 
     const handleSubmit = ()=>{
         if(firstNameForm.value == '' || lastNameForm.value == '' || speditionForm.value == '' || platesForm.value ==''){

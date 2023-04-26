@@ -96,11 +96,12 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import {useRouter} from 'vue-router'
 import getCustomers from '../js-components/getCustomers.js'
+import { useLinksStore } from '../stores/linksStore.js'
 
 export default {
     setup(){
-        const url = 'https://localhost:44331/api/'
-        const {loadCustomers, error, customers, totalPages, itemsFrom, itemsTo, totalItemsCount} = getCustomers(url)
+        const linksStore = useLinksStore()
+        const {loadCustomers, error, customers, totalPages, itemsFrom, itemsTo, totalItemsCount} = getCustomers(linksStore.url)
         const router = useRouter()
         const searchPhrase = ref('')
         const pageSize = ref(10)

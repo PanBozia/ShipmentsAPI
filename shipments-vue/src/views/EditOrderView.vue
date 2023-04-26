@@ -93,22 +93,23 @@ import getAllCustomers from '../js-components/getAllCustomers.js'
 import editPurchaseOrder from '../js-components/editPurchaseOrder.js'
 import AddPurchaseOrder from '../components/AddPurchaseOrder.vue'
 import moment from 'moment'
+import { useLinksStore } from '../stores/linksStore.js'
 
 export default {
     props:['orderId'],
     components:{NavbarComponent, AddPurchaseOrder},
     setup(props){
-        const url = 'https://localhost:44331/api/'
-        const {loadOrder, error:loadOrderError, order} = getPurchaseOrderById(url)
+        const linksStore = useLinksStore()
+        const {loadOrder, error:loadOrderError, order} = getPurchaseOrderById(linksStore.url)
         const poNumberForm = ref('')
         const categoryForm = ref('')
         const deliveryDateForm = ref()
         const incotermIdForm = ref(1)
         const customerIdForm = ref()
         const createdFlag = ref(false)
-        const {loadIncoterms, incoterms, error:incotermsError} = getIncoterms(url)
-        const {loadAllCustomers, customers, error:customersError} = getAllCustomers(url)
-        const {editOrder, error:editOrderError} = editPurchaseOrder(url)
+        const {loadIncoterms, incoterms, error:incotermsError} = getIncoterms(linksStore.url)
+        const {loadAllCustomers, customers, error:customersError} = getAllCustomers(linksStore.url)
+        const {editOrder, error:editOrderError} = editPurchaseOrder(linksStore.url)
         const goToAddFlag = ref(false)
 
         onBeforeMount(()=>{

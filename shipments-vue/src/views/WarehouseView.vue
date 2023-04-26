@@ -58,12 +58,13 @@ import { onBeforeMount, ref } from 'vue'
 import NavbarComponent from '../components/NavbarComponent.vue'
 import getWarehouseLocations from '../js-components/getWarehouseLocations.js'
 import addWarehouseLocation from '../js-components/addWarehouseLocation.js'
+import { useLinksStore } from '../stores/linksStore.js'
 export default {
     components: {NavbarComponent},
     setup(){
-        const url = 'https://localhost:44331/api/'
-        const {loadLocations, error:loadError, locations} = getWarehouseLocations(url)
-        const {addNewLocation, error:addError} = addWarehouseLocation(url)
+        const linksStore = useLinksStore()
+        const {loadLocations, error:loadError, locations} = getWarehouseLocations(linksStore.url)
+        const {addNewLocation, error:addError} = addWarehouseLocation(linksStore.url)
         const nameForm = ref('')
         const createdFlag = ref(false)
         onBeforeMount(()=>{

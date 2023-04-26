@@ -184,7 +184,7 @@ import NavbarComponent from '../components/NavbarComponent.vue'
 import ChangeShipmentStatus from '../components/ChangeShipmentStatus.vue'
 import ChangeShipmentComponent from '../components/ChangeShipmentComponent.vue'
 import ChangeForwarder from '../components/ChangeForwarder.vue'
-
+import { useLinksStore } from '../stores/linksStore.js'
 import getShipmentById from '../js-components/getShipmentById'
 import moment from "moment/dist/moment"
 
@@ -193,8 +193,8 @@ export default {
     components: { NavbarComponent, ChangeShipmentStatus, ChangeShipmentComponent, ChangeForwarder},
     props:['shipmentId'],
     setup(props){
-        const url = 'https://localhost:44331/api/'
-        const { loadShipment, error, shipment} = getShipmentById(url)
+        const linksStore = useLinksStore()
+        const { loadShipment, error, shipment} = getShipmentById(linksStore.url)
         //const router = useRouter()
 
         const changeFlagStatus = ref(false)

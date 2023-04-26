@@ -30,14 +30,16 @@ import changeDepartureTime from '../js-components/changeDepartureTime.js'
 import getStatuses from '../js-components/getStatuses.js'
 import StatusComponent from '../components/StatusComponent.vue'
 import moment from 'moment'
+import { useLinksStore } from '../stores/linksStore.js'
+
 export default {
 props:['shipmentId'],
 components:{StatusComponent},
 setup(props, context){
-    const url = 'https://localhost:44331/api/'
-    const { change, error} = changeStatus(url)
-    const { loadStatuses, error:loadError, statuses} = getStatuses(url)
-    const {changeDeparture, error:departureError} = changeDepartureTime(url)
+    const linksStore = useLinksStore()
+    const { change, error} = changeStatus(linksStore.url)
+    const { loadStatuses, error:loadError, statuses} = getStatuses(linksStore.url)
+    const {changeDeparture, error:departureError} = changeDepartureTime(linksStore.url)
     const dateOfDepartureForm = ref(moment(new Date()).format("YYYY-MM-DDThh:mm"))
     
     onBeforeMount(()=>{

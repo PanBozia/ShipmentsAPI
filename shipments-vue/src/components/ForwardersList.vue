@@ -87,10 +87,11 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import getForwarders from '../js-components/getForwarders.js'
 import {useRouter} from 'vue-router'
+import { useLinksStore } from '../stores/linksStore.js'
 export default {
     setup(){
-        const url = 'https://localhost:44331/api/'
-        const {loadForwarders, error, forwarders, totalPages, itemsFrom, itemsTo, totalItemsCount} = getForwarders(url)
+        const linksStore = useLinksStore()
+        const {loadForwarders, error, forwarders, totalPages, itemsFrom, itemsTo, totalItemsCount} = getForwarders(linksStore.url)
         const router = useRouter()
         const searchPhrase = ref('')
         const pageSize = ref(10)

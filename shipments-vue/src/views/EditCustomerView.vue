@@ -79,11 +79,13 @@ import NavbarComponent from '../components/NavbarComponent.vue'
 import editCustomer from '../js-components/editCustomer.js'
 import getCustomerById from '../js-components/getCustomerById.js'
 import AddCustomer from '../components/AddCustomer.vue'
+import { useLinksStore } from '../stores/linksStore.js'
 export default {
     props:['customerId'],
     components:{NavbarComponent, AddCustomer},
     setup(props){
-    const url = 'https://localhost:44331/api/'
+    const linksStore = useLinksStore()
+
     const nameForm = ref('')
     const shortNameForm = ref('')
     const clientNumberForm = ref('')
@@ -95,8 +97,8 @@ export default {
     const errorForm = ref('')
     const goToAddFlag = ref(false)
 
-    const {edit, error:editCustomerError} = editCustomer(url)
-    const {loadCustomer, error:getCustomerError, customer} = getCustomerById(url)
+    const {edit, error:editCustomerError} = editCustomer(linksStore.url)
+    const {loadCustomer, error:getCustomerError, customer} = getCustomerById(linksStore.url)
 
     onBeforeMount(()=>{
         loadCustomer(props.customerId).then(()=>{

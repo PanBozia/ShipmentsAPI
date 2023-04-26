@@ -364,7 +364,7 @@
 
 <script>
 import { ref } from "vue";
-
+import { useLinksStore } from '../stores/linksStore.js'
 import ChooseOrder from "../components/ChooseOrder.vue";
 import NavbarComponent from "../components/NavbarComponent.vue";
 import AddShipmentData from "../components/AddShipmentData.vue";
@@ -375,20 +375,20 @@ import moment from 'moment'
 export default {
   components: { NavbarComponent, ChooseOrder, AddShipmentData, ChooseForwarder },
   setup() {
-    const url = 'https://localhost:44331/api/'
-    
+    const linksStore = useLinksStore()
+
     //const {shipment, error:shipmentError, loadShipment} = getShipmentById(url)
     const chosenForwarder = ref(null)
     const chosenShipment = ref(null)
     const chosenOrders = ref(null)
-    const { addNewShipment, error:addShipmentError, createdId} = addShipment(url)
-    const {addOrder, error:addOrderError} = addOrderToShipment(url)
+    const { addNewShipment, error:addShipmentError, createdId} = addShipment( linksStore.url)
+    const {addOrder, error:addOrderError} = addOrderToShipment(linksStore.url)
     const addedPoNumber = ref("");
     
     const editShipment = ref(true)
     const editOrders = ref(false)
     const editForwarder = ref(false)
-    
+
     const handleNewShipment = (shipmentData) =>{
         chosenShipment.value = shipmentData
         editShipment.value = false
@@ -423,7 +423,7 @@ export default {
         if(chosenShipment.value.timeOfDeparture != null){
             chosenShipment.value.timeOfDeparture = moment(chosenShipment.value.timeOfDeparture).format("YYYY-MM-DDThh:mm")
         }
-        console.log(moment(chosenShipment.value.etd))
+        
         addNewShipment(chosenShipment.value)
         .then(()=>{
             if(chosenOrders.value.length != 0){

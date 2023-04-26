@@ -143,11 +143,12 @@
 import { onBeforeMount } from 'vue'
 import getShipments from '../js-components/getShipments'
 import moment from 'moment'
+import { useLinksStore } from '../stores/linksStore.js'
 export default {
     
     setup(){
-        const url = 'https://localhost:44331/api/'
-        const {loadShipments, error, shipments, totalPages, itemsFrom, itemsTo, totalItemsCount} = getShipments(url)
+        const linksStore = useLinksStore()
+        const {loadShipments, error, shipments, totalPages, itemsFrom, itemsTo, totalItemsCount} = getShipments(linksStore.url)
         
         const queryData = {
                 //hasPriority: hasPriority.value,

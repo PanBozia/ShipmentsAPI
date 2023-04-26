@@ -18,13 +18,14 @@
     import { onBeforeMount } from 'vue'
     import changeForwarder from '../js-components/changeForwarder.js'
     import ChooseForwarder from './ChooseForwarder.vue'
+    import { useLinksStore } from '../stores/linksStore.js'
     export default {
     emits:['changeForwarderEvent'],
     props:['shipmentId'],
     components:{ChooseForwarder},
     setup(props, context){
-        const url = 'https://localhost:44331/api/'
-        const {change, error} = changeForwarder(url)
+        const linksStore = useLinksStore()
+        const {change, error} = changeForwarder(linksStore.url)
         onBeforeMount(()=>{
         })
 

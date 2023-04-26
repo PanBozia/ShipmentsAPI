@@ -49,9 +49,10 @@
 <script>
 import { ref } from 'vue'
 import addCustomer from '../js-components/addCustomer.js'
+import { useLinksStore } from '../stores/linksStore.js'
 export default {
 setup(){
-    const url = 'https://localhost:44331/api/'
+    const linksStore = useLinksStore()
     const nameForm = ref('')
     const shortNameForm = ref('')
     const clientNumberForm = ref('')
@@ -63,7 +64,7 @@ setup(){
 
     const errorForm = ref('')
 
-    const {addNewCustomer, error, createdId} = addCustomer(url)
+    const {addNewCustomer, error, createdId} = addCustomer(linksStore.url)
 
     const handleSubmit = ()=>{
         if(countryForm.value.length > 2){

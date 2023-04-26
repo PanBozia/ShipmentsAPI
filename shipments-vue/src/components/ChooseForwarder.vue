@@ -102,15 +102,17 @@ import { ref } from 'vue'
 import getForwarders from '../js-components/getForwarders.js'
 import AddForwarder from '../components/AddForwarder.vue'
 import getForwarderById from '../js-components/getForwarderById.js'
+import { useLinksStore } from '../stores/linksStore.js'
+
 export default {
     
     emits:['forwarder-chosen-event'],
     components:{AddForwarder},
     setup(props,context){
-        const url = 'https://localhost:44331/api/'
+        const linksStore = useLinksStore()
         
-        const {loadForwarders, error:forwardersError, forwarders, totalItemsCount:totalItemsCountForwarders} = getForwarders(url)
-        const {loadForwarder, error:getForwarderError, forwarder} = getForwarderById(url)
+        const {loadForwarders, error:forwardersError, forwarders, totalItemsCount:totalItemsCountForwarders} = getForwarders(linksStore.url)
+        const {loadForwarder, error:getForwarderError, forwarder} = getForwarderById(linksStore.url)
         const search_phrase = ref('')
         const newForwarder = ref('')
 

@@ -223,13 +223,15 @@ import moment from 'moment'
 import 'moment/min/locales.min'
 import 'moment/locale/pl'
 import {useRouter} from 'vue-router'
+import { useLinksStore } from '../stores/linksStore.js'
+
 export default {
     setup(){
-        const url = 'https://localhost:44331/api/'
+        const linksStore = useLinksStore()
         const router = useRouter()
-        const {loadShipments, error, shipments, totalPages, itemsFrom, itemsTo, totalItemsCount} = getShipments(url)
-        const {loadAreas, error:areaError, areas} = getAreas(url)
-        const {loadStatuses, error:statusError, statuses} = getStatuses(url)
+        const {loadShipments, error, shipments, totalPages, itemsFrom, itemsTo, totalItemsCount} = getShipments(linksStore.url)
+        const {loadAreas, error:areaError, areas} = getAreas(linksStore.url)
+        const {loadStatuses, error:statusError, statuses} = getStatuses(linksStore.url)
 
         const pageSize = ref(10)
         const pageNumber = ref(1)

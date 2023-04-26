@@ -71,11 +71,13 @@ import NavbarComponent from '../components/NavbarComponent.vue'
 import editForwarder from '../js-components/editForwarder.js'
 import getForwarderById from '../js-components/getForwarderById.js'
 import AddForwarder from '../components/AddForwarder.vue'
+import { useLinksStore} from '../stores/linksStore.js'
+
 export default {
     props:['forwarderId'],
     components:{NavbarComponent, AddForwarder},
     setup(props){
-    const url = 'https://localhost:44331/api/'
+    const linksStore = useLinksStore()
     const firstNameForm = ref('')
     const lastNameForm = ref('')
     const speditionForm = ref('')
@@ -86,8 +88,8 @@ export default {
     const errorForm = ref('')
     const goToAddFlag = ref(false)
 
-    const {edit, error:editForwarderError} = editForwarder(url)
-    const {loadForwarder, error:getForwarderError, forwarder} = getForwarderById(url)
+    const {edit, error:editForwarderError} = editForwarder(linksStore.url)
+    const {loadForwarder, error:getForwarderError, forwarder} = getForwarderById(linksStore.url)
 
     onBeforeMount(()=>{
         loadForwarder(props.forwarderId).then(()=>{

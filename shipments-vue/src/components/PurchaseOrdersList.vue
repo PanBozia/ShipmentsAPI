@@ -112,12 +112,13 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import getPurchaseOrders from '../js-components/getPurchaseOrders.js'
 import moment from 'moment'
-
 import {useRouter} from 'vue-router'
+import { useLinksStore } from '../stores/linksStore.js'
+
 export default {
     setup(){
-        const url = 'https://localhost:44331/api/'
-        const {loadOrders, error, orders, totalPages, itemsFrom, itemsTo, totalItemsCount} = getPurchaseOrders(url)
+        const linksStore = useLinksStore()
+        const {loadOrders, error, orders, totalPages, itemsFrom, itemsTo, totalItemsCount} = getPurchaseOrders(linksStore.url)
         const router = useRouter()
         const searchPhrase = ref('')
         const pageSize = ref(10)

@@ -134,12 +134,13 @@ import getIncoterms from '../js-components/getIncoterms.js'
 import getAllCustomers from '../js-components/getAllCustomers.js'
 import addPurchaseOrder from '../js-components/addPurchaseOrder.js'
 import getPurchaseOrderById from '../js-components/getPurchaseOrderById.js'
+import { useLinksStore } from '../stores/linksStore.js'
 import moment from 'moment'
 export default {
     emits:['add-orders-event'],
     setup(props, context) {
-    const url = "https://localhost:44331/api/";
-    const { loadOrders, error: loadOrdersError, orders, totalItemsCount: totalItemsCountPo } = getPurchaseOrders(url);
+    const linksStore = useLinksStore()
+    const { loadOrders, error: loadOrdersError, orders, totalItemsCount: totalItemsCountPo } = getPurchaseOrders(linksStore.url);
     const searchOrderPhrase = ref("");
     const ordersList = ref([]);
 
@@ -158,7 +159,7 @@ export default {
     };
 
     //add order
-        const {loadOrder, order:newOrder} = getPurchaseOrderById(url)
+        const {loadOrder, order:newOrder} = getPurchaseOrderById(linksStore.url)
         const poNumberForm = ref('')
         const categoryForm = ref('Standard')
         const deliveryDateForm = ref()
@@ -166,9 +167,9 @@ export default {
         const customerIdForm = ref()
         const createdFlag = ref(false)
 
-        const {loadIncoterms, incoterms, error:incotermsError} = getIncoterms(url)
-        const {loadAllCustomers, customers, error:customersError} = getAllCustomers(url)
-        const {addNewPO, error:addPoError, createdId} = addPurchaseOrder(url)
+        const {loadIncoterms, incoterms, error:incotermsError} = getIncoterms(linksStore.url)
+        const {loadAllCustomers, customers, error:customersError} = getAllCustomers(linksStore.url)
+        const {addNewPO, error:addPoError, createdId} = addPurchaseOrder(linksStore.url)
         
         onBeforeMount (()=>{
             loadIncoterms();

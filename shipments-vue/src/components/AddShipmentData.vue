@@ -116,10 +116,11 @@
 import getAreas from '../js-components/getAreas.js'
 import { onMounted, ref } from 'vue'
 import moment from 'moment'
+import { useLinksStore } from '../stores/linksStore.js'
 export default {
     emits:["new-shipment-event"],
     setup(props,context){
-        const url = 'https://localhost:44331/api/'
+        const linksStore = useLinksStore()
         const etdForm = ref(null)
         const hasPriorityForm = ref(false)
         const palletQtyForm = ref(0)
@@ -133,7 +134,7 @@ export default {
         const createdFlag = ref(false)
 
         
-        const { loadAreas, error:areasError, areas} = getAreas(url)
+        const { loadAreas, error:areasError, areas} = getAreas(linksStore.url)
         onMounted(()=>{
             createdFlag.value = false
             loadAreas()

@@ -51,11 +51,12 @@ import { onBeforeMount, ref } from 'vue'
 import getIncoterms from '../js-components/getIncoterms.js'
 import getAllCustomers from '../js-components/getAllCustomers.js'
 import addPurchaseOrder from '../js-components/addPurchaseOrder.js'
+import { useLinksStore } from '../stores/linksStore.js'
 import moment from 'moment'
 export default {
     emits:['order-added-event'],
     setup(props, context){
-        const url = 'https://localhost:44331/api/'
+        const linksStore = useLinksStore()
         const poNumberForm = ref('')
         const categoryForm = ref('Standard')
         const deliveryDateForm = ref()
@@ -63,9 +64,9 @@ export default {
         const customerIdForm = ref()
         const createdFlag = ref(false)
 
-        const {loadIncoterms, incoterms, error:incotermsError} = getIncoterms(url)
-        const {loadAllCustomers, customers, error:customersError} = getAllCustomers(url)
-        const {addNewPO, error:addPoError} = addPurchaseOrder(url)
+        const {loadIncoterms, incoterms, error:incotermsError} = getIncoterms(linksStore.url)
+        const {loadAllCustomers, customers, error:customersError} = getAllCustomers(linksStore.url)
+        const {addNewPO, error:addPoError} = addPurchaseOrder(linksStore.url)
         
         onBeforeMount (()=>{
             loadIncoterms();

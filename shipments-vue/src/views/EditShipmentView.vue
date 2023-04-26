@@ -198,11 +198,13 @@ import addOrderToShipment from '../js-components/addOrderToShipment.js'
 import removeOrderFromShipment from '../js-components/removeOrderFromShipment.js'
 import { onBeforeMount, ref } from 'vue'
 import moment from 'moment'
+import { useLinksStore } from '../stores/linksStore.js'
+
 export default {
     props:['shipmentId'],
     components:{NavbarComponent},
     setup(props){
-        const url = 'https://localhost:44331/api/'
+        const linksStore = useLinksStore()
         const etdForm = ref(null)
         const hasPriorityForm = ref(false)
         const palletQtyForm = ref(0)
@@ -219,15 +221,15 @@ export default {
         const searchOrderPhrase = ref('')
         const createdFlag = ref(false)
 
-        const {edit, error:editShipmentError} = editShipment(url,props.shipmentId)
-        const {loadShipment, error:loadShipmentError, shipment} = getShipmentById(url)
-        const {loadAreas, error:areasError, areas} = getAreas(url)
-        const {loadForwarders, error:forwardersError, forwarders, totalPages, itemsFrom, itemsTo, totalItemsCount:totalItemsCountForwarders} = getForwarders(url)
-        const {loadForwarder, error:getForwarderByIdError, forwarder} = getForwarderById(url)
-        const {loadStatuses, error:getStatusesError, statuses} = getStatuses(url)
-        const {loadOrders, error:loadOrdersError, orders, totalItemsCount:totalItemsCountPo} = getPurchaseOrders(url)
-        const {addOrder, error:addOrderError} = addOrderToShipment(url)
-        const {removeOrder, error:removeOrderError} = removeOrderFromShipment(url)
+        const {edit, error:editShipmentError} = editShipment(linksStore.url,props.shipmentId)
+        const {loadShipment, error:loadShipmentError, shipment} = getShipmentById(linksStore.url)
+        const {loadAreas, error:areasError, areas} = getAreas(linksStore.url)
+        const {loadForwarders, error:forwardersError, forwarders, totalPages, itemsFrom, itemsTo, totalItemsCount:totalItemsCountForwarders} = getForwarders(linksStore.url)
+        const {loadForwarder, error:getForwarderByIdError, forwarder} = getForwarderById(linksStore.url)
+        const {loadStatuses, error:getStatusesError, statuses} = getStatuses(linksStore.url)
+        const {loadOrders, error:loadOrdersError, orders, totalItemsCount:totalItemsCountPo} = getPurchaseOrders(linksStore.url)
+        const {addOrder, error:addOrderError} = addOrderToShipment(linksStore.url)
+        const {removeOrder, error:removeOrderError} = removeOrderFromShipment(linksStore.url)
         
         const refreshShipmentData = () =>{
             

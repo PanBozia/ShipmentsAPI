@@ -122,12 +122,13 @@ import getStatuses from '../js-components/getStatuses.js'
 import getShipmentById from '../js-components/getShipmentById.js'
 import editShipment from '../js-components/editShipment.js'
 import { onBeforeMount, onMounted, ref } from 'vue'
+import { useLinksStore } from '../stores/linksStore.js'
 import moment from 'moment'
 export default {
     emits:['changeShipmentDataEvent'],
     props:['shipmentId'],
     setup(props,context){
-        const url = 'https://localhost:44331/api/'
+        const linksStore = useLinksStore()
         const etdForm = ref()
         const hasPriorityForm = ref()
         const palletQtyForm = ref()
@@ -139,10 +140,10 @@ export default {
         const search_phrase = ref('')
         const createdFlag = ref(false)
 
-        const { loadShipment, error:loadShipmentError, shipment} = getShipmentById(url)
-        const {edit, error:editError} = editShipment(url,props.shipmentId)
-        const { loadAreas, areas} = getAreas(url)
-        const {loadStatuses, statuses} = getStatuses(url)
+        const { loadShipment, error:loadShipmentError, shipment} = getShipmentById(linksStore.url)
+        const {edit, error:editError} = editShipment(linksStore.url,props.shipmentId)
+        const { loadAreas, areas} = getAreas(linksStore.url)
+        const {loadStatuses, statuses} = getStatuses(linksStore.url)
         onBeforeMount(()=>{
                 loadStatuses(),
                 loadAreas()
