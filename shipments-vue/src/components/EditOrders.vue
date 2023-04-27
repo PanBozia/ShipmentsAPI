@@ -160,10 +160,15 @@ export default {
       loadOrders(searchOrderPhrase.value, 20, 1, "DeliveryDate", 1);
     };
     const handleAddOrder = (order) => {
-      ordersList.value.push(order);
+        let orderExist = false
+        ordersList.value.forEach(orderFromList => {
+            if(orderFromList.id == order.id ){orderExist = true}
+        });
+        if (!orderExist) ordersList.value.push(order);
     };
     const handleRemoveOrder = (order) => {
-      ordersList.value = ordersList.value.filter((po) => po != order);
+    //   ordersList.value = ordersList.value.filter((po) => po != order);
+        ordersList.value.pop(order)
     };
 
     const handleSubmitOrdersList = () => {
@@ -218,10 +223,10 @@ export default {
                         addPoError.value = ''
                         customersError.value = ''
                         createdFlag.value = true
-                        setTimeout(()=>{createdFlag.value = false},4000)
+                        setTimeout(()=>{createdFlag.value = false},3000)
                     })
                 }else{
-                    setTimeout(()=>{addPoError.value = null},4000)
+                    setTimeout(()=>{addPoError.value = null},3000)
                 }
             })
             }

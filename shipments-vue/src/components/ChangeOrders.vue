@@ -35,24 +35,31 @@ export default {
         onBeforeMount(()=>{
             loadShipment(props.shipmentId)
         })
-
-        const getOrdersList = (ordersList)=>{
-            console.log(ordersList)
-            
-                shipment.value.purchaseOrders.forEach(order => {
-                    removeOrder(props.shipmentId, order.id)
+        const removeCurrentOrders = async (ordersArray)=>{
+           await ordersArray.forEach(order => {
+                removeOrder(props.shipmentId, order.id)
                 });
-                ordersList.forEach(order => {
+        }
+        const addNewOrders = async (ordersArray) =>{
+            await ordersArray.forEach(order => {
                     addOrder(props.shipmentId, order.id)
                 });
-            
-                context.emit('changeOrdersEvent', true)
-            // popraw bo nie odświerza na czas
-            // !!!!!!!!!!!!!!!!!!!!!!!
+        }
 
-            // change(props.shipmentId, newForwarder.id).then(()=>{
-            //     context.emit('changeForwarderEvent', true)
-            // })
+        const getOrdersList = (ordersList)=>{
+            removeCurrentOrders(shipment.value.purchaseOrders).then(()=>{
+                setTimeout(() => {
+                    console.log("Delayed for 0,3 sec.");
+                    addNewOrders(ordersList).then(()=>{
+                        setTimeout(() => {
+                            console.log("Delayed for 0,3 sec.");
+                            // console.log(ordersList)
+                            context.emit('changeOrdersEvent', true)
+                        }, "300");
+                    })
+                    }, "300");
+            })
+            
         }
 
         const handleExit = ()=>{    

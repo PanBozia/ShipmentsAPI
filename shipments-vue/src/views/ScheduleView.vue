@@ -1,5 +1,5 @@
 <template class="schedule-ctnr">
-    <div class="navbar" @click="handleFullScreen">
+    <div class="navbar" @click="refreshScreenOn">
         <div class="navbar-line"></div>
         <div class="schedule-container schedule-bar">
             <div>
@@ -165,33 +165,60 @@ export default {
                 // palletQty: 14
                 //timeOfDeparture.value
         }
+        
 
         onBeforeMount(()=>{
+            loadScheduleShipments()
+        })
+
+        const loadScheduleShipments = ()=>{
             loadShipments(queryData).then(()=>{
                 let counter = 0
                 shipments.value.forEach(shipment => {
                     shipment['counter']=counter++
-                    
                 });
             })
-            moment.locale("pl")
-        })
+        }
        
-        const handleFullScreen = ()=>{
-            var elem = document.getElementById("app")
-            if (elem.requestFullscreen) {
-                    elem.requestFullscreen();
-                } else if (elem.webkitRequestFullscreen) { /* Safari */
-                    elem.webkitRequestFullscreen();
-                } else if (elem.msRequestFullscreen) { /* IE11 */
-                    elem.msRequestFullscreen();
-                }
-        }    
-          
+        // const handleFullScreen = ()=>{
             
+        //     var elem = document.getElementById("app")
+        //     if (elem.requestFullscreen) {
+        //         elem.requestFullscreen();
+        //     } else if (elem.webkitRequestFullscreen) { /* Safari */
+        //         elem.webkitRequestFullscreen();
+        //     } else if (elem.msRequestFullscreen) { /* IE11 */
+        //         elem.msRequestFullscreen();
+        //     }
+
+            
+        // }    
+          function requestFullScreen(element) {
+                // Supports most browsers and their versions.
+                var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
+
+                if (requestMethod) { // Native full screen.
+                    requestMethod.call(element);
+                    } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+                        var wscript = new window.ActiveXObject("WScript.Shell");
+                        if (wscript !== null) {
+                            wscript.SendKeys("{F11}");
+                        }
+                    }
+                }
+
+        const refreshScreenOn = ()=>{
+            var elem = document.getElementById("app") // Make the body go full screen.
+            requestFullScreen(elem);
+            setInterval(()=>{
+                loadScheduleShipments()
+            }, 1000*60)
+        }  
         
+     
+
         return{
-             error, shipments, totalPages, itemsFrom, itemsTo, totalItemsCount, moment, handleFullScreen
+             error, shipments, totalPages, itemsFrom, itemsTo, totalItemsCount, moment, refreshScreenOn
         }
     }
 
