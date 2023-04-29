@@ -11,7 +11,7 @@
                 <h3>Awizacja wysyłek</h3>
             </div>
         </router-link>
-        <router-link :to="{name:'ShipmentsView'}" class="test-image first">
+        <router-link :to="{name:'ShipmentsWarehouseView'}" class="test-image first">
             <img src="../assets/img/magazyn.jpg">
             <div>
                 <h1>Magazyn</h1>

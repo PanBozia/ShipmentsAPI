@@ -3,23 +3,13 @@
         <div class="navbar-line"></div>
         <div class="navbar-content">
             <div>
-                <router-link :to="{name:'CustomerView'}">
-                    <p>KLIENCI</p>
-                </router-link>
-            </div>
-            <div>
-                <router-link :to="{name: 'PurchaseOrderView'}">
-                    <p>ZAMÓWIENIA</p>
-                </router-link>
-            </div>
-            <div>
-                <router-link :to="{name: 'ShipmentsView'}">
+                <router-link :to="{name: 'ShipmentsWarehouseView'}">
                     <p>WYSYŁKI</p>
                 </router-link>
             </div>
             <div>
-                    <router-link :to="{name:'ForwarderView'}">
-                    <p>PRZEWOŹNICY</p>
+                <router-link :to="{name:'WarehouseView'}">
+                    <p>LOKACJE</p>
                 </router-link>
             </div>
             <div>
@@ -35,12 +25,6 @@
 
 <script>
 export default {
-    // setup(){
-    //     const reloadPage = ()=>{
-    //         location.reload()
-    //     }
-    //     return { reloadPage}
-    // }
 
 }
 </script>

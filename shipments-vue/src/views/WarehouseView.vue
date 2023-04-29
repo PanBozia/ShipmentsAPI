@@ -1,5 +1,5 @@
 <template>
-<NavbarComponent />
+<NavbarWarehouse />
    <div class="frame">
      <div class="view-container">
         <div class="sub-page-header item-e location-header">
@@ -55,12 +55,12 @@
 <script>
 import { onBeforeMount, ref } from 'vue'
 
-import NavbarComponent from '../components/NavbarComponent.vue'
+import NavbarWarehouse from '../components/NavbarWarehouse.vue'
 import getWarehouseLocations from '../js-components/getWarehouseLocations.js'
 import addWarehouseLocation from '../js-components/addWarehouseLocation.js'
 import { useLinksStore } from '../stores/linksStore.js'
 export default {
-    components: {NavbarComponent},
+    components: {NavbarWarehouse},
     setup(){
         const linksStore = useLinksStore()
         const {loadLocations, error:loadError, locations} = getWarehouseLocations(linksStore.url)

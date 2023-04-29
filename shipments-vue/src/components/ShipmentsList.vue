@@ -226,7 +226,8 @@ import {useRouter} from 'vue-router'
 import { useLinksStore } from '../stores/linksStore.js'
 
 export default {
-    setup(){
+    props:['userIsOffice'],
+    setup(props){
         const linksStore = useLinksStore()
         const router = useRouter()
         const {loadShipments, error, shipments, totalPages, itemsFrom, itemsTo, totalItemsCount} = getShipments(linksStore.url)
@@ -351,12 +352,22 @@ export default {
         
 
         const gotoShipment = (shipmentId) =>{
-            router.push({ name:'SingleShipmentView', 
-                      params:{ shipmentId }
-                      }) 
+            console.log(props.userIsOffice)
+            if(props.userIsOffice){
+                router.push({ name:'SingleShipmentView', 
+                          params:{ shipmentId }
+                          }) 
+            }
+            if(!props.userIsOffice){
+                router.push({ name:'SingleShipmentWarehouseView', 
+                          params:{ shipmentId }
+                          }) 
+            }
+            
         }
 
-        return{ pagesRange, 
+        return{ 
+                pagesRange, 
                 palletsArray,
                 handlePageSize, 
                 handleGoToPage, 

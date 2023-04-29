@@ -8,7 +8,7 @@
                 </router-link>
             </div>
             <div>
-                    <router-link :to="{name:'ForwarderView'}">
+                    <router-link :to="{name:'ShipmentsWarehouseView'}">
                     <p>MAGAZYN</p>
                 </router-link>
             </div>

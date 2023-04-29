@@ -1,7 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ShipmentsView from '../views/ShipmentsView.vue'
+import ShipmentsWarehouseView from '../views/ShipmentsWarehouseView.vue'
 import SingleShipmentView from '../views/SingleShipmentView.vue'
+import SingleShipmentWarehouseView from '../views/SingleShipmentWarehouseView.vue'
 import ScheduleView from '../views/ScheduleView.vue'
 import ForwarderView from '../views/ForwarderView.vue'
 import CustomerView from '../views/CustomerView.vue'
@@ -21,12 +23,12 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/customers',
+      path: '/office/customers',
       name: 'CustomerView',
       component: CustomerView
     },
     {
-      path: '/orders',
+      path: '/office/orders',
       name: 'PurchaseOrderView',
       component: PurchaseOrderView
     },
@@ -37,57 +39,69 @@ const router = createRouter({
       props: true
     },
     {
-      path: '/forwarder',
+      path: '/office/forwarder',
       name: 'ForwarderView',
       component: ForwarderView
     },
     {
-        path: '/shipment',
+        path: '/office/shipments',
         name: 'ShipmentsView',
         component: ShipmentsView,
         props: true
     },
     {
-        path: '/shipment/:shipmentId',
+        path: '/warehouse/shipments',
+        name: 'ShipmentsWarehouseView',
+        component: ShipmentsWarehouseView,
+        props: true
+    },
+    {
+        path: '/office/shipment/:shipmentId',
         name: 'SingleShipmentView',
         component: SingleShipmentView,
         props: true
     },
     {
-        path: '/warehouse',
+        path: '/warehouse/shipment/:shipmentId',
+        name: 'SingleShipmentWarehouseView',
+        component: SingleShipmentWarehouseView,
+        props: true
+    },
+    {
+        path: '/warehouse/locations',
         name: 'WarehouseView',
         component: WarehouseView,
         props: true
     },
     {
-        path: '/addall',
+        path: '/office/addall',
         name: 'AddAllView',
         component: AddAllView,
         props: true
     },
     {
-        path: '/shipment/edit/:shipmentId',
+        path: '/office/shipment/edit/:shipmentId',
         name: 'EditShipmentView',
         component: EditShipmentView,
         props: true
         
     },
     {
-        path: '/order/edit/:orderId',
+        path: '/office/order/edit/:orderId',
         name: 'EditOrderView',
         component: EditOrderView,
         props: true
         
     },
     {
-        path: '/customer/edit/:customerId',
+        path: '/office/customer/edit/:customerId',
         name: 'EditCustomerView',
         component: EditCustomerView,
         props: true
         
     },
     {
-        path: '/forwarder/edit/:forwarderId',
+        path: '/office/forwarder/edit/:forwarderId',
         name: 'EditForwarderView',
         component: EditForwarderView,
         props: true

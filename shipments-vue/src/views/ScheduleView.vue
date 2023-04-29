@@ -128,7 +128,9 @@
                         statusBlocked:shipment.status == 'Wstrzymana' || shipment.status == 'Wstrzymana QA' || shipment.status == 'Wstrzymana LP',
                         statusCanceled:shipment.status == 'Anulowana'
                         }">
-                    {{shipment.status}}
+                    <span>
+                        {{shipment.status}}
+                    </span>
                     <span v-if="shipment.hasPriority" class="material-symbols-outlined timer">timer</span>
                 </div>
                 <div v-else>N/A</div>
@@ -248,6 +250,7 @@ export default {
 }
 .status{
     display: flex;
+    justify-content: space-between;
 }
 .timer{
     font-size: 3vh;

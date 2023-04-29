@@ -1,5 +1,5 @@
 <template>
-    <NavbarComponent />
+    <NavbarWarehouse />
    <div class="frame">
      <div class="shipment-view-container" v-if="shipment != null">
             <div class="item-header">
@@ -26,18 +26,18 @@
                     <h1 v-else class="green">{{moment(shipment.timeOfDeparture).format("YYYY MMM DD")}}</h1>
                 </div>
             </div>
-                <div class="item-status" :class="{
-                                                    statusNowa: shipment.status == 'Nowa',
-                                                    statusKompletacja:shipment.status == 'Kompletacja',
-                                                    statusGotowa:shipment.status == 'Gotowa',
-                                                    statusZrealizowana:shipment.status == 'Zrealizowana',
-                                                    statusWstrzymana:shipment.status == 'Wstrzymana',
-                                                    statusAnulowana:shipment.status == 'Anulowana'
-                                                }">
-                    <div>
-                        <h2 >{{shipment.status}}</h2>
-                    </div>
+            <div class="item-status" :class="{
+                                                statusNowa: shipment.status == 'Nowa',
+                                                statusKompletacja:shipment.status == 'Kompletacja',
+                                                statusGotowa:shipment.status == 'Gotowa',
+                                                statusZrealizowana:shipment.status == 'Zrealizowana',
+                                                statusWstrzymana:shipment.status == 'Wstrzymana',
+                                                statusAnulowana:shipment.status == 'Anulowana'
+                                            }">
+                <div>
+                    <h2 >{{shipment.status}}</h2>
                 </div>
+            </div>
             <div class="item-main">
                 <div>
                     <p>{{moment(shipment.etd).format("YYYY-MM-DD dddd hh:mm")}}</p>
@@ -143,16 +143,18 @@
                         </div>
                     </div>
                     <div class="content">
+                        <div class="content-btn" @click="changeFlagLocation=true">
+                            <p>
+                                Zmień LOKACJĘ
+                            </p>
+                        </div>
+                    </div>
+                    <div class="content">
                         <div class="content-btn" @click="changeFlagData=true">
                         <p>Edytuj DANE</p>    
                         </div>
                     </div>
                     
-                    <div class="content">
-                        <div class="content-btn" @click="changeFlagOrders=true">
-                            <p>Edytuj ZAMÓWIENIA</p> 
-                        </div>
-                    </div>
                     <div class="content">
                         <div class="content-btn"  @click="changeFlagForwarder=true">
                             <p>
@@ -175,26 +177,24 @@
   <div v-if="changeFlagForwarder">
     <ChangeForwarder @changeForwarderEvent="handleChangeForwarder" :shipmentId="shipmentId"/>
   </div>
-  <div v-if="changeFlagOrders">
-    <ChangeOrders @changeOrdersEvent="handleChangeOrders" :shipmentId="shipmentId"/>
-  </div>
+  
 </template>
 
 <script>
 import { onBeforeMount, ref} from 'vue'
 
-import NavbarComponent from '../components/NavbarComponent.vue'
+import NavbarWarehouse from '../components/NavbarWarehouse.vue'
 import ChangeShipmentStatus from '../components/ChangeShipmentStatus.vue'
 import ChangeShipmentComponent from '../components/ChangeShipmentComponent.vue'
 import ChangeForwarder from '../components/ChangeForwarder.vue'
-import ChangeOrders from '../components/ChangeOrders.vue'
+
 import { useLinksStore } from '../stores/linksStore.js'
 import getShipmentById from '../js-components/getShipmentById'
 import moment from "moment/dist/moment"
 
 //import { useRouter} from 'vue-router'
 export default {
-    components: { NavbarComponent, ChangeShipmentStatus, ChangeShipmentComponent, ChangeForwarder, ChangeOrders},
+    components: { NavbarWarehouse, ChangeShipmentStatus, ChangeShipmentComponent, ChangeForwarder },
     props:['shipmentId'],
     setup(props){
         const linksStore = useLinksStore()
@@ -204,7 +204,7 @@ export default {
         const changeFlagStatus = ref(false)
         const changeFlagData = ref(false)
         const changeFlagForwarder = ref(false)
-        const changeFlagOrders = ref(false)
+        const changeFlagLocation = ref(false)
 
         onBeforeMount(()=>{
             loadShipment(props.shipmentId)
@@ -229,19 +229,20 @@ export default {
             }
             changeFlagForwarder.value = false
         }
-        const handleChangeOrders = (flag) =>{
+        const handleChangeLocation = (flag) =>{
             if (flag == true){
                 loadShipment(props.shipmentId)
             }
-            changeFlagOrders.value = false
+            changeFlagLocation.value = false
         }
+        
         
         return{ 
                 error, 
                 shipment, 
                 moment, 
-                handleChangeStatus, handleChangeShipmentData, handleChangeForwarder, handleChangeOrders,
-                changeFlagStatus, changeFlagData, changeFlagForwarder, changeFlagOrders
+                handleChangeStatus, handleChangeShipmentData, handleChangeForwarder, handleChangeLocation,
+                changeFlagStatus, changeFlagData, changeFlagForwarder, changeFlagLocation
                 
                 }      
                 
@@ -251,220 +252,5 @@ export default {
 </script>
 
 <style>
-.shipment-view-container{
-    display: grid;
-    grid-template-columns: 20vh 20vh 20vh 20vh ;
-    grid-template-areas:
-    "header header header status"
-    " desc main main btns ";
-    margin-top: 4vh;
-    justify-content: center;
-    
 
-
-}
-.item-header {
-    grid-area: header;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #fdc600;
-    background: linear-gradient(to right, #ffdc60, #fdc600, #fdc600);
-    background: linear-gradient(to right, #323232, #323232,#323232,#323232, #2d2d2d);
-    /* background: #fcfcfc; */
-    color: #3e3e3e;
-    color: #dedede;
-    border: solid #777 1px;
-    
-    z-index: 1;
-    margin-bottom: 2vh;
-}
-.item-header .tod{
-    margin-right: 3vh;
-}
-.item-header h3{
-    margin: 0;
-}
-.poHearders{
-    display: flex;
-}
-.green{
-    color:#89f722
-}
-.item-status {
-    grid-area: status;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #fdc600;
-    background: linear-gradient(to right,#997801, #fdc600,#fdc600,#fdc600, #fdc600, #997801);
-    color: #333;
-    border: solid #aaa 1px;
-    
-    /* border-left: #fdc600 ; */
-    z-index: 1;
-    transform: scale(1.2)  translateY(0vh) translateX(0vh);
-    border-radius: 11%;
-    box-shadow: 0vh 1vh 1.2vh #00000080;
-    margin-bottom: 2vh;
-}
-
-.item-status p{
-    margin: 0;
-}
-.item-header div{
-    padding: 0.5vh 2vh;
-}
-.item-header div span{
-    margin: 0;
-    padding: 0;
-    font-size: 4.5vh;
-}
-.item-main {
-    grid-area: main;
-    display: flex;
-    flex-direction: column;
-    background-color: #282a39;
-    background: linear-gradient(to right, #22242b, #282d39);
-    border-top: solid #777 1px;
-}
-.item-desc{
-    grid-area: desc;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    background-color: #242424;
-    background: linear-gradient(to right, #202125, #22242b);
-    color: #ffcb0e;
-    border-left: solid #777 1px;
-    border-top: solid #777 1px;
-    
-    /* box-shadow: 0.6vh 0vh 1.5vh #00000050; */
-}
-.item-btns{
-    grid-area: btns;
-    display: grid;
-    width: 100%;
-    align-content: space-evenly;
-    border: solid #777 1px;
-    background: linear-gradient(to right, #282d39, #26272f);
-
-}
-
-.item-btns div{
-    padding: 0.6vh 0;
-    
-}
-.item-btns div.content{
-    align-self: center;
-    justify-self: center;
-    border: none;
-}
-.item-btns div.content .content-btn{
-    display: flex;
-    padding: 1vh 1.5vh;
-    font-size: 1.2vh;
-    cursor: pointer;
-    width: 13vh;
-    height: 4vh;
-    justify-content: center;
-    align-items: center;
-    border: solid #888 1px;
-    box-shadow: 0.3vh 0.3vh 0.4vh #00000085;
-    
-    background: linear-gradient(to right bottom, #414141, #353535);
-    transition: 100ms ease-in-out;
-    /* border-radius: 1em; */
-}
-.item-btns div.content .content-btn:hover{
-    background: #ffcf0e;
-    background: linear-gradient(to right bottom, #13a300, #166a03);
-    /* color: #555; */
-    box-shadow: 0.8vh 0.8vh 1vh #00000085;
-    transition: 100ms ease-in-out;
-    
-
-}
-.item-btns div.content .content-btn p{
-    text-align: center;
-    padding: 0.4vh 2vh;
-}
-
-.item-btns p{
-     margin: 0;
-    padding: 0.0vh 2vh;
-    font-weight: 400;
-}
-
-.item-main div, .item-desc div{
-    padding: 0.6vh 0;
-    display: flex;    
-    align-items: flex-start;
-    flex-direction: column;
-    height: 2.4vh;
-    border-bottom: solid #777 1px;
-}
-.item-main p, .item-desc p{
-    margin: 0;
-    padding: 0.0vh 2vh;
-    font-weight: 400;
-}
-
-.item-main .line-forwarder, .item-main .line-comment, .item-main .line-orders, 
-.item-desc .line-forwarder, .item-desc .line-comment, .item-desc .line-orders {
-    height: 10vh;
-    overflow: hidden;
-    overflow-y: visible;
-    border-bottom: solid #777 1px;
-}
-.item-desc .line-comment, .item-main .line-comment{
-    height: 6vh;
-}
-
-.order-desc{
-    color: #ffcb0e;
-    color: #999;
-}
-
-.statusNowa{
-    background-color: #fff;
-    background: linear-gradient(to right,#c6c6c6, #fff,#fff,#fff, #fff, #c6c6c6);
-    color: #008ddf;
-}
-.statusGotowa{
-    background-color: #3fb500;
-    background: linear-gradient(to right,#1e5600, #3fb500,#3fb500,#3fb500, #3fb500, #1e5600);
-    color: #ffffff;
-}
-.statusZrealizowana{
-    background-color: #5f5f5f;
-    background: linear-gradient(to right,#323232, #5d5d5d,#5f5f5f,#5f5f5f, #5d5d5d, #323232);
-    color: #89f722;
-}
-.statusKompletacja{
-    background-color: #008ddf;
-    background: linear-gradient(to right,#004974, #008ddf,#2daef9,#2daef9, #008ddf, #004974);
-    color: #ffffff;
-}
-.statusWstrzymana{
-    background-color: #df3000;
-    background: linear-gradient(to right,#8f1f00, #df3000,#df3000,#df3000, #df3000, #8f1f00);
-    color: #ffffff;
-}
-.statusAnulowana{
-    background-color: #5f5f5f;
-    background: linear-gradient(to right,#323232, #5d5d5d,#5f5f5f,#5f5f5f, #5d5d5d, #323232);
-    color: #d3d3d3;
-}
-
-.prio-line{
-    display: flex;
-    align-items: center;
-}
-.prio-line .material-symbols-outlined{
-    font-size: 2.4vh;
-    margin: 0 0 0 2vh;
-    padding: 0;
-    color: #90f01b;
-}
 </style>
