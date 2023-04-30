@@ -70,16 +70,6 @@ namespace ShipmentsAPI
                 },
                 new Status()
                 {
-                    Name = "Wstrzymana LP",
-                    Description = "Wysyłka wstrzymana przez dział LP"
-                },
-                new Status()
-                {
-                    Name = "Wstrzymana QA",
-                    Description = "Wysyłka wstrzymana przez dział QA"
-                },
-                new Status()
-                {
                     Name = "Anulowana",
                     Description = "Przesyłka została anulowana"
                 },
@@ -179,7 +169,7 @@ namespace ShipmentsAPI
                 },
                      new Incoterm()
                 {
-                    Name = "Inne lub nieznane",
+                    Name = "Nieznane",
                     ShortName = "N/A"
                 }
 

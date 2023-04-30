@@ -116,7 +116,7 @@
         <div class="list-item list-header shipment-header shipment-list">
             
             <p>NR PO</p>
-            <p>WYJAZD</p>
+            <p>ETD</p>
             <p>KONTENER</p>
             <p>TPA</p>
             <p>ILOŚĆ</p>
@@ -130,8 +130,8 @@
             </p>   
             <p>
                 <span class="sort-icon-label">SORTUJ:</span>
-                <span @click="sortBy='TimeOfDeparture', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
-                <span @click="sortBy='TimeOfDeparture', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>
+                <span @click="sortBy='ETD', sortDirection=0" class="material-symbols-outlined sort-icon">keyboard_double_arrow_up</span>
+                <span @click="sortBy='ETD', sortDirection=1" class="material-symbols-outlined sort-icon">keyboard_double_arrow_down</span>
             </p>
             <p>
                 <span class="sort-icon-label">SORTUJ:</span>

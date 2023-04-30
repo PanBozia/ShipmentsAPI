@@ -1,4 +1,10 @@
 <template class="schedule-ctnr">
+    <div class="palletCount" >
+        <h2 v-if="shipmentsCount == 0"><span>{{moment().format("dddd")}}</span> Dzisiaj nie ma wysyłek</h2>
+        <h2 v-if="shipmentsCount == 1"><span>{{moment().format("dddd")}}</span> Dzisiaj mamy <span>{{shipmentsCount}}</span> wysyłkę <span>{{palletCount}}</span> PAL</h2>
+        <h2 v-if="shipmentsCount > 1 && shipmentsCount < 5"><span>{{moment().format("dddd")}}</span> Dzisiaj mamy <span>{{shipmentsCount}}</span> wysyłki <span>{{palletCount}}</span> PAL</h2>
+        <h2 v-if="shipmentsCount > 4"><span>{{moment().format("dddd")}}</span> Dzisiaj mamy <span>{{shipmentsCount}}</span> wysyłek <span>{{palletCount}}</span> PAL</h2>
+    </div>
     <div class="navbar" @click="refreshScreenOn">
         <div class="navbar-line"></div>
         <div class="schedule-container schedule-bar">
@@ -60,7 +66,6 @@
             <div v-for="shipment in shipments" :key="shipment.id" class="schedule-container scheduleRow" 
                 :class="{
                     statusCompleated:shipment.status == 'Zrealizowana',
-                    
                     secondRow: shipment.counter % 2 == 0,
                     prioRow: shipment.hasPriority
                     }">
@@ -78,7 +83,7 @@
 
                 <!-- klient -->
                 <div v-if="shipment.purchaseOrders.length != 0">
-                    <div v-for="order in shipment.purchaseOrders" :key="order.id" :class="{doubleline:shipment.purchaseOrders.length>1}">
+                    <div v-for="order in shipment.purchaseOrders" :key="order.id" class="clientName" :class="{doubleline:shipment.purchaseOrders.length>1}">
                         {{order.customerShortName}}
                     </div>
                 </div>
@@ -106,12 +111,12 @@
                 <div v-if="shipment.palletQty">{{shipment.palletQty}}</div>
                 <div v-else>N/A</div>
                 <!-- ETD -->
-                <div v-if="shipment.etd">
+                <div v-if="shipment.etd" :class="{statusDelayed: shipment.status != 'Zrealizowana'&& moment(shipment.etd) < moment()}">
                     <span v-if="shipment.status != 'Zrealizowana'">
-                        {{moment(shipment.etd).format("YY-MMM-DD / HH:mm")}}
+                        {{moment(shipment.etd).format("YY-MMM-DD / hh:mm")}}
                     </span>
                     <span v-else>
-                        {{moment(shipment.timeOfDeparture).format("YY-MMM-DD / HH:mm")}}
+                        {{moment(shipment.timeOfDeparture).format("YY-MMM-DD / hh:mm")}}
                     </span>
                 </div>
                 <div v-else>N/A</div>
@@ -125,7 +130,7 @@
                 <div class="status" v-if="shipment.status != null" 
                     :class="{
                         statusDone:shipment.status == 'Zrealizowana' || shipment.status == 'Gotowa',
-                        statusBlocked:shipment.status == 'Wstrzymana' || shipment.status == 'Wstrzymana QA' || shipment.status == 'Wstrzymana LP',
+                        statusBlocked:shipment.status == 'Wstrzymana',
                         statusCanceled:shipment.status == 'Anulowana'
                         }">
                     <span>
@@ -142,7 +147,7 @@
 </template>
 
 <script>
-import { onBeforeMount } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import getShipments from '../js-components/getShipments'
 import moment from 'moment'
 import { useLinksStore } from '../stores/linksStore.js'
@@ -151,7 +156,8 @@ export default {
     setup(){
         const linksStore = useLinksStore()
         const {loadShipments, error, shipments, totalPages, itemsFrom, itemsTo, totalItemsCount} = getShipments(linksStore.url)
-        
+        const palletCount = ref(0)
+        const shipmentsCount = ref(0)
         const queryData = {
                 //hasPriority: hasPriority.value,
                 //comment: comment.value,
@@ -160,6 +166,8 @@ export default {
                 //statusId: statusId.value,
                 //containerNumber: containerNumber.value,
                 //purchaseOrderNumber: purchaseOrderNumber.value,
+                scheduleDate: moment().format('YYYY-MM-DDTHH:mm'),
+                dateOffset: 4,
                 pageNumber: 1,
                 pageSize: 20,
                 sortBy: "ETD"
@@ -178,23 +186,15 @@ export default {
                 let counter = 0
                 shipments.value.forEach(shipment => {
                     shipment['counter']=counter++
+                        if(moment(shipment.etd).format("YYY-MM-DD") == moment().format("YYY-MM-DD")){
+                            shipmentsCount.value++
+                            palletCount.value = palletCount.value + shipment.palletQty
+                    }
                 });
             })
         }
        
-        // const handleFullScreen = ()=>{
-            
-        //     var elem = document.getElementById("app")
-        //     if (elem.requestFullscreen) {
-        //         elem.requestFullscreen();
-        //     } else if (elem.webkitRequestFullscreen) { /* Safari */
-        //         elem.webkitRequestFullscreen();
-        //     } else if (elem.msRequestFullscreen) { /* IE11 */
-        //         elem.msRequestFullscreen();
-        //     }
-
-            
-        // }    
+    
           function requestFullScreen(element) {
                 // Supports most browsers and their versions.
                 var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
@@ -214,13 +214,13 @@ export default {
             requestFullScreen(elem);
             setInterval(()=>{
                 loadScheduleShipments()
-            }, 1000*60)
+            }, 1000*120)
         }  
         
      
 
         return{
-             error, shipments, totalPages, itemsFrom, itemsTo, totalItemsCount, moment, refreshScreenOn
+             error, shipments, totalPages, itemsFrom, itemsTo, totalItemsCount, moment, refreshScreenOn, palletCount, shipmentsCount
         }
     }
 
@@ -229,7 +229,22 @@ export default {
 
 <style scoped>
 
-
+.palletCount h2{
+    position: fixed;
+    padding: 0;
+    margin: 0%;
+    top: 2.5vh;
+    right: 4vh;
+    z-index: 100;
+    height: 2vh;
+    color:#ddd;
+    font-size: 2vh;
+}
+.palletCount h2 span{
+    font-size: 3vh;
+    color: #fdc700;
+    margin:0 0.5vh;
+}
 
 .scheduleRow{
 
@@ -293,10 +308,15 @@ export default {
     color: #f8b052;
 }
 .statusCompleated{
-    color: #89cd2f;
+    color: #b0f25a;
 }
 .statusCanceled{
     color: #f86262;
-
+}
+.statusDelayed{
+    color: #ffb53f;
+}
+.clientName{
+    color: #fdc700;
 }
 </style>

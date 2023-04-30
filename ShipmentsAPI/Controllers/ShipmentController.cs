@@ -69,6 +69,18 @@ namespace ShipmentsAPI.Controllers
             shipmentService.ChangeStatus(shipmentId, statusId);
             return Ok();
         }
+        [HttpPut("area/{shipmentId}/{areaId}")]
+        public ActionResult ChangeWarehouseLocation([FromRoute] Guid shipmentId, [FromRoute] int areaId)
+        {
+            shipmentService.ChangeWarehouseLocation(shipmentId, areaId);
+            return Ok();
+        }
+        [HttpPut("area/{shipmentId}")]
+        public ActionResult RemoveWarehouseLocation([FromRoute] Guid shipmentId)
+        {
+            shipmentService.RemoveWarehouseLocation(shipmentId);
+            return Ok();
+        }
         [HttpPut("forwarder/{shipmentId}/{forwarderId}")]
         public ActionResult ChangeStatus([FromRoute] Guid shipmentId, [FromRoute] Guid forwarderId)
         {

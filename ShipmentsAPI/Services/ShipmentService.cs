@@ -24,6 +24,8 @@ namespace ShipmentsAPI.Services
         void RemoveOrderFromShipment(Guid shipmentId, Guid purchaseOrderId);
         void ChangeForwarder(Guid shipmentId, Guid forwarderId);
         void ChangeDepartureDate(Guid shipmentId, string dateTime);
+        void ChangeWarehouseLocation(Guid shipmentId, int areaId);
+        void RemoveWarehouseLocation(Guid shipmentId);
     }
 
     public class ShipmentService : IShipmentService
@@ -75,8 +77,21 @@ namespace ShipmentsAPI.Services
             if (queryShipments.TimeOfDeparture != nullDate)
             {
                 shipments = shipments
-                   .Where(d => d.TimeOfDeparture > queryShipments.TimeOfDeparture.AddDays(-2))
-                   .Where(d => d.TimeOfDeparture < queryShipments.TimeOfDeparture.AddDays(2));
+                   .Where(d => d.ETD  > queryShipments.TimeOfDeparture.AddDays(-2))
+                   .Where(d => d.ETD < queryShipments.TimeOfDeparture.AddDays(2));
+            }
+            if (queryShipments.ScheduleDate != nullDate)
+            {
+                if(queryShipments.DateOffset != 0)
+                {
+                    shipments = shipments
+                        .Where(d => d.ETD > queryShipments.ScheduleDate.AddDays(queryShipments.DateOffset * (-1)));
+                }
+                else
+                {
+                    shipments = shipments
+                       .Where(d => d.ETD > queryShipments.ScheduleDate.AddDays(-2));
+                }
             }
             if (queryShipments.HasPriority)
             {
@@ -115,7 +130,7 @@ namespace ShipmentsAPI.Services
                 shipments = shipments.Where(x => x.PalletQty == queryShipments.PalletQty || x.PalletQty == queryShipments.PalletQty + 1 || x.PalletQty == queryShipments.PalletQty-1);
             }
 
-            shipments = shipments.OrderBy(x => x.TimeOfDeparture);
+            shipments = shipments.OrderBy(x => x.ETD);
             
             if (!string.IsNullOrEmpty(queryShipments.SortBy))
             {
@@ -239,6 +254,49 @@ namespace ShipmentsAPI.Services
             dbContext.Shipments.Update(shipment);
             dbContext.SaveChanges();
 
+        }
+        public void ChangeWarehouseLocation(Guid shipmentId, int areaId)
+        {
+            var shipment = dbContext.Shipments
+               .Include(x => x.Forwarder)
+               .Include(z => z.WarehouseArea)
+               .Include(y => y.Status)
+               .Include(s => s.PurchaseOrders)
+               .ThenInclude(c => c.Customer)
+               .FirstOrDefault(x => x.Id == shipmentId);
+
+            if (shipment is null)
+            {
+                throw new NotFoundException($"Wysyłka z nr id: {shipmentId} nie została odnaleziona.");
+            }
+            var areaExists = dbContext.WarehouseAreas.Any(x => x.Id == areaId);
+            if (!areaExists)
+            {
+                throw new NotFoundException($"Lokacja z nr id: {areaId} nie została odnaleziona.");
+            }
+            shipment.WarehouseAreaId = areaId;
+            dbContext.Shipments.Update(shipment);
+            dbContext.SaveChanges();
+
+        }
+        public void RemoveWarehouseLocation(Guid shipmentId)
+        {
+            var shipment = dbContext.Shipments
+               .Include(x => x.Forwarder)
+               .Include(z => z.WarehouseArea)
+               .Include(y => y.Status)
+               .Include(s => s.PurchaseOrders)
+               .ThenInclude(c => c.Customer)
+               .FirstOrDefault(x => x.Id == shipmentId);
+
+            if (shipment is null)
+            {
+                throw new NotFoundException($"Wysyłka z nr id: {shipmentId} nie została odnaleziona.");
+            }
+            
+            shipment.WarehouseAreaId = null;
+            dbContext.Shipments.Update(shipment);
+            dbContext.SaveChanges();
         }
         public void ChangeForwarder(Guid shipmentId, Guid forwarderId)
         {

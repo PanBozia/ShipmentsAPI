@@ -177,6 +177,9 @@
   <div v-if="changeFlagForwarder">
     <ChangeForwarder @changeForwarderEvent="handleChangeForwarder" :shipmentId="shipmentId"/>
   </div>
+  <div v-if="changeFlagLocation">
+    <ChangeShipmentLocation @changeLocationEvent="handleChangeLocation" :shipmentId="shipmentId"/>
+  </div>
   
 </template>
 
@@ -185,6 +188,7 @@ import { onBeforeMount, ref} from 'vue'
 
 import NavbarWarehouse from '../components/NavbarWarehouse.vue'
 import ChangeShipmentStatus from '../components/ChangeShipmentStatus.vue'
+import ChangeShipmentLocation from '../components/ChangeShipmentLocation.vue'
 import ChangeShipmentComponent from '../components/ChangeShipmentComponent.vue'
 import ChangeForwarder from '../components/ChangeForwarder.vue'
 
@@ -194,7 +198,7 @@ import moment from "moment/dist/moment"
 
 //import { useRouter} from 'vue-router'
 export default {
-    components: { NavbarWarehouse, ChangeShipmentStatus, ChangeShipmentComponent, ChangeForwarder },
+    components: { NavbarWarehouse, ChangeShipmentStatus, ChangeShipmentComponent, ChangeForwarder, ChangeShipmentLocation },
     props:['shipmentId'],
     setup(props){
         const linksStore = useLinksStore()

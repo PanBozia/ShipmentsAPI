@@ -14,6 +14,8 @@ namespace ShipmentsAPI.DtoModels
         public int StatusId { get; set; }
         public string ContainerNumber { get; set; }
         public string PurchaseOrderNumber { get; set; }
+        public DateTime ScheduleDate { get; set; }
+        public int DateOffset { get; set; }
 
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
