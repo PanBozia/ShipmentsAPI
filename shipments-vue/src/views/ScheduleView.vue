@@ -64,11 +64,13 @@
         
         <div v-if="!error" >
             <div v-for="shipment in shipments" :key="shipment.id" class="schedule-container scheduleRow" 
-                :class="{
+                 @click="gotoShipment(shipment.id)"
+                 :class="{
                     statusCompleated:shipment.status == 'Zrealizowana',
                     secondRow: shipment.counter % 2 == 0,
                     prioRow: shipment.hasPriority
-                    }">
+                    }"
+                    >
                 <!-- zamówienie -->
                 <div v-if="shipment.purchaseOrders.length != 0">
                     <div v-for="order in shipment.purchaseOrders" :key="order.id" :class="{doubleline:shipment.purchaseOrders.length>1}">
@@ -151,9 +153,12 @@ import { onBeforeMount, ref } from 'vue'
 import getShipments from '../js-components/getShipments'
 import moment from 'moment'
 import { useLinksStore } from '../stores/linksStore.js'
+import {useRouter} from 'vue-router'
+
 export default {
-    
-    setup(){
+    props:['userIsOffice'],
+    setup(props){
+        const router = useRouter()
         const linksStore = useLinksStore()
         const {loadShipments, error, shipments, totalPages, itemsFrom, itemsTo, totalItemsCount} = getShipments(linksStore.url)
         const palletCount = ref(0)
@@ -217,10 +222,31 @@ export default {
             }, 1000*120)
         }  
         
+        const gotoShipment = (shipmentId) =>{
+            
+            if(props.userIsOffice == 'false'){
+                console.log('warehouse')
+                router.push({ name:'SingleShipmentWarehouseView', 
+                          params:{ shipmentId:shipmentId }
+                          }) 
+            }
+            if(props.userIsOffice == 'true'){
+                console.log('office')
+                router.push({ name:'SingleShipmentView', 
+                            params:{ shipmentId:shipmentId }
+                            }) 
+            }
+            
+        }
      
 
         return{
-             error, shipments, totalPages, itemsFrom, itemsTo, totalItemsCount, moment, refreshScreenOn, palletCount, shipmentsCount
+             error, 
+             shipments, 
+             totalPages, itemsFrom, itemsTo, totalItemsCount, 
+             moment, 
+             refreshScreenOn, gotoShipment,
+             palletCount, shipmentsCount, 
         }
     }
 
@@ -254,7 +280,7 @@ export default {
     min-height: 7.0vh;
     box-shadow: inset 0 1vh 2vh #00000030;
     color: #ddd;
-
+    cursor: pointer;
 }
 .secondRow{
     background: linear-gradient(to right, #252d4e, #1d488a);

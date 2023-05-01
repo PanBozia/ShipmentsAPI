@@ -13,7 +13,7 @@
                 </router-link>
             </div>
             <div>
-                <router-link :to="{name:'ScheduleView'}" >
+                <router-link :to="{name:'ScheduleView', params:{userIsOffice:false}}" >
                     <p>HARMONOGRAM</p>
                 </router-link>
             </div>

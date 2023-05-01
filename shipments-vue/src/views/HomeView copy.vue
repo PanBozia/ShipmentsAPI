@@ -1,21 +1,7 @@
 <template>
-  
-  <div class="frame home-screen" >
-
-    <div class="nav-container">
-        <div class="top-bar home-bar">
-            <router-link :to="{name:'home'}">
-                <img id="dsse-logo" src="@/assets/img/logoDSSE.png" alt="">
-            </router-link>
-            <div id="label">FG SHIPMENTS</div>
-        </div>
-        <div>
-            <RouterView />
-        </div>
-    </div>
+  <NavbarStart />
+  <div class="frame">
     
-
-
     <div class="img-ctnr">
         <div></div>
         <router-link :to="{name:'ShipmentsView'}" class="test-image first">
@@ -32,26 +18,23 @@
                 <h3>Obsługa wysyłek</h3>
             </div>
         </router-link>
-        <!-- <router-link :to="{name:'ScheduleView', params:{userIsOffice:false}}" class="test-image first">
+        <router-link :to="{name:'ScheduleView', params:{userIsOffice:false}}" class="test-image first">
             <img src="../assets/img/harmonogram.jpg">
             <div>
                 <h1>Wysyłki</h1>
                 <h3>Harmonogram</h3>
             </div>
-        </router-link> -->
+        </router-link>
         <div></div>
-    </div>
-     <div class="home-desc">
-       <h1></h1>
     </div>
 
   </div>
 </template>
 
 <script>
-
+import NavbarStart from '../components/NavbarStart.vue'
 export default {
-   
+    components: {NavbarStart},
     setup(){
         
         return{}
@@ -59,39 +42,6 @@ export default {
 }
 </script>
 <style>
-.home-screen{
- position: absolute;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to right, #202635,#303552, #202635);
-    top: 0;
-    z-index: 1000;
-    transition: 200ms ease-in;
-}
-.home-desc{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    
-    margin: 0vh auto;
-}
-.home-desc p{
-    margin: 0.4vh;
-    font-weight: 200;
-}
-#app .main-container .top-bar.home-bar{
-    margin-top: 4vh 0 0 0;
-    padding: 2vh 0;
-    background: transparent;
-    background:linear-gradient(to right, #00000070, #00000030, #ffffff00,#00000030, #00000070);
-    border:solid 2px;
-    justify-content: center;
-    transform: scale(1.1)
-               translateY(5vh);
-    
-}
-
 .img-ctnr{
     /* display:grid;
     grid-template-columns: 15% 35% 35% 15%;

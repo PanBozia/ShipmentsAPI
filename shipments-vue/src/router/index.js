@@ -33,7 +33,7 @@ const router = createRouter({
       component: PurchaseOrderView
     },
     {
-      path: '/schedule',
+      path: '/schedule/:userIsOffice',
       name: 'ScheduleView',
       component: ScheduleView,
       props: true

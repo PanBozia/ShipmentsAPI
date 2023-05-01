@@ -352,7 +352,7 @@ export default {
         
 
         const gotoShipment = (shipmentId) =>{
-            console.log(props.userIsOffice)
+            
             if(props.userIsOffice){
                 router.push({ name:'SingleShipmentView', 
                           params:{ shipmentId }
