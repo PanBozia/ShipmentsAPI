@@ -138,7 +138,7 @@ export default {
         onMounted(()=>{
             createdFlag.value = false
             loadAreas()
-            etdForm.value = moment(new Date()).format("YYYY-MM-DD hh:mm")
+            etdForm.value = moment(new Date()).format("YYYY-MM-DD HH:mm")
         })
 
         const handleSubmit = ()=>{

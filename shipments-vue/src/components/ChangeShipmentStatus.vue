@@ -40,7 +40,7 @@ setup(props, context){
     const { change, error} = changeStatus(linksStore.url)
     const { loadStatuses, error:loadError, statuses} = getStatuses(linksStore.url)
     const {changeDeparture, error:departureError} = changeDepartureTime(linksStore.url)
-    const dateOfDepartureForm = ref(moment(new Date()).format("YYYY-MM-DDThh:mm"))
+    const dateOfDepartureForm = ref(moment(new Date()).format("YYYY-MM-DDTHH:mm"))
     
     onBeforeMount(()=>{
         loadStatuses()
@@ -55,7 +55,7 @@ setup(props, context){
 
             })
         }else{
-            changeDeparture(props.shipmentId, moment(dateOfDepartureForm.value).format("YYYY-MM-DDThh:mm")).then(()=>{
+            changeDeparture(props.shipmentId, moment(dateOfDepartureForm.value).format("YYYY-MM-DDTHH:mm")).then(()=>{
                 change(props.shipmentId, status.id).then(()=>{
                     context.emit('changeStatusEvent', true)
                 })

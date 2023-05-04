@@ -40,10 +40,10 @@
                 </div>
             <div class="item-main">
                 <div>
-                    <p>{{moment(shipment.etd).format("YYYY-MM-DD dddd hh:mm")}}</p>
+                    <p>{{moment(shipment.etd).format("YYYY-MM-DD dddd HH:mm")}}</p>
                 </div>
                 <div>
-                    <p v-if="shipment.timeOfDeparture != null">{{moment(shipment.timeOfDeparture).format("YYYY-MM-DD dddd hh:mm")}}</p>
+                    <p v-if="shipment.timeOfDeparture != null">{{moment(shipment.timeOfDeparture).format("YYYY-MM-DD dddd HH:mm")}}</p>
                     <p v-else>Brak</p>
                 </div>
                 <div>

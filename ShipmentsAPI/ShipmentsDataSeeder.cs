@@ -100,6 +100,7 @@ namespace ShipmentsAPI
                     CityAddress = "Żarów",
                     StreetAddress = "Strefowa 8",
                     ZipCodeAddress = "58-130",
+                    CountryAddress = "PL"
                 },
                 new Customer()
                 {
@@ -109,6 +110,7 @@ namespace ShipmentsAPI
                     CityAddress = "Klasterec nad Ohri",
                     StreetAddress = "Prymuslova 145",
                     ZipCodeAddress = "068-130",
+                    CountryAddress = "CZ"
                 }
 
             };

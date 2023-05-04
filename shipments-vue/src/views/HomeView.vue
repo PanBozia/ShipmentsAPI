@@ -1,6 +1,6 @@
 <template>
   
-  <div class="frame home-screen" >
+  <div class="frame home-screen back01" :class="{back02:moment().format('HH:mm') > moment('10:00').format('HH:mm') }" >
 
     <div class="nav-container">
         <div class="top-bar home-bar">
@@ -13,9 +13,6 @@
             <RouterView />
         </div>
     </div>
-    
-
-
     <div class="img-ctnr">
         <div></div>
         <router-link :to="{name:'ShipmentsView'}" class="test-image first">
@@ -42,19 +39,23 @@
         <div></div>
     </div>
      <div class="home-desc">
-       <h1></h1>
+       <h1>Witaj Logistyku</h1>
+       <p>Platforma <span>FG Shipments</span> została zbudowana w celu usprawnienia procesu komunikacji związanego 
+       z wysyłkami wyrobów gotowych. Umożliwia tworzenie awizacji zawierających dane o zamówieniach, 
+       klientach oraz przewoźnikach. Narzędzie pozwala na wymianę danych między logistykami (biuro 
+       <span class="material-symbols-outlined desc-symbol">swap_horiz</span> magazyn), czego wynikiem jest czytelny harmonogram wysyłek w postaci tablicy informacyjnej (dashboard'u).</p>
     </div>
 
   </div>
 </template>
 
 <script>
-
+import moment from 'moment'
 export default {
    
     setup(){
         
-        return{}
+        return{moment}
     }
 }
 </script>
@@ -64,10 +65,17 @@ export default {
     width: 100%;
     height: 100%;
     background: linear-gradient(to right, #202635,#303552, #202635);
-    
     top: 0;
     z-index: 1000;
     transition: 200ms ease-in;
+}
+.home-screen.back01{
+    background-image: linear-gradient(to right, #202635,#303552, #202635), url('../assets/img/back03.jpg');
+    background-blend-mode: multiply;
+}
+.home-screen.back02{
+    background-image: linear-gradient(to right, #202635,#303552, #202635), url('../assets/img/back02.jpg');
+    background-blend-mode: multiply;
 }
 .home-desc{
     display: flex;
@@ -77,12 +85,24 @@ export default {
     
     margin: 0vh auto;
 }
+.home-desc span{
+    font-weight: 400;
+}
+.home-desc .desc-symbol{
+    
+    margin:0;
+    padding: 0;
+    font-size: 1.8vh;
+    vertical-align: sub;
+}
 .home-desc p{
     margin: 0.4vh;
     font-weight: 200;
+    width: 84vh;
+    text-align: justify;
 }
 #app .main-container .top-bar.home-bar{
-    margin-top: 7vh;
+    margin-top: 10vh;
     padding: 2vh 0;
     background: transparent;
     background:linear-gradient(to right, #00000070, #00000030, #ffffff00,#00000030, #00000070);
@@ -95,13 +115,10 @@ export default {
 }
 
 .img-ctnr{
-    /* display:grid;
-    grid-template-columns: 15% 35% 35% 15%;
-    justify-items:center ; */
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 60vh;
+    height: 48vh;
     
 }
 .img-ctnr img{
@@ -117,7 +134,7 @@ export default {
     height: 24vh;
     border-radius: 0vh;
     margin: 10vh 2vh;
-    border: solid 0.3vh #ffffff;
+    border: solid 2px #ddd;
     justify-content: start;
     align-items: center;
     background: linear-gradient(rgb(56, 56, 56), rgb(38, 41, 42));

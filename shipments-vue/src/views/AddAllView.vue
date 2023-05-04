@@ -8,7 +8,7 @@
                 <h3>DANE NOWEJ WYSYŁKI</h3>
                 <div v-if="chosenShipment != null">
                     <p v-if="chosenShipment.hasPriority"> PRIORYTETOWA</p>
-                    <p><span class="yellow">ETD:</span> {{moment(chosenShipment.etd).format("YYYY-MM-DD / hh:mm")}}</p>
+                    <p><span class="yellow">ETD:</span> {{moment(chosenShipment.etd).format("YYYY-MM-DD / HH:mm")}}</p>
                     <p v-if="chosenShipment.containerNumber"><span class="yellow">Nr kontenera: </span>{{chosenShipment.containerNumber}}</p>
                     <p v-if="chosenShipment.containerType"><span class="yellow">Typ kontenera: </span>{{chosenShipment.containerType}}</p>
                     <p v-if="chosenShipment.warehouseArea != null"><span class="yellow">TPA: </span>{{chosenShipment.warehouseArea}}</p>
@@ -234,7 +234,7 @@
                 <div>
                     <p>
                         <span class="yellow">ETD: </span>
-                        {{moment(chosenShipment.timeOfDeparture).format("YYY-MM-DD / mm:hh")}}
+                        {{moment(chosenShipment.timeOfDeparture).format("YYY-MM-DD / HH:mm")}}
                     </p>
                     <p>
                         <span class="yellow">Nr kontenera: </span>
@@ -331,11 +331,11 @@
                     <div v-for="poShipment in order.shipments" :key="poShipment.id">
                         <p>
                             <span class="yellow">ETD: </span>
-                            {{moment(poShipment.etd).format("YYYY-MM-DD / hh:mm")}}
+                            {{moment(poShipment.etd).format("YYYY-MM-DD / HH:mm")}}
                         </p>
                         <p>
                             <span class="yellow">ATD: </span>
-                            {{moment(poShipment.atd).format("YYYY-MM-DD / hh:mm")}}
+                            {{moment(poShipment.atd).format("YYYY-MM-DD / HH:mm")}}
                         </p>
                         <p>
                             <span class="yellow">Nr kontenera: </span>
@@ -419,9 +419,9 @@ export default {
         if(chosenForwarder.value['id']){
                 chosenShipment.value['forwarderId'] = chosenForwarder.value['id']
             }
-        chosenShipment.value.etd = moment(chosenShipment.value.etd).format("YYYY-MM-DDThh:mm")
+        chosenShipment.value.etd = moment(chosenShipment.value.etd).format("YYYY-MM-DDTHH:mm")
         if(chosenShipment.value.timeOfDeparture != null){
-            chosenShipment.value.timeOfDeparture = moment(chosenShipment.value.timeOfDeparture).format("YYYY-MM-DDThh:mm")
+            chosenShipment.value.timeOfDeparture = moment(chosenShipment.value.timeOfDeparture).format("YYYY-MM-DDTHH:mm")
         }
         
         addNewShipment(chosenShipment.value)

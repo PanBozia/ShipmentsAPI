@@ -270,7 +270,7 @@ export default {
             };
                 if(palletQty.value != 0){query['palletQty'] = palletQty.value}
                 //console.log(timeOfDeparture.value)
-                if (moment(timeOfDeparture.value).format("YYYY-MM-DDThh:mm") != "Invalid date") {query['timeOfDeparture'] = timeOfDeparture.value}
+                if (moment(timeOfDeparture.value).format("YYYY-MM-DDTHH:mm") != "Invalid date") {query['timeOfDeparture'] = timeOfDeparture.value}
 
             return query
         })
