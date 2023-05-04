@@ -115,10 +115,10 @@
                 <!-- ETD -->
                 <div v-if="shipment.etd" :class="{statusDelayed: shipment.status != 'Zrealizowana'&& moment(shipment.etd) < moment()}">
                     <span v-if="shipment.status != 'Zrealizowana'">
-                        {{moment(shipment.etd).format("YY-MMM-DD / hh:mm")}}
+                        {{moment(shipment.etd).format("YY-MMM-DD / HH:mm")}}
                     </span>
                     <span v-else>
-                        {{moment(shipment.timeOfDeparture).format("YY-MMM-DD / hh:mm")}}
+                        {{moment(shipment.timeOfDeparture).format("YY-MMM-DD / HH:mm")}}
                     </span>
                 </div>
                 <div v-else>N/A</div>

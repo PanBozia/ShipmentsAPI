@@ -2,20 +2,25 @@
   <div class="navbar">
         <div class="navbar-line"></div>
         <div class="navbar-content">
-            <div>
-                <router-link :to="{name: 'ShipmentsWarehouseView'}">
-                    <p>WYSYŁKI</p>
-                </router-link>
+            <div class="nav-left">
+                <div>
+                    <router-link :to="{name: 'ShipmentsWarehouseView'}">
+                        <p>WYSYŁKI</p>
+                    </router-link>
+                </div>
+                <div>
+                    <router-link :to="{name:'ScheduleView', params:{userIsOffice:false}}">
+                        <p>HARMONOGRAM</p>
+                    </router-link>
+                </div>
             </div>
-            <div>
-                <router-link :to="{name:'WarehouseView'}">
-                    <p>LOKACJE</p>
-                </router-link>
-            </div>
-            <div>
-                <router-link :to="{name:'ScheduleView', params:{userIsOffice:false}}">
-                    <p>HARMONOGRAM</p>
-                </router-link>
+            <div class="nav-right">
+                <div>
+                    <router-link :to="{name:'WarehouseView'}">
+                        <p>LOKACJE</p>
+                    </router-link>
+                </div>
+
             </div>
              
         </div>

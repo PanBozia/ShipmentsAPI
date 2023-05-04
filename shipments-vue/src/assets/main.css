@@ -96,10 +96,30 @@ h1, h2, h3, h4 {
     height: 4.4vh; 
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     padding-top: 0.4vh ;
+    overflow: hidden;
 }
+#app .main-container .nav-container .navbar .navbar-content .nav-left{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+#app .main-container .nav-container .navbar .navbar-content .nav-right{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#app .main-container .nav-container .navbar .navbar-content .nav-right div{
+    color: #787878;
+    margin-right: 0;
+    z-index: 1;
+}
+
 #app .main-container .nav-container .navbar .navbar-content div{
     font-family: 'Bebas Neue';
     color: #2f548b;

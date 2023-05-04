@@ -40,6 +40,12 @@ namespace ShipmentsAPI
                     dbContext.Incoterms.AddRange(inco);
                     dbContext.SaveChanges();
                 }
+                if (!dbContext.WarehouseAreas.Any())
+                {
+                    var warehouseAreas = GetAreas();
+                    dbContext.WarehouseAreas.AddRange(warehouseAreas);
+                    dbContext.SaveChanges();
+                }
 
             }
         }
@@ -175,6 +181,42 @@ namespace ShipmentsAPI
 
             };
             return incoterms;
+        }
+        private IEnumerable<WarehouseArea> GetAreas()
+        {
+            var areas = new List<WarehouseArea>()
+            {
+                new WarehouseArea()
+                {
+                    Name = "TPA-1"
+                },
+                new WarehouseArea()
+                {
+                    Name = "TPA-2"
+                },
+                new WarehouseArea()
+                {
+                   Name = "TPA-3"
+                },
+                new WarehouseArea()
+                {
+                    Name = "TPA-4"
+                },
+                new WarehouseArea()
+                {
+                   Name = "TPA-5"
+                },
+                new WarehouseArea()
+                {
+                   Name = "LOK-1"
+                },
+                new WarehouseArea()
+                {
+                   Name = "LOK-2"
+                }
+
+            };
+            return areas;
         }
     }
 }

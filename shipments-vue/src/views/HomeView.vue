@@ -64,6 +64,7 @@ export default {
     width: 100%;
     height: 100%;
     background: linear-gradient(to right, #202635,#303552, #202635);
+    
     top: 0;
     z-index: 1000;
     transition: 200ms ease-in;
@@ -81,14 +82,15 @@ export default {
     font-weight: 200;
 }
 #app .main-container .top-bar.home-bar{
-    margin-top: 4vh 0 0 0;
+    margin-top: 7vh;
     padding: 2vh 0;
     background: transparent;
     background:linear-gradient(to right, #00000070, #00000030, #ffffff00,#00000030, #00000070);
     border:solid 2px;
+    border-left: 0px;
+    border-right: 0px;
     justify-content: center;
-    transform: scale(1.1)
-               translateY(5vh);
+    /* transform: translateY(5vh); */
     
 }
 
