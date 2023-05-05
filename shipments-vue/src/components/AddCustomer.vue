@@ -1,5 +1,5 @@
 <template>
-   
+   <Spinner v-if="isPending" />
     <div class="add-container">
         <form class="form-add add-single-form" @submit.prevent="handleSubmit">
             <h2>Dodaj nowego klienta</h2>
@@ -50,7 +50,10 @@
 import { ref } from 'vue'
 import addCustomer from '../js-components/addCustomer.js'
 import { useLinksStore } from '../stores/linksStore.js'
+
+import Spinner from './SpinnerComponent.vue'
 export default {
+components:{Spinner},
 setup(){
     const linksStore = useLinksStore()
     const nameForm = ref('')
@@ -64,7 +67,7 @@ setup(){
 
     const errorForm = ref('')
 
-    const {addNewCustomer, error, createdId} = addCustomer(linksStore.url)
+    const {addNewCustomer, error, createdId, isPending} = addCustomer(linksStore.url)
 
     const handleSubmit = ()=>{
         if(countryForm.value.length > 2){
@@ -99,7 +102,9 @@ setup(){
         
     }
 
-    return {nameForm, 
+    return {
+            isPending,
+            nameForm, 
             shortNameForm, 
             clientNumberForm, 
             streetForm, 

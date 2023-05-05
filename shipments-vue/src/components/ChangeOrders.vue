@@ -1,4 +1,5 @@
 <template>
+    <Spinner v-if="isPending1 || isPending2 || isPending3" />
    <div class="orders-screen">
         <div class="orders-ctnr">
             <h2>wybierz zamówienia</h2>
@@ -21,16 +22,16 @@ import { useLinksStore } from '../stores/linksStore.js'
 import getShipmentById from '../js-components/getShipmentById'
 import removeOrderToShipment from '../js-components/removeOrderFromShipment.js'
 import addOrderToShipment from '../js-components/addOrderToShipment.js'
-
+import Spinner from './SpinnerComponent.vue'
 export default {
     emits:['changeOrdersEvent'],
     props:['shipmentId'],
-    components:{EditOrders},
+    components:{EditOrders, Spinner},
     setup(props, context){
         const linksStore = useLinksStore()
-        const {loadShipment, error:loadShipmentsError, shipment } = getShipmentById(linksStore.url)
-        const {removeOrder} = removeOrderToShipment(linksStore.url)
-        const {addOrder} = addOrderToShipment(linksStore.url)
+        const {loadShipment, error:loadShipmentsError, shipment, isPending:isPending1 } = getShipmentById(linksStore.url)
+        const {removeOrder, isPending:isPending2} = removeOrderToShipment(linksStore.url)
+        const {addOrder, isPending:isPending3} = addOrderToShipment(linksStore.url)
 
         onBeforeMount(()=>{
             loadShipment(props.shipmentId)
@@ -69,7 +70,8 @@ export default {
         return {
             // error,
             loadShipmentsError,
-            getOrdersList, handleExit
+            getOrdersList, handleExit,
+            isPending1, isPending2, isPending3
         }
     }
     }

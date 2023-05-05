@@ -4,9 +4,9 @@ import axios from 'axios'
 const changeArea = (url) =>{
     
     const error = ref(null)
-
+    const isPending = ref(false)
     const change =  async (shipmentId, areaId) => {
-        
+        isPending.value = true
         var requestOptions = {
             method: 'PUT',
             headers: {
@@ -36,16 +36,16 @@ const changeArea = (url) =>{
             try {
                 let resp = await axios.put( url + 'Shipment/area/'+shipmentId+'/'+ areaId, requestOptions)
                 if (resp.status <200 & resp.status > 300){
+                    isPending.value = false
                     throw Error('Coś poszło nie tak..')
                 }
-                
+                isPending.value = false
             } catch (err) {
                 error.value = err.response.data.errors
-                console.log(error.value)
             }    
 
         }
     }
-      return {change, error}
+      return {change, error, isPending}
 }
 export default changeArea

@@ -1,5 +1,5 @@
 <template>
- 
+    <SpinnerComponent v-if="isPending" />
   <div>
    <div>
     <form class="shipment-search-form">
@@ -211,6 +211,7 @@
                 </div>
         </div>
     </div>
+  
   </div>
 </template>
 
@@ -224,13 +225,14 @@ import 'moment/min/locales.min'
 import 'moment/locale/pl'
 import {useRouter} from 'vue-router'
 import { useLinksStore } from '../stores/linksStore.js'
-
+import SpinnerComponent from './SpinnerComponent.vue'
 export default {
+    components:{SpinnerComponent},
     props:['userIsOffice'],
     setup(props){
         const linksStore = useLinksStore()
         const router = useRouter()
-        const {loadShipments, error, shipments, totalPages, itemsFrom, itemsTo, totalItemsCount} = getShipments(linksStore.url)
+        const {loadShipments, error, shipments, totalPages, itemsFrom, itemsTo, totalItemsCount, isPending} = getShipments(linksStore.url)
         const {loadAreas, error:areaError, areas} = getAreas(linksStore.url)
         const {loadStatuses, error:statusError, statuses} = getStatuses(linksStore.url)
 
@@ -366,7 +368,7 @@ export default {
             
         }
 
-        return{ 
+        return{ isPending,
                 pagesRange, 
                 palletsArray,
                 handlePageSize, 

@@ -5,8 +5,10 @@ const getWarehouseLocations = (url) =>{
 
     const locations = ref([])
     const error = ref(null)
-    
+    const isPending = ref(false)
+
     const loadLocations = async () => {
+        isPending.value = true
 
         try {
                 let resp = await axios.get(url + 'WarehouseArea/', {
@@ -16,18 +18,20 @@ const getWarehouseLocations = (url) =>{
                 })
                 //console.log(resp)
                 if (resp.status <200 & resp.status > 300){
-                throw Error('Coś poszło nie tak..')
+                    isPending.value = false
+                    throw Error('Coś poszło nie tak..')
                 }
                 
                 locations.value = resp.data
-                
+                isPending.value = false
+            
             } catch (er) {
                 error.value = er.response.data
             }
 
       }
 
-      return {loadLocations, error, locations}
+      return {loadLocations, error, locations, isPending}
 }
 
 export default getWarehouseLocations

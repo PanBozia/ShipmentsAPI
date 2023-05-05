@@ -4,9 +4,11 @@ import axios from 'axios'
 const changeStatus = (url) =>{
 
     const error = ref(null)
-    
+    const isPending = ref(false)
+
 
     const change =  async (shipmentId, statusId) => {
+        isPending.value = true
 
         var requestOptions = {
         method: 'PUT',
@@ -23,14 +25,17 @@ const changeStatus = (url) =>{
         try {
             let resp = await axios.put( url + 'Shipment/'+shipmentId+'/'+ statusId, requestOptions)
             if (resp.status <200 & resp.status > 300){
+                isPending.value = false
+
                 throw Error('Coś poszło nie tak..')
             }
-            
+            isPending.value = false
+
         } catch (err) {
             error.value = err.response.data
             console.log(error.value)
         }    
     }
-      return {change, error}
+      return {change, error, isPending}
 }
 export default changeStatus

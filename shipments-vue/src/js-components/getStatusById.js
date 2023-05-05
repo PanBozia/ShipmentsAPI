@@ -5,8 +5,10 @@ const getStatusById = (url) =>{
 
     const status = ref([])
     const error = ref(null)
-    
+    const isPending = ref(false)
+
     const loadStatus = async (id) => {
+        isPending.value = true
 
         try {
                 let resp = await axios.get(url + 'Status/' + id, {
@@ -16,18 +18,20 @@ const getStatusById = (url) =>{
                 })
                 //console.log(resp)
                 if (resp.status <200 & resp.status > 300){
-                throw Error('Coś poszło nie tak..')
+                    isPending.value = false
+                    throw Error('Coś poszło nie tak..')
                 }
                 
                 status.value = resp.data
-                
+                isPending.value = false
+
             } catch (er) {
                 error.value = er.response.data
             }
 
       }
 
-      return {loadStatus, error, status}
+      return {loadStatus, error, status, isPending}
 }
 
 export default getStatusById

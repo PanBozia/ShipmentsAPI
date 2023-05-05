@@ -9,9 +9,10 @@ const getCustomers = (url) =>{
     const itemsFrom = ref()
     const itemsTo = ref()
     const totalPages = ref()
+    const isPending = ref(false)
 
-    
     const loadCustomers = async (searchPhrase, pageSize, pageNumber, sortBy, sortDirection) => {
+        isPending.value = true
 
         try {
                 let resp = await axios.get(url + 'Customer/search?searchPhrase='+ searchPhrase +'&pageSize='+pageSize+'&pageNumber='+pageNumber+'&sortBy='+sortBy+'&SortDirection='+sortDirection, {
@@ -21,7 +22,8 @@ const getCustomers = (url) =>{
                 })
                 //console.log(resp)
                 if (resp.status <200 & resp.status > 300){
-                throw Error('Coś poszło nie tak..')
+                    isPending.value = false
+                    throw Error('Coś poszło nie tak..')
                 }
                 
                 customers.value = resp.data.items
@@ -29,7 +31,8 @@ const getCustomers = (url) =>{
                 itemsFrom.value = resp.data.itemsFrom
                 itemsTo.value = resp.data.itemsTo
                 totalItemsCount.value = resp.data.totalItemsCount
-                
+                isPending.value = false
+
             } catch (er) {
                 error.value = er.response.data
             }
@@ -37,7 +40,7 @@ const getCustomers = (url) =>{
 
       }
 
-      return {loadCustomers, error, customers, totalPages, itemsFrom, itemsTo, totalItemsCount}
+      return {loadCustomers, isPending, error, customers, totalPages, itemsFrom, itemsTo, totalItemsCount}
 }
 
 export default getCustomers

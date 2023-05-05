@@ -9,9 +9,11 @@ const getPurchaseOrders = (url) =>{
     const itemsFrom = ref()
     const itemsTo = ref()
     const totalPages = ref()
+    const isPending = ref(false)
 
     
     const loadOrders = async (searchPhrase, pageSize, pageNumber, sortBy, sortDirection) => {
+        isPending.value = true
 
         try {
                 let resp = await axios.get(url + 'PurchaseOrder/search?searchPhrase='+ searchPhrase +'&pageSize='+pageSize+'&pageNumber='+pageNumber+'&sortBy='+sortBy+'&SortDirection='+sortDirection, {
@@ -21,7 +23,8 @@ const getPurchaseOrders = (url) =>{
                 })
                 //console.log(resp)
                 if (resp.status <200 & resp.status > 300){
-                throw Error('Coś poszło nie tak..')
+                    isPending.value = false
+                    throw Error('Coś poszło nie tak..')
                 }
                 
                 orders.value = resp.data.items
@@ -29,15 +32,14 @@ const getPurchaseOrders = (url) =>{
                 itemsFrom.value = resp.data.itemsFrom
                 itemsTo.value = resp.data.itemsTo
                 totalItemsCount.value = resp.data.totalItemsCount
-                
+                isPending.value = false
+
             } catch (er) {
                 error.value = er.response.data
             }
-        // console.log(forwarders.value)
-
       }
 
-      return {loadOrders, error, orders, totalPages, itemsFrom, itemsTo, totalItemsCount}
+      return {loadOrders, error, orders, totalPages, itemsFrom, itemsTo, totalItemsCount, isPending}
 }
 
 export default getPurchaseOrders

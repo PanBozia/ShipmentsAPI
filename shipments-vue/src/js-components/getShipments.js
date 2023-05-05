@@ -9,10 +9,11 @@ const getShipments = (url) =>{
     const itemsFrom = ref()
     const itemsTo = ref()
     const totalPages = ref()
+    const isPending = ref(false)
 
     
     const loadShipments = async ( queryData) => {
-
+        isPending.value = true
         try {
                 let resp = await axios.post(url + 'Shipment/search', queryData, {
                     headers: {
@@ -21,7 +22,8 @@ const getShipments = (url) =>{
                 })
                 //console.log(resp)
                 if (resp.status <200 & resp.status > 300){
-                throw Error('Coś poszło nie tak..')
+                    isPending.value = false
+                    throw Error('Coś poszło nie tak..')
                 }
                 
                 shipments.value = resp.data.items
@@ -29,6 +31,8 @@ const getShipments = (url) =>{
                 itemsFrom.value = resp.data.itemsFrom
                 itemsTo.value = resp.data.itemsTo
                 totalItemsCount.value = resp.data.totalItemsCount
+                // setTimeout(()=>{isPending.value = false}, 400000)
+                isPending.value = false
                 
             } catch (er) {
                 error.value = er.response.data
@@ -37,7 +41,7 @@ const getShipments = (url) =>{
 
       }
 
-      return {shipments, error, loadShipments, totalPages, itemsFrom, itemsTo, totalItemsCount}
+      return {shipments, error, loadShipments, totalPages, itemsFrom, itemsTo, totalItemsCount, isPending}
 }
 
 export default getShipments

@@ -4,9 +4,9 @@ import axios from 'axios'
 const editPurchaseOrder = (url) =>{
 
     const error = ref(null)
-    
-
+    const isPending = ref(false)
     const editOrder =  async (id, orderData) => {
+        isPending.value = true
 
         var requestOptions = {
         method: 'PUT',
@@ -23,13 +23,14 @@ const editPurchaseOrder = (url) =>{
         try {
             let resp = await axios.put( url + 'PurchaseOrder/'+ id, orderData, requestOptions)
             if (resp.status <200 & resp.status > 300){
+                isPending.value = false
                 throw Error('Coś poszło nie tak..')
             }
-            
+            isPending.value = false
         } catch (err) {
             error.value = err.response.data
         }    
     }
-      return {editOrder, error}
+      return {editOrder, error, isPending}
 }
 export default editPurchaseOrder

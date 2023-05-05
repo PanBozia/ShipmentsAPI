@@ -4,8 +4,10 @@ import axios from 'axios'
 const removeOrderToShipment = (url) =>{
 
     const error = ref(null)
+    const isPending = ref(false)
 
     const removeOrder =  async (shipmentId, orderId) => {
+        isPending.value = true
 
         var requestOptions = {
         method: 'POST',
@@ -22,13 +24,14 @@ const removeOrderToShipment = (url) =>{
         try {
             let resp = await axios.post( url + 'Shipment/removePo/' + shipmentId +"/"+ orderId, requestOptions)
             if (resp.status <200 & resp.status > 300){
+                isPending.value = false
                 throw Error('Coś poszło nie tak..')
             }
-            
+            isPending.value = false
         } catch (err) {
             error.value = err.response.data
         }    
     }
-      return {removeOrder, error}
+      return {removeOrder, error, isPending}
 }
 export default removeOrderToShipment

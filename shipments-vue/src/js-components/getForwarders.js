@@ -9,9 +9,10 @@ const getForwarders = (url) =>{
     const itemsFrom = ref()
     const itemsTo = ref()
     const totalPages = ref()
-
+    const isPending = ref(false)
     
     const loadForwarders = async (searchPhrase, pageSize, pageNumber, sortBy, sortDirection) => {
+        isPending.value = true
 
         try {
                 let resp = await axios.get(url + 'forwarder/search?searchPhrase='+ searchPhrase +'&pageSize='+pageSize+'&pageNumber='+pageNumber+'&sortBy='+sortBy+'&SortDirection='+sortDirection, {
@@ -21,7 +22,8 @@ const getForwarders = (url) =>{
                 })
                 //console.log(resp)
                 if (resp.status <200 & resp.status > 300){
-                throw Error('Coś poszło nie tak..')
+                    isPending.value = false
+                    throw Error('Coś poszło nie tak..')
                 }
                 
                 forwarders.value = resp.data.items
@@ -29,15 +31,14 @@ const getForwarders = (url) =>{
                 itemsFrom.value = resp.data.itemsFrom
                 itemsTo.value = resp.data.itemsTo
                 totalItemsCount.value = resp.data.totalItemsCount
-                
+                isPending.value = false
+
             } catch (er) {
                 error.value = er.response.data
             }
-        // console.log(forwarders.value)
-
       }
 
-      return {loadForwarders, error, forwarders, totalPages, itemsFrom, itemsTo, totalItemsCount}
+      return {loadForwarders, error, forwarders, totalPages, itemsFrom, itemsTo, totalItemsCount, isPending}
 }
 
 export default getForwarders

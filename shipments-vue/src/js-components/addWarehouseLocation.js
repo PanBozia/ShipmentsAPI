@@ -5,9 +5,9 @@ const addWarehouseLocation = (url) =>{
 
     const error = ref(null)
     const createdId = ref('')
-
+    const isPending = ref(false)
     const addNewLocation =  async (locationName) => {
-
+        isPending.value = true
         var requestOptions = {
         method: 'POST',
         headers: {
@@ -23,14 +23,16 @@ const addWarehouseLocation = (url) =>{
         try {
             let resp = await axios.post( url + 'WarehouseArea/', locationName, requestOptions)
             if (resp.status <200 & resp.status > 300){
+                isPending.value = false
                 throw Error('Coś poszło nie tak..')
             }
             createdId.value = resp.data.customerId
+            isPending.value = false
         } catch (err) {
             error.value = err.response.data
             console.log(error.value)
         }    
     }
-      return {addNewLocation, error, createdId}
+      return {addNewLocation, error, createdId, isPending}
 }
 export default addWarehouseLocation

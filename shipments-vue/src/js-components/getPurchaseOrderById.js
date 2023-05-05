@@ -5,8 +5,10 @@ const getPurchaseOrderById = (url) =>{
 
     const order = ref([])
     const error = ref(null)
-    
+    const isPending = ref(false)
+
     const loadOrder = async (id) => {
+        isPending.value = true
 
         try {
                 let resp = await axios.get(url + 'PurchaseOrder/'+id, {
@@ -16,11 +18,12 @@ const getPurchaseOrderById = (url) =>{
                 })
                 //console.log(resp)
                 if (resp.status <200 & resp.status > 300){
-                throw Error('Coś poszło nie tak..')
+                    isPending.value = false
+                    throw Error('Coś poszło nie tak..')
                 }
                 
                 order.value = resp.data
-                
+                isPending.value = false
                 
             } catch (er) {
                 error.value = er.response.data
@@ -28,7 +31,7 @@ const getPurchaseOrderById = (url) =>{
 
       }
 
-      return {loadOrder, error, order}
+      return {loadOrder, error, order, isPending}
 }
 
 export default getPurchaseOrderById
