@@ -1,19 +1,18 @@
 <template>
     <NavbarWarehouse />
+    <Spinner v-if="isPending" />
    <div class="frame">
      <div class="shipment-view-container" v-if="shipment != null">
             <div class="item-header">
-                <div>
-                    <span class="material-symbols-outlined">
-                        inventory
-                    </span>
+                <div class="header-img-ctnr">
+                        <img src="../assets/img/cargo.png" alt="" srcset="">
                 </div>
-                <div class="poHearders" v-if="shipment.purchaseOrders.length < 4">
+                <div class="poHearders" v-if="shipment.purchaseOrders.length < 3">
                     <div v-for="po in shipment.purchaseOrders" :key="po.id">
-                        <h3>{{po.customerShortName}}</h3><h3> ({{po.poNumber}})</h3>
+                        <h3>{{po.number}}</h3><h2> {{po.customerShortName}}</h2>
                     </div>
                 </div>
-                <div v-if="shipment.purchaseOrders.length >= 4" >
+                <div v-if="shipment.purchaseOrders.length >= 3" >
                     <div>
                         <h3>
                            Wiele zamówień ( {{shipment.purchaseOrders[0].customerShortName}} ... )
@@ -195,14 +194,14 @@ import ChangeForwarder from '../components/ChangeForwarder.vue'
 import { useLinksStore } from '../stores/linksStore.js'
 import getShipmentById from '../js-components/getShipmentById'
 import moment from "moment/dist/moment"
-
+import Spinner from '../components/SpinnerComponent.vue'
 //import { useRouter} from 'vue-router'
 export default {
-    components: { NavbarWarehouse, ChangeShipmentStatus, ChangeShipmentComponent, ChangeForwarder, ChangeShipmentLocation },
+    components: { NavbarWarehouse, ChangeShipmentStatus, ChangeShipmentComponent, ChangeForwarder, ChangeShipmentLocation, Spinner },
     props:['shipmentId'],
     setup(props){
         const linksStore = useLinksStore()
-        const { loadShipment, error, shipment} = getShipmentById(linksStore.url)
+        const { loadShipment, error, shipment, isPending} = getShipmentById(linksStore.url)
         //const router = useRouter()
 
         const changeFlagStatus = ref(false)
@@ -211,31 +210,38 @@ export default {
         const changeFlagLocation = ref(false)
 
         onBeforeMount(()=>{
-            loadShipment(props.shipmentId)
-            
+            refreshShipments()
         })
+        const refreshShipments = ()=>{
+            loadShipment(props.shipmentId).then(()=>{
+                let count = 1
+                shipment.value.purchaseOrders.forEach(order => {
+                    order['number']=count++
+                });
+            })
+        }
 
         const handleChangeStatus = (flag) =>{
             if (flag == true){
-                loadShipment(props.shipmentId)
+                refreshShipments()
             }
             changeFlagStatus.value = false
         }
         const handleChangeShipmentData = (flag) =>{
             if (flag == true){
-                loadShipment(props.shipmentId)
+                refreshShipments()
             }
             changeFlagData.value = false
         }
         const handleChangeForwarder = (flag) =>{
             if (flag == true){
-                loadShipment(props.shipmentId)
+                refreshShipments()
             }
             changeFlagForwarder.value = false
         }
         const handleChangeLocation = (flag) =>{
             if (flag == true){
-                loadShipment(props.shipmentId)
+                refreshShipments()
             }
             changeFlagLocation.value = false
         }
@@ -246,8 +252,8 @@ export default {
                 shipment, 
                 moment, 
                 handleChangeStatus, handleChangeShipmentData, handleChangeForwarder, handleChangeLocation,
-                changeFlagStatus, changeFlagData, changeFlagForwarder, changeFlagLocation
-                
+                changeFlagStatus, changeFlagData, changeFlagForwarder, changeFlagLocation,
+                isPending
                 }      
                 
     }

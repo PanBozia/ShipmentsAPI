@@ -1,6 +1,6 @@
 <template>
     <NavbarComponent/>
-    
+    <Spinner v-if="isPending" />
     <div class="frame">
         <div class="view-container">
             <div class="sub-page-header item-e ">
@@ -71,17 +71,6 @@
             </div>
         </div>
     </div>
-
-
-
-
-
-
-
-
-
-    
-  
 </template>
 
 <script>
@@ -94,13 +83,13 @@ import editPurchaseOrder from '../js-components/editPurchaseOrder.js'
 import AddPurchaseOrder from '../components/AddPurchaseOrder.vue'
 import moment from 'moment'
 import { useLinksStore } from '../stores/linksStore.js'
-
+import Spinner from '../components/SpinnerComponent.vue'
 export default {
     props:['orderId'],
-    components:{NavbarComponent, AddPurchaseOrder},
+    components:{NavbarComponent, AddPurchaseOrder, Spinner},
     setup(props){
         const linksStore = useLinksStore()
-        const {loadOrder, error:loadOrderError, order} = getPurchaseOrderById(linksStore.url)
+        const {loadOrder, error:loadOrderError, order, isPending} = getPurchaseOrderById(linksStore.url)
         const poNumberForm = ref('')
         const categoryForm = ref('')
         const deliveryDateForm = ref()
@@ -152,6 +141,7 @@ export default {
     }
 
         return{
+            isPending,
             handleSubmit,
             loadOrderError,
             order,

@@ -17,10 +17,10 @@ namespace ShipmentsAPI.Controllers
             this.shipmentService = shipmentService;
         }
 
-        [HttpGet]
-        public ActionResult<List<ShipmentDto>> Get()
+        [HttpGet("scheduled")]
+        public ActionResult<List<ShipmentDto>> GetScheduled()
         {
-            var shipments = shipmentService.Get();
+            var shipments = shipmentService.GetScheduleShipments();
             return Ok(shipments);
         }
         [HttpPost("search")]

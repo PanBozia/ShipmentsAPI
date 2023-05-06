@@ -1,6 +1,6 @@
 <template>
    <NavbarComponent />
-  
+    <Spinner v-if="isPending" />
   <div class="frame">
      <div class="view-container">
         <div class="sub-page-header item-e ">
@@ -72,10 +72,10 @@ import editForwarder from '../js-components/editForwarder.js'
 import getForwarderById from '../js-components/getForwarderById.js'
 import AddForwarder from '../components/AddForwarder.vue'
 import { useLinksStore} from '../stores/linksStore.js'
-
+import Spinner from '../components/SpinnerComponent.vue'
 export default {
     props:['forwarderId'],
-    components:{NavbarComponent, AddForwarder},
+    components:{NavbarComponent, AddForwarder, Spinner},
     setup(props){
     const linksStore = useLinksStore()
     const firstNameForm = ref('')
@@ -89,7 +89,7 @@ export default {
     const goToAddFlag = ref(false)
 
     const {edit, error:editForwarderError} = editForwarder(linksStore.url)
-    const {loadForwarder, error:getForwarderError, forwarder} = getForwarderById(linksStore.url)
+    const {loadForwarder, error:getForwarderError, forwarder, isPending} = getForwarderById(linksStore.url)
 
     onBeforeMount(()=>{
         loadForwarder(props.forwarderId).then(()=>{
@@ -128,7 +128,9 @@ export default {
         goToAddFlag.value = true
     }
 
-    return {getForwarderError,
+    return {
+            isPending,
+            getForwarderError,
             editForwarderError,
 
             firstNameForm,

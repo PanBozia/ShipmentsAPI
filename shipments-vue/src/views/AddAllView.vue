@@ -1,5 +1,6 @@
 <template>
   <NavbarComponent />
+  <Spinner v-if="isPending1 || isPending2" />
   <div class="row-container-seven" >
     <!-- 1st column -->
     <div> 
@@ -372,8 +373,9 @@ import ChooseForwarder from "../components/ChooseForwarder.vue";
 import addShipment from '../js-components/addShipment.js'
 import addOrderToShipment from '../js-components/addOrderToShipment.js'
 import moment from 'moment'
+import Spinner from '../components/SpinnerComponent.vue';
 export default {
-  components: { NavbarComponent, ChooseOrder, AddShipmentData, ChooseForwarder },
+  components: { NavbarComponent, ChooseOrder, AddShipmentData, ChooseForwarder, Spinner },
   setup() {
     const linksStore = useLinksStore()
 
@@ -381,8 +383,8 @@ export default {
     const chosenForwarder = ref(null)
     const chosenShipment = ref(null)
     const chosenOrders = ref(null)
-    const { addNewShipment, error:addShipmentError, createdId} = addShipment( linksStore.url)
-    const {addOrder, error:addOrderError} = addOrderToShipment(linksStore.url)
+    const { addNewShipment, error:addShipmentError, createdId, ispending:isPending1} = addShipment( linksStore.url)
+    const {addOrder, error:addOrderError, isPending:isPending2} = addOrderToShipment(linksStore.url)
     const addedPoNumber = ref("");
     
     const editShipment = ref(true)
@@ -441,6 +443,7 @@ export default {
     // })
 
     return {
+      isPending1, isPending2,
       handleNewShipment, chosenShipment,
       handleChoosenForwarder, chosenForwarder,
       addedPoNumber,

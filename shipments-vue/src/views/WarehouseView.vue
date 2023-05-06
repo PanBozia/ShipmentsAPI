@@ -1,5 +1,6 @@
 <template>
 <NavbarWarehouse />
+<Spinner v-if="isPending1 || isPending2" />
    <div class="frame">
      <div class="view-container">
         <div class="sub-page-header item-e location-header">
@@ -59,12 +60,13 @@ import NavbarWarehouse from '../components/NavbarWarehouse.vue'
 import getWarehouseLocations from '../js-components/getWarehouseLocations.js'
 import addWarehouseLocation from '../js-components/addWarehouseLocation.js'
 import { useLinksStore } from '../stores/linksStore.js'
+import Spinner from '../components/SpinnerComponent.vue'
 export default {
-    components: {NavbarWarehouse},
+    components: {NavbarWarehouse, Spinner},
     setup(){
         const linksStore = useLinksStore()
-        const {loadLocations, error:loadError, locations} = getWarehouseLocations(linksStore.url)
-        const {addNewLocation, error:addError} = addWarehouseLocation(linksStore.url)
+        const {loadLocations, error:loadError, locations, isPending:isPending1} = getWarehouseLocations(linksStore.url)
+        const {addNewLocation, error:addError, isPending:isPending2} = addWarehouseLocation(linksStore.url)
         const nameForm = ref('')
         const createdFlag = ref(false)
         onBeforeMount(()=>{
@@ -80,11 +82,8 @@ export default {
             })
             createdFlag.value = true
         }
-
-        return{ loadError, addError,  locations, handleSubmit, createdFlag, nameForm }
-                
+        return{ loadError, addError,  locations, handleSubmit, createdFlag, nameForm, isPending1, isPending2 }
     }
-
 }
 </script>
 

@@ -1,19 +1,18 @@
 <template>
     <NavbarComponent />
+    <Spinner v-if="isPending" />
    <div class="frame">
      <div class="shipment-view-container" v-if="shipment != null">
             <div class="item-header">
-                <div>
-                    <span class="material-symbols-outlined">
-                        inventory
-                    </span>
+                <div class="header-img-ctnr">
+                        <img src="../assets/img/cargo.png" alt="" srcset="">
                 </div>
-                <div class="poHearders" v-if="shipment.purchaseOrders.length < 4">
+                <div class="poHearders" v-if="shipment.purchaseOrders.length < 3">
                     <div v-for="po in shipment.purchaseOrders" :key="po.id">
-                        <h3>{{po.customerShortName}}</h3><h3> ({{po.poNumber}})</h3>
+                        <h3>{{po.number}}</h3><h2> {{po.customerShortName}}</h2>
                     </div>
                 </div>
-                <div v-if="shipment.purchaseOrders.length >= 4" >
+                <div v-if="shipment.purchaseOrders.length >= 3" >
                     <div>
                         <h3>
                            Wiele zamówień ( {{shipment.purchaseOrders[0].customerShortName}} ... )
@@ -191,14 +190,14 @@ import ChangeOrders from '../components/ChangeOrders.vue'
 import { useLinksStore } from '../stores/linksStore.js'
 import getShipmentById from '../js-components/getShipmentById'
 import moment from "moment/dist/moment"
-
+import Spinner from '../components/SpinnerComponent.vue'
 //import { useRouter} from 'vue-router'
 export default {
-    components: { NavbarComponent, ChangeShipmentStatus, ChangeShipmentComponent, ChangeForwarder, ChangeOrders},
+    components: { NavbarComponent, ChangeShipmentStatus, ChangeShipmentComponent, ChangeForwarder, ChangeOrders, Spinner},
     props:['shipmentId'],
     setup(props){
         const linksStore = useLinksStore()
-        const { loadShipment, error, shipment} = getShipmentById(linksStore.url)
+        const { loadShipment, error, shipment, isPending} = getShipmentById(linksStore.url)
         //const router = useRouter()
 
         const changeFlagStatus = ref(false)
@@ -207,31 +206,37 @@ export default {
         const changeFlagOrders = ref(false)
 
         onBeforeMount(()=>{
-            loadShipment(props.shipmentId)
-            
+            refreshShipments()
         })
-
+        const refreshShipments = ()=>{
+            loadShipment(props.shipmentId).then(()=>{
+                let count = 1
+                shipment.value.purchaseOrders.forEach(order => {
+                    order['number']=count++
+                });
+            })
+        }
         const handleChangeStatus = (flag) =>{
             if (flag == true){
-                loadShipment(props.shipmentId)
+                 refreshShipments()
             }
             changeFlagStatus.value = false
         }
         const handleChangeShipmentData = (flag) =>{
             if (flag == true){
-                loadShipment(props.shipmentId)
+                 refreshShipments()
             }
             changeFlagData.value = false
         }
         const handleChangeForwarder = (flag) =>{
             if (flag == true){
-                loadShipment(props.shipmentId)
+                 refreshShipments()
             }
             changeFlagForwarder.value = false
         }
         const handleChangeOrders = (flag) =>{
             if (flag == true){
-                loadShipment(props.shipmentId)
+                 refreshShipments()
             }
             changeFlagOrders.value = false
         }
@@ -241,8 +246,8 @@ export default {
                 shipment, 
                 moment, 
                 handleChangeStatus, handleChangeShipmentData, handleChangeForwarder, handleChangeOrders,
-                changeFlagStatus, changeFlagData, changeFlagForwarder, changeFlagOrders
-                
+                changeFlagStatus, changeFlagData, changeFlagForwarder, changeFlagOrders,
+                isPending
                 }      
                 
     }
@@ -275,18 +280,53 @@ export default {
     color: #3e3e3e;
     color: #dedede;
     border: solid #777 1px;
-    
+    padding-bottom: 0;
     z-index: 1;
     margin-bottom: 2vh;
 }
 .item-header .tod{
     margin-right: 3vh;
+    
 }
 .item-header h3{
     margin: 0;
 }
+.item-header .header-img-ctnr{
+    margin: 0;
+    padding: 0;
+}
+.item-header img{
+    height: 9vh;
+    transform: scale(1.5) translateX(-1.5vh) translateY(-0.2vh);
+    
+}
 .poHearders{
     display: flex;
+}
+.poHearders div{
+    display: flex;
+    flex-direction: column;
+    
+    
+}
+.poHearders h3, h2{
+    margin: 0;
+    padding: 0 1vh;
+    z-index: 2;
+}
+.poHearders h2{
+    transform: translateY(-1vh);
+}
+.poHearders h3{
+    font-size: 1.2vh ;
+    z-index: 1;
+    padding: 0.6vh 0.8vh;
+    width: 1vh;
+    border-radius: 50%;
+    color: #888;
+    background: #454545;
+    vertical-align: middle;
+    transform: translateY(1.7vh) translateX(-0.7vh);
 }
 .green{
     color:#89f722
@@ -299,7 +339,7 @@ export default {
     background-color: #fdc600;
     background: linear-gradient(to right,#997801, #fdc600,#fdc600,#fdc600, #fdc600, #997801);
     color: #333;
-    border: solid #aaa 1px;
+    border: solid #999 1px;
     
     /* border-left: #fdc600 ; */
     z-index: 1;
@@ -327,6 +367,7 @@ export default {
     background-color: #282a39;
     background: linear-gradient(to right, #22242b, #282d39);
     border-top: solid #777 1px;
+    border-bottom: solid #777 1px;
 }
 .item-desc{
     grid-area: desc;
@@ -416,6 +457,9 @@ export default {
     overflow: hidden;
     overflow-y: visible;
     border-bottom: solid #777 1px;
+}
+.item-main .line-forwarder{
+    border-bottom: solid #777 0px;
 }
 .item-desc .line-comment, .item-main .line-comment{
     height: 6vh;

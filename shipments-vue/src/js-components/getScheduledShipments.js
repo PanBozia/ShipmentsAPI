@@ -1,21 +1,18 @@
 import { ref } from 'vue'
 import axios from 'axios'
 
-const getShipments = (url) =>{
+const getScheduledShipments = (url) =>{
 
     const shipments = ref([])
     const error = ref(null)
-    const totalItemsCount = ref()
-    const itemsFrom = ref()
-    const itemsTo = ref()
-    const totalPages = ref()
+    
     const isPending = ref(false)
 
     
-    const loadShipments = async ( queryData) => {
+    const loadShipments = async () => {
         isPending.value = true
         try {
-                let resp = await axios.post(url + 'Shipment/search', queryData, {
+                let resp = await axios.get(url + 'Shipment/scheduled', {
                     headers: {
                             'Accept':'*/*'
                     }
@@ -27,11 +24,8 @@ const getShipments = (url) =>{
                     throw Error('Coś poszło nie tak..')
                 }
                 
-                shipments.value = resp.data.items
-                totalPages.value = resp.data.totalPages
-                itemsFrom.value = resp.data.itemsFrom
-                itemsTo.value = resp.data.itemsTo
-                totalItemsCount.value = resp.data.totalItemsCount
+                shipments.value = resp.data
+               
                 // setTimeout(()=>{isPending.value = false}, 100000)
                 isPending.value = false
                 
@@ -42,7 +36,7 @@ const getShipments = (url) =>{
             }
       }
 
-      return {shipments, error, loadShipments, totalPages, itemsFrom, itemsTo, totalItemsCount, isPending}
+      return {shipments, error, loadShipments, isPending}
 }
 
-export default getShipments
+export default getScheduledShipments

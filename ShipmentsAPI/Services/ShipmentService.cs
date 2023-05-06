@@ -16,7 +16,7 @@ namespace ShipmentsAPI.Services
         void AddOrderToShipment(Guid shipmentId, Guid purchaseOrderId);
         Guid Create(CreateShipmentDto dto);
         void Delete(Guid id);
-        List<ShipmentDto> Get();
+        List<ShipmentDto> GetScheduleShipments();
         PageResult<ShipmentDto> Search(QueryShipments queryShipments);
         ShipmentDto GetById(Guid id);
         ShipmentBriefDto Update(Guid id, UpdateShipmentDto dto);
@@ -39,7 +39,7 @@ namespace ShipmentsAPI.Services
             this.dbContext = dbContext;
         }
 
-        public List<ShipmentDto> Get()
+        public List<ShipmentDto> GetScheduleShipments()
         {
             var shipments = dbContext.Shipments
                 .Include(x => x.Forwarder)
@@ -55,6 +55,26 @@ namespace ShipmentsAPI.Services
             {
                 throw new NotFoundException("Brak wysyłek - nie znaleziono");
             }
+
+            var excludedStatus1 = dbContext.Statuses
+                .Where(x => x.Name == "Anulowana")
+                .FirstOrDefault();
+            var excludedStatus2 = dbContext.Statuses
+                .Where(x => x.Name == "Zrealizowana")
+                .FirstOrDefault();
+            DateTime yesterday = DateTime.Today.AddDays(-1);
+
+            var oldShipments = shipments
+                    .Where(x => x.Status != excludedStatus1 && x.Status != excludedStatus2 && x.ETD <= yesterday);
+            var newShipments = shipments
+                    .Where(x => x.ETD > yesterday);
+            shipments = oldShipments.Concat(newShipments).OrderBy(x => x.ETD);
+
+            if (!shipments.Any())
+            {
+                throw new NotFoundException("Brak wysyłek - nie znaleziono");
+            }
+
             var shipmentsDto = mapper.Map<List<ShipmentDto>>(shipments);
 
             return shipmentsDto;
@@ -219,7 +239,7 @@ namespace ShipmentsAPI.Services
             dto.ShipmentId = id;
             
             var updatedShipment = mapper.Map<Shipment>(dto);
-
+            updatedShipment.CreatedByUser = shipment.CreatedByUser;
             dbContext.Shipments.Update(updatedShipment);
             //dbContext.Shipments.Update(updatedShipment).State = EntityState.Modified;
             

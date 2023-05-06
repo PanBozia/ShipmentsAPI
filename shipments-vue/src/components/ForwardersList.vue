@@ -1,4 +1,5 @@
 <template>
+    <Spinner v-if="isPending" />
   <div>
     <div class="search-header">
         <div class="search-item">
@@ -88,10 +89,12 @@ import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import getForwarders from '../js-components/getForwarders.js'
 import {useRouter} from 'vue-router'
 import { useLinksStore } from '../stores/linksStore.js'
+import Spinner from './SpinnerComponent.vue'
 export default {
+    components:{Spinner},
     setup(){
         const linksStore = useLinksStore()
-        const {loadForwarders, error, forwarders, totalPages, itemsFrom, itemsTo, totalItemsCount} = getForwarders(linksStore.url)
+        const {loadForwarders, error, forwarders, totalPages, itemsFrom, itemsTo, totalItemsCount, isPending} = getForwarders(linksStore.url)
         const router = useRouter()
         const searchPhrase = ref('')
         const pageSize = ref(10)
@@ -173,7 +176,9 @@ export default {
             sortByWatcher();
         })
 
-        return{ pagesRange, 
+        return{ 
+                isPending,
+                pagesRange, 
                 handlePageSize, 
                 handleGoToPage, 
                 handleSubmit, 

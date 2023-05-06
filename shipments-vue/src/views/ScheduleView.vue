@@ -1,4 +1,5 @@
 <template class="schedule-ctnr">
+    <Spinner v-if="isPending" />
     <div class="palletCount" >
         <h2 v-if="shipmentsCount == 0"><span>{{moment().format("dddd")}}</span> Dzisiaj nie ma wysyłek</h2>
         <h2 v-if="shipmentsCount == 1"><span>{{moment().format("dddd")}}</span> Dzisiaj mamy <span>{{shipmentsCount}}</span> wysyłkę <span>{{palletCount}}</span> PAL</h2>
@@ -150,52 +151,37 @@
 
 <script>
 import { onBeforeMount, ref } from 'vue'
-import getShipments from '../js-components/getShipments'
+import getScheduledShipments from '../js-components/getScheduledShipments.js'
 import moment from 'moment'
 import { useLinksStore } from '../stores/linksStore.js'
 import {useRouter} from 'vue-router'
-
+import Spinner from '../components/SpinnerComponent.vue'
 export default {
     props:['userIsOffice'],
+    components:{Spinner},
     setup(props){
         const router = useRouter()
         const linksStore = useLinksStore()
-        const {loadShipments, error, shipments, totalPages, itemsFrom, itemsTo, totalItemsCount} = getShipments(linksStore.url)
+        const {loadShipments, error, shipments, isPending} = getScheduledShipments(linksStore.url)
         const palletCount = ref(0)
         const shipmentsCount = ref(0)
-        const queryData = {
-                //hasPriority: hasPriority.value,
-                //comment: comment.value,
-                //warehouseAreaId: warehouseAreaId.value,
-                //carPlates: carPlates.value,
-                //statusId: statusId.value,
-                //containerNumber: containerNumber.value,
-                //purchaseOrderNumber: purchaseOrderNumber.value,
-                scheduleDate: moment().format('YYYY-MM-DDTHH:mm'),
-                dateOffset: 4,
-                pageNumber: 1,
-                pageSize: 20,
-                sortBy: "ETD"
-                //sortDirection: sortDirection.value
-                // palletQty: 14
-                //timeOfDeparture.value
-        }
-        
 
         onBeforeMount(()=>{
             loadScheduleShipments()
         })
 
         const loadScheduleShipments = ()=>{
-            loadShipments(queryData).then(()=>{
-                let counter = 0
-                shipments.value.forEach(shipment => {
-                    shipment['counter']=counter++
-                        if(moment(shipment.etd).format("YYY-MM-DD") == moment().format("YYY-MM-DD")){
-                            shipmentsCount.value++
-                            palletCount.value = palletCount.value + shipment.palletQty
-                    }
-                });
+            loadShipments()
+                .then(()=>{
+                    console.log(shipments.value)
+                    let counter = 0
+                    shipments.value.forEach(shipment => {
+                        shipment['counter']=counter++
+                            if(moment(shipment.etd).format("YYY-MM-DD") == moment().format("YYY-MM-DD") || moment(shipment.timeOfDeparture).format("YYY-MM-DD") == moment().format("YYY-MM-DD")){
+                                shipmentsCount.value++
+                                palletCount.value = palletCount.value + shipment.palletQty
+                        }
+                    });
             })
         }
        
@@ -241,9 +227,9 @@ export default {
      
 
         return{
+             isPending,
              error, 
              shipments, 
-             totalPages, itemsFrom, itemsTo, totalItemsCount, 
              moment, 
              refreshScreenOn, gotoShipment,
              palletCount, shipmentsCount, 
@@ -253,8 +239,10 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style >
+body{
+    overflow: hidden !important;
+}
 .palletCount h2{
     position: fixed;
     padding: 0;
@@ -293,8 +281,8 @@ export default {
     display: flex;
     justify-content: space-between;
 }
-.timer{
-    font-size: 3vh;
+.status .timer{
+    font-size: 3vh ;
     margin: 0 0 0 1vh;
     padding: 0;
     color: #fdc700;

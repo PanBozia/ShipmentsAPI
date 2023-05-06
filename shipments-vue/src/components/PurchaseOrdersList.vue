@@ -1,4 +1,5 @@
 <template>
+<Spinner v-if="isPending" />
   <div>
     <div class="search-header">
         <div class="search-item">
@@ -68,7 +69,9 @@
                     </div>
                     <div>
                         <p>ATD:</p>
-                        <p>{{moment(shipment.timeOfDeparture).format("YYYY-MM-DD")}}</p>
+                        <p v-if="shipment.timeOfDeparture">{{moment(shipment.timeOfDeparture).format("YYYY-MM-DD")}}</p>
+                        <p v-else>Brak</p>
+
                     </div>
                 </div>
             </div>
@@ -114,11 +117,12 @@ import getPurchaseOrders from '../js-components/getPurchaseOrders.js'
 import moment from 'moment'
 import {useRouter} from 'vue-router'
 import { useLinksStore } from '../stores/linksStore.js'
-
+import Spinner from './SpinnerComponent.vue'
 export default {
+    components:{Spinner},
     setup(){
         const linksStore = useLinksStore()
-        const {loadOrders, error, orders, totalPages, itemsFrom, itemsTo, totalItemsCount} = getPurchaseOrders(linksStore.url)
+        const {loadOrders, error, orders, totalPages, itemsFrom, itemsTo, totalItemsCount, isPending} = getPurchaseOrders(linksStore.url)
         const router = useRouter()
         const searchPhrase = ref('')
         const pageSize = ref(10)
@@ -199,7 +203,9 @@ export default {
             sortDirectionWatcher();
             sortByWatcher();
         })
-        return{ pagesRange, 
+        return{ 
+                isPending,
+                pagesRange, 
                 handleEdit,
                 handlePageSize, 
                 handleGoToPage, 

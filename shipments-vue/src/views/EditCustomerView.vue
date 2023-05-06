@@ -1,6 +1,6 @@
 <template>
    <NavbarComponent />
-  
+  <Spinner v-if="isPending1 || isPending2" />
   <div class="frame">
      <div class="view-container">
         <div class="sub-page-header item-e ">
@@ -80,9 +80,10 @@ import editCustomer from '../js-components/editCustomer.js'
 import getCustomerById from '../js-components/getCustomerById.js'
 import AddCustomer from '../components/AddCustomer.vue'
 import { useLinksStore } from '../stores/linksStore.js'
+import Spinner from '../components/SpinnerComponent.vue'
 export default {
     props:['customerId'],
-    components:{NavbarComponent, AddCustomer},
+    components:{NavbarComponent, AddCustomer, Spinner},
     setup(props){
     const linksStore = useLinksStore()
 
@@ -97,8 +98,8 @@ export default {
     const errorForm = ref('')
     const goToAddFlag = ref(false)
 
-    const {edit, error:editCustomerError} = editCustomer(linksStore.url)
-    const {loadCustomer, error:getCustomerError, customer} = getCustomerById(linksStore.url)
+    const {edit, error:editCustomerError, isPending:isPending2} = editCustomer(linksStore.url)
+    const {loadCustomer, error:getCustomerError, customer, isPending:isPending1} = getCustomerById(linksStore.url)
 
     onBeforeMount(()=>{
         loadCustomer(props.customerId).then(()=>{
@@ -138,7 +139,9 @@ export default {
         goToAddFlag.value = true
     }
 
-    return {getCustomerError,
+    return {
+            isPending1, isPending2,
+            getCustomerError,
             editCustomerError,
             nameForm, 
             shortNameForm, 

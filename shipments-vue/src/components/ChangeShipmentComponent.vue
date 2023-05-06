@@ -101,6 +101,7 @@
                                                         </div>
                             </form>
                         </div>
+                        
                 </div>
             </div>
 
@@ -177,8 +178,10 @@ export default {
                 comment : commentForm.value,
                 warehouseAreaId : null,
                 statusId: null,
-                forwarderId: null
+                forwarderId: null,
+                createdByUser: shipment.value.createdByUser
                 }
+                
                 if(shipment.value.forwarder != null){
                     shipmentData['forwarderId'] = shipment.value.forwarder.id
                 }

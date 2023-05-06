@@ -1,4 +1,5 @@
 <template>
+   <Spinner v-if="isPending1 || isPending2 || isPending3"/>
 
    <div class="add-container">
         <form class="form-add add-single-form" @submit.prevent="handleSubmit">
@@ -53,8 +54,11 @@ import getAllCustomers from '../js-components/getAllCustomers.js'
 import addPurchaseOrder from '../js-components/addPurchaseOrder.js'
 import { useLinksStore } from '../stores/linksStore.js'
 import moment from 'moment'
+import Spinner from './SpinnerComponent.vue'
+
 export default {
     emits:['order-added-event'],
+    components:{Spinner},
     setup(props, context){
         const linksStore = useLinksStore()
         const poNumberForm = ref('')
@@ -64,9 +68,9 @@ export default {
         const customerIdForm = ref()
         const createdFlag = ref(false)
 
-        const {loadIncoterms, incoterms, error:incotermsError} = getIncoterms(linksStore.url)
-        const {loadAllCustomers, customers, error:customersError} = getAllCustomers(linksStore.url)
-        const {addNewPO, error:addPoError} = addPurchaseOrder(linksStore.url)
+        const {loadIncoterms, incoterms, error:incotermsError, isPending:isPending1} = getIncoterms(linksStore.url)
+        const {loadAllCustomers, customers, error:customersError, isPending:isPending2} = getAllCustomers(linksStore.url)
+        const {addNewPO, error:addPoError, isPending:isPending3} = addPurchaseOrder(linksStore.url)
         
         onBeforeMount (()=>{
             loadIncoterms();
@@ -103,6 +107,7 @@ export default {
         }
        
         return {
+            isPending1, isPending2, isPending3,
             handleSubmit,
             moment,
             poNumberForm,

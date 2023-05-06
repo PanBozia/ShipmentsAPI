@@ -1,5 +1,5 @@
 <template>
-   
+   <Spinner v-if="isPending"/>
     <div>
         <form class="form-add add-single-form" @submit.prevent="handleSubmit">
             <h2>Dodaj nowego przewoźnika</h2>
@@ -42,8 +42,10 @@
 import { ref } from 'vue'
 import addForwarder from '../js-components/addForwarder.js'
 import { useLinksStore } from '../stores/linksStore.js'
+import Spinner from './SpinnerComponent.vue'
 export default {
 emits:['created-forwarder-event'],
+components:{Spinner},
 setup(props, context){
     const linksStore = useLinksStore()
     const firstNameForm = ref('')
@@ -55,7 +57,7 @@ setup(props, context){
 
     const errorForm = ref('')
 
-    const {addNewForwarder, error, createdId} = addForwarder(linksStore.url)
+    const {addNewForwarder, error, createdId, isPending} = addForwarder(linksStore.url)
 
     const handleSubmit = ()=>{
         if(firstNameForm.value == '' || lastNameForm.value == '' || speditionForm.value == '' || platesForm.value ==''){
@@ -85,16 +87,18 @@ setup(props, context){
         }
     }
 
-    return {firstNameForm, 
-            lastNameForm, 
-            speditionForm, 
-            phoneForm, 
-            platesForm,
-            errorForm,
-            handleSubmit,
-            error,
-            createdId,
-            createdFlag
+    return {
+        isPending,
+        firstNameForm, 
+        lastNameForm, 
+        speditionForm, 
+        phoneForm, 
+        platesForm,
+        errorForm,
+        handleSubmit,
+        error,
+        createdId,
+        createdFlag
             }
 }
 }
