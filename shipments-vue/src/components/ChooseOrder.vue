@@ -1,4 +1,5 @@
 <template>
+    <Spinner v-if="isPending1 || isPending2" />
   <div class="choose-order-container non-symertic">
     <div>
       <h2>Wybierz zamówienia</h2>
@@ -125,6 +126,7 @@
         Zapisz
     </button>
 </div>
+
 </template>
 
 <script>
@@ -136,8 +138,10 @@ import addPurchaseOrder from '../js-components/addPurchaseOrder.js'
 import getPurchaseOrderById from '../js-components/getPurchaseOrderById.js'
 import { useLinksStore } from '../stores/linksStore.js'
 import moment from 'moment'
+import Spinner from './SpinnerComponent.vue';
 export default {
     emits:['add-orders-event'],
+    components:{Spinner},
     setup(props, context) {
     const linksStore = useLinksStore()
     const { loadOrders, error: loadOrdersError, orders, totalItemsCount: totalItemsCountPo } = getPurchaseOrders(linksStore.url);
@@ -159,7 +163,7 @@ export default {
     };
 
     //add order
-        const {loadOrder, order:newOrder} = getPurchaseOrderById(linksStore.url)
+        const {loadOrder, order:newOrder, isPending:isPending1} = getPurchaseOrderById(linksStore.url)
         const poNumberForm = ref('')
         const categoryForm = ref('Standard')
         const deliveryDateForm = ref()
@@ -169,7 +173,7 @@ export default {
 
         const {loadIncoterms, incoterms, error:incotermsError} = getIncoterms(linksStore.url)
         const {loadAllCustomers, customers, error:customersError} = getAllCustomers(linksStore.url)
-        const {addNewPO, error:addPoError, createdId} = addPurchaseOrder(linksStore.url)
+        const {addNewPO, error:addPoError, createdId, isPending:isPending2} = addPurchaseOrder(linksStore.url)
         
         onBeforeMount (()=>{
             loadIncoterms();
@@ -177,6 +181,7 @@ export default {
         })
 
         const handleCreatePo = ()=>{
+            isPending1.value = true
             const poData = {
                 poNumber : poNumberForm.value,
                 category : categoryForm.value,
@@ -189,6 +194,7 @@ export default {
                     setTimeout(()=>{addPoError.value = null},4000)
                 }
             else{
+            addPoError.value = null
             addNewPO(poData).then(()=>{
                 console.log(addPoError.value)
                 if(addPoError.value == null){
@@ -196,8 +202,8 @@ export default {
                     
                     // loadOrders(searchOrderPhrase.value, 20, 1, "DeliveryDate", 1)
                     loadOrder(createdId.value).then(()=>{
-                        ordersList.value.push(newOrder.value)
-
+                        setTimeout(()=>{
+                            handleAddOrder(newOrder.value)},1000)
                         poNumberForm.value = ''
                         deliveryDateForm.value = null
                         customerIdForm.value = null
@@ -207,6 +213,7 @@ export default {
                         customersError.value = ''
                         createdFlag.value = true
                         setTimeout(()=>{createdFlag.value = false},4000)
+                        isPending1.value = false
                     })
                 }else{
                     setTimeout(()=>{addPoError.value = null},4000)
@@ -215,16 +222,16 @@ export default {
             }
         }
     return {
-      handleSearchOrders,
-      handleAddOrder,
-      handleRemoveOrder,
-      loadOrdersError,
-      totalItemsCountPo,
-      orders,
-      searchOrderPhrase,
-      ordersList,
-      handleSubmitOrdersList,
-
+        isPending1, isPending2,
+        handleSearchOrders,
+        handleAddOrder,
+        handleRemoveOrder,
+        loadOrdersError,
+        totalItemsCountPo,
+        orders,
+        searchOrderPhrase,
+        ordersList,
+        handleSubmitOrdersList,
         handleCreatePo,
         moment,
         poNumberForm,

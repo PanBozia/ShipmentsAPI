@@ -235,7 +235,7 @@
                 <div>
                     <p>
                         <span class="yellow">ETD: </span>
-                        {{moment(chosenShipment.timeOfDeparture).format("YYY-MM-DD / HH:mm")}}
+                        {{moment(chosenShipment.etd).format("YYYY-MM-DD / HH:mm")}}
                     </p>
                     <p>
                         <span class="yellow">Nr kontenera: </span>
