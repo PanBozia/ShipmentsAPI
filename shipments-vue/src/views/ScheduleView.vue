@@ -1,5 +1,12 @@
 <template class="schedule-ctnr">
     <Spinner v-if="isPending" />
+    <div class="back-arrow">
+        <span class="material-symbols-outlined" @click="goBack">
+            arrow_circle_left
+        </span>
+    
+    </div>    
+
     <div class="palletCount" >
         <h2 v-if="shipmentsCount == 0"><span>{{moment().format("dddd")}}</span> Dzisiaj nie ma wysyłek</h2>
         <h2 v-if="shipmentsCount == 1"><span>{{moment().format("dddd")}}</span> Dzisiaj mamy <span>{{shipmentsCount}}</span> wysyłkę <span>{{palletCount}}</span> PAL</h2>
@@ -11,17 +18,17 @@
         <div class="schedule-container schedule-bar">
             <div>
                 <div class="schedule-header">
-                    <p>ZAMÓWIENIE</p>
-                </div>
-            </div>
-            <div>
-                <div class="schedule-header">
                     <p>KLIENT</p>
                 </div>
             </div>
             <div>
                <div class="schedule-header">
                     <p>MIEJSCE</p>
+                </div>
+            </div>
+            <div>
+                <div class="schedule-header">
+                    <p>ZAMÓWIENIE</p>
                 </div>
             </div>
             <div>
@@ -72,23 +79,21 @@
                     prioRow: shipment.hasPriority
                     }"
                     >
-                <!-- zamówienie -->
-                <div v-if="shipment.purchaseOrders.length != 0">
-                    <div v-for="order in shipment.purchaseOrders" :key="order.id" :class="{doubleline:shipment.purchaseOrders.length>1}">
-                        {{order.category}}: {{order.poNumber}} 
-                    </div>
-                </div>
-                <div v-else>
-                    <div>
-                        N/A
-                    </div>
-                </div>
 
                 <!-- klient -->
+                <!-- :class="{doubleline:shipment.purchaseOrders.length>1} -->
                 <div v-if="shipment.purchaseOrders.length != 0">
-                    <div v-for="order in shipment.purchaseOrders" :key="order.id" class="clientName" :class="{doubleline:shipment.purchaseOrders.length>1}">
-                        {{order.customerShortName}}
+                    <div v-for="(order, index) in shipment.purchaseOrders" :key="order.id" class="clientName" :class="{doubleline:shipment.purchaseOrders.length>1}">
+                        <span :class="{moreClients:shipment.purchaseOrders.length>1}">
+                            <span class="index">{{index+1}}</span>
+                            {{order.customerShortName}}
+                        </span>
                     </div>
+                    <!-- <div v-for="client in shipment.Clients" :key=client class="clientName" :class="{doubleline:shipment.Clients.length>1}">
+                        <span :class="{moreClients:shipment.Clients.length>1}">
+                            {{client}}
+                        </span>
+                    </div> -->
                 </div>
                 <div v-else>
                     <div>
@@ -98,8 +103,20 @@
 <!-- :class="{statusDelivered:delivery.statusId==3, statusInTransit:delivery.statusId==2, statusCreated:delivery.statusId==1}" -->
                 <!-- miejsce -->
                 <div v-if="shipment.purchaseOrders.length != 0">
-                    <div v-for="order in shipment.purchaseOrders" :key="order.id" :class="{doubleline:shipment.purchaseOrders.length>1}">
+                    <div v-for="order in shipment.purchaseOrders" :key="order.id" class="doubleline" >
                         {{order.customerCity}}
+                    </div>
+                </div>
+                <div v-else>
+                    <div>
+                        N/A
+                    </div>
+                </div>
+                <!-- zamówienie -->
+                <div v-if="shipment.purchaseOrders.length != 0">
+                    <div v-for="(order, index) in shipment.purchaseOrders" :key="order.id" class="doubleline">
+                         <span class="index">{{index+1}}</span>
+                        {{order.category}}: {{order.poNumber}} 
                     </div>
                 </div>
                 <div v-else>
@@ -116,10 +133,10 @@
                 <!-- ETD -->
                 <div v-if="shipment.etd" :class="{statusDelayed: shipment.status != 'Zrealizowana'&& moment(shipment.etd) < moment()}">
                     <span v-if="shipment.status != 'Zrealizowana'">
-                        {{moment(shipment.etd).format("YY-MMM-DD / HH:mm")}}
+                        {{moment(shipment.etd).format("DD-MMM-YY / HH:mm")}}
                     </span>
                     <span v-else>
-                        {{moment(shipment.timeOfDeparture).format("YY-MMM-DD / HH:mm")}}
+                        {{moment(shipment.timeOfDeparture).format("DD-MMM-YY / HH:mm")}}
                     </span>
                 </div>
                 <div v-else>N/A</div>
@@ -173,14 +190,30 @@ export default {
         const loadScheduleShipments = ()=>{
             loadShipments()
                 .then(()=>{
-                    console.log(shipments.value)
+                    shipmentsCount.value = 0
+                    palletCount.value = 0
                     let counter = 0
                     shipments.value.forEach(shipment => {
                         shipment['counter']=counter++
-                            if(moment(shipment.etd).format("YYY-MM-DD") == moment().format("YYY-MM-DD") || moment(shipment.timeOfDeparture).format("YYY-MM-DD") == moment().format("YYY-MM-DD")){
-                                shipmentsCount.value++
-                                palletCount.value = palletCount.value + shipment.palletQty
+                        if(moment(shipment.etd).format("YYY-MM-DD") == moment().format("YYY-MM-DD") || moment(shipment.timeOfDeparture).format("YYY-MM-DD") == moment().format("YYY-MM-DD")){
+                            shipmentsCount.value++
+                            palletCount.value = palletCount.value + shipment.palletQty
                         }
+                        // // creating customers array with unique customers names accordng to purchase orders 
+                        // let clientName = shipment.purchaseOrders[0].customerShortName
+                        // let clients = []
+                        // clients.push(shipment.purchaseOrders[0].customerShortName)
+                        // if(shipment.purchaseOrders.length > 1){
+                        //     for (let i = 1; i < shipment.purchaseOrders.length; i++) {
+                        //         console.log(i)
+                        //         if(shipment.purchaseOrders[i].customerShortName != clientName){
+                        //             clients.push(shipment.purchaseOrders[i].customerShortName)
+                        //         }               
+                        //     }
+
+                        // }
+                        // shipment['Clients'] = clients
+                        // console.log(shipment)
                     });
             })
         }
@@ -224,6 +257,10 @@ export default {
             }
             
         }
+
+        const goBack = () =>{
+            router.go(-1);
+        }
      
 
         return{
@@ -233,6 +270,7 @@ export default {
              moment, 
              refreshScreenOn, gotoShipment,
              palletCount, shipmentsCount, 
+             goBack
         }
     }
 
@@ -252,12 +290,24 @@ body{
     z-index: 100;
     height: 2vh;
     color:#ddd;
-    font-size: 2vh;
+    font-size: 2.5vh;
 }
 .palletCount h2 span{
-    font-size: 3vh;
+    font-size: 3.8vh;
     color: #fdc700;
     margin:0 0.5vh;
+}
+.back-arrow {
+    position: fixed;
+    padding: 0;
+    margin: 0%;
+    top: 11.0vh;
+    left: 1vh;
+    z-index: 100;
+    height: 2vh;
+    color:#ccc;
+    font-size: 1.5vh;
+    cursor: pointer;
 }
 
 .scheduleRow{
@@ -272,7 +322,6 @@ body{
 }
 .secondRow{
     background: linear-gradient(to right, #252d4e, #1d488a);
-    color: #eee;
     }
 .prioRow{
     /* background: linear-gradient(to right, #38254e, #7e22af); */
@@ -295,9 +344,9 @@ body{
     font-size: 2.6vh;
     display: grid;
     align-items: center;
-    grid-template-columns:2.5fr 1fr 3fr 1.2fr 1fr 2.5fr 2fr 3fr 2fr ;
-    column-gap: 1vh;
-    padding: 0.3vh 3vh;
+    grid-template-columns:1.2fr 2.8fr 3fr 1.2fr 0.8fr 2.3fr 2.0fr 3fr 2fr ;
+    column-gap: 1.6vw;
+    padding: 0.3vh 1vw 0.3vh 4vw;
 }
 .schedule-container div{
     word-wrap: none;
@@ -332,5 +381,14 @@ body{
 }
 .clientName{
     color: #fdc700;
+    font-size: 2.3vh;
+}
+.moreClients{
+    font-size: 2.3vh;
+}
+.index{
+    color: #777;
+    font-size: 1.3vh;
+    /* vertical-align: middle; */
 }
 </style>
