@@ -13,7 +13,7 @@
         <h2 v-if="shipmentsCount > 1 && shipmentsCount < 5"><span>{{moment().format("dddd")}}</span> Dzisiaj mamy <span>{{shipmentsCount}}</span> wysyłki <span>{{palletCount}}</span> PAL</h2>
         <h2 v-if="shipmentsCount > 4"><span>{{moment().format("dddd")}}</span> Dzisiaj mamy <span>{{shipmentsCount}}</span> wysyłek <span>{{palletCount}}</span> PAL</h2>
     </div>
-    <div class="navbar" @click="refreshScreenOn">
+    <div class="navbar">
         <div class="navbar-line"></div>
         <div class="schedule-container schedule-bar">
             <div>
@@ -75,6 +75,8 @@
                  @click="gotoShipment(shipment.id)"
                  :class="{
                     statusCompleated:shipment.status == 'Zrealizowana',
+                    statusBlocked:shipment.status == 'Wstrzymana',
+                    statusCanceled:shipment.status == 'Anulowana',
                     secondRow: shipment.counter % 2 == 0,
                     prioRow: shipment.hasPriority
                     }"
@@ -167,7 +169,7 @@
 </template>
 
 <script>
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, onUnmounted, ref } from 'vue'
 import getScheduledShipments from '../js-components/getScheduledShipments.js'
 import moment from 'moment'
 import { useLinksStore } from '../stores/linksStore.js'
@@ -185,8 +187,14 @@ export default {
 
         onBeforeMount(()=>{
             loadScheduleShipments()
+            
+            document.body.classList.add("stop-scrolling");
+        
         })
-
+        onUnmounted(()=>{
+            document.body.classList.remove("stop-scrolling");
+        })
+        
         const loadScheduleShipments = ()=>{
             loadShipments()
                 .then(()=>{
@@ -260,6 +268,7 @@ export default {
 
         const goBack = () =>{
             router.go(-1);
+            document.body.classList.remove("stop-scrolling");
         }
      
 
@@ -277,8 +286,8 @@ export default {
 }
 </script>
 
-<style scoped>
-body{
+<style>
+.stop-scrolling{
     overflow: hidden !important;
 }
 .palletCount h2{
@@ -368,13 +377,15 @@ body{
     color: #b0f25a;
 }
 .statusBlocked{
-    color: #f8b052;
+    /* color: #f86262; */
+    color: #ffa1a1;
+    color: #ff874f;
 }
 .statusCompleated{
     color: #b0f25a;
 }
 .statusCanceled{
-    color: #f86262;
+    color: #7b7b7b;
 }
 .statusDelayed{
     color: #ffb53f;
