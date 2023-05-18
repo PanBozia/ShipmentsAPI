@@ -238,8 +238,8 @@ export default {
 
         const pageSize = ref(10)
         const pageNumber = ref(1)
-        const sortBy = ref('')
-        const sortDirection = ref(0)
+        const sortBy = ref('ETD')
+        const sortDirection = ref(1)
 
         const timeOfDeparture = ref(null)
         const hasPriority = ref(false)
