@@ -6,6 +6,7 @@ using ShipmentsAPI.Entities;
 using ShipmentsAPI.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -26,6 +27,7 @@ namespace ShipmentsAPI.Services
         void ChangeDepartureDate(Guid shipmentId, string dateTime);
         void ChangeWarehouseLocation(Guid shipmentId, int areaId);
         void RemoveWarehouseLocation(Guid shipmentId);
+        void AddOrdersToShipment(Guid shipmentId, Guid[] purchaseOrdersIds);
     }
 
     public class ShipmentService : IShipmentService
@@ -415,6 +417,43 @@ namespace ShipmentsAPI.Services
             shipment.PurchaseOrders.Add(purchaseOrder);
             dbContext.Shipments.Update(shipment);
             dbContext.SaveChanges();
+        }
+        public void AddOrdersToShipment(Guid shipmentId, Guid[] purchaseOrdersIds)
+        {
+            var shipment = dbContext.Shipments
+                .Include(p => p.PurchaseOrders)
+                .FirstOrDefault(x => x.Id == shipmentId);
+            if (shipment is null)
+            {
+                throw new NotFoundException($"Wysyła nie została znaleziona.");
+            }
+            
+            using (var dbTransaction = dbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    foreach (var id in purchaseOrdersIds)
+                    {
+                        var purchaseOrder = dbContext.PurchaseOrders
+                            .Include(p => p.Shipments)
+                            .FirstOrDefault(x => id == x.Id);
+                        if (purchaseOrder is null)
+                        {
+                            throw new NotFoundException($"Zamówienie nie zostało znalezione.");
+                        }
+                        shipment.PurchaseOrders.Add(purchaseOrder);
+                        
+                    }
+                    dbContext.Shipments.Update(shipment);
+                    dbContext.SaveChanges();
+                    dbTransaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    dbTransaction.Rollback();
+                    throw new BadRequestException($"Coś poszło nie tak. Info: {ex.Message}.");
+                }
+            }
         }
         public void RemoveOrderFromShipment(Guid shipmentId, Guid purchaseOrderId)
         {

@@ -31,6 +31,7 @@ const addCustomer = (url) =>{
             isPending.value = false
         } catch (err) {
             error.value = err.response.data
+            isPending.value = false
         }    
     }
       return {addNewCustomer, error, createdId, isPending}

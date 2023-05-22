@@ -30,8 +30,9 @@ const changeStatus = (url) =>{
                 throw Error('Coś poszło nie tak..')
             }
             isPending.value = false
-
+            
         } catch (err) {
+            isPending.value = false
             error.value = err.response.data
             console.log(error.value)
         }    

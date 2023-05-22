@@ -356,8 +356,8 @@
         <div v-if="addShipmentError">
             {{addShipmentError}}
         </div>
-        <div v-if="addOrderError">
-            {{addOrderError}}
+        <div v-if="addOrdersError">
+            {{addOrdersError}}
         </div>
         <div></div>
     </div>
@@ -371,7 +371,7 @@ import NavbarComponent from "../components/NavbarComponent.vue";
 import AddShipmentData from "../components/AddShipmentData.vue";
 import ChooseForwarder from "../components/ChooseForwarder.vue";
 import addShipment from '../js-components/addShipment.js'
-import addOrderToShipment from '../js-components/addOrderToShipment.js'
+import addManyOrdersToShipment from '../js-components/addManyOrdersToShipment.js'
 import moment from 'moment'
 import Spinner from '../components/SpinnerComponent.vue';
 export default {
@@ -384,7 +384,8 @@ export default {
     const chosenShipment = ref(null)
     const chosenOrders = ref(null)
     const { addNewShipment, error:addShipmentError, createdId, ispending:isPending1} = addShipment( linksStore.url)
-    const {addOrder, error:addOrderError, isPending:isPending2} = addOrderToShipment(linksStore.url)
+    // const {addOrder, error:addOrderError, isPending:isPending2} = addOrderToShipment(linksStore.url)
+    const {addOrders, error:addOrdersError, isPending:isPending2} = addManyOrdersToShipment(linksStore.url)
     const addedPoNumber = ref("");
     
     const editShipment = ref(true)
@@ -418,7 +419,7 @@ export default {
     
     const handleSaveShipmentData = ()=>{
         
-        if(chosenForwarder.value['id']){
+        if(chosenForwarder.value){
                 chosenShipment.value['forwarderId'] = chosenForwarder.value['id']
             }
         chosenShipment.value.etd = moment(chosenShipment.value.etd).format("YYYY-MM-DDTHH:mm")
@@ -429,9 +430,9 @@ export default {
         addNewShipment(chosenShipment.value)
         .then(()=>{
             if(chosenOrders.value.length != 0){
-                    chosenOrders.value.forEach(order => {
-                        addOrder(createdId.value, order.id)
-                    });
+                        // chosenOrders.value = chosenOrders.value.toReversed()
+                        var newOrdersIds = chosenOrders.value.map(order => order.id)
+                        addOrders(createdId.value, newOrdersIds)
             }
         })
             
@@ -450,7 +451,7 @@ export default {
       moment,
       chosenOrders, handleAddOrders,
       addShipmentError, createdId, handleSaveShipmentData,
-      addOrderError,
+      addOrdersError,
       editShipment, editOrders, editForwarder, handleEdit
     };
   },

@@ -30,6 +30,7 @@ const addPurchaseOrder = (url) =>{
             isPending.value = false
         } catch (err) {
             error.value = err.response.data
+            isPending.value = false
             // .data.errors
             console.log(error.value)
         }    

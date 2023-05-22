@@ -392,10 +392,10 @@ export default {
 }
 .clientName{
     color: #fdc700;
-    font-size: 2.3vh;
+    font-size: 2.6vh;
 }
 .moreClients{
-    font-size: 2.3vh;
+    font-size: 2.1vh;
 }
 .index{
     color: #777;

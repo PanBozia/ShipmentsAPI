@@ -26,6 +26,7 @@ const getCustomerById = (url) =>{
                 isPending.value = false
                 
             } catch (er) {
+                isPending.value = false
                 error.value = er.response.data
             }
       }

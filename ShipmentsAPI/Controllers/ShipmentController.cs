@@ -49,6 +49,12 @@ namespace ShipmentsAPI.Controllers
             shipmentService.AddOrderToShipment(shipmentId, orderId);
             return Ok();
         }
+        [HttpPost("addOrders/{shipmentId}")]
+        public ActionResult AddPurchaseOrder([FromRoute] Guid shipmentId, [FromBody] Guid[] ordersIds)
+        {
+            shipmentService.AddOrdersToShipment(shipmentId, ordersIds);
+            return Ok();
+        }
 
         [HttpPost("removePo/{shipmentId}/{orderId}")]
         public ActionResult RemovePurchaseOrder([FromRoute] Guid shipmentId, [FromRoute] Guid orderId)

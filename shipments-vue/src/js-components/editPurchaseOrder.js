@@ -28,6 +28,7 @@ const editPurchaseOrder = (url) =>{
             }
             isPending.value = false
         } catch (err) {
+            isPending.value = false
             error.value = err.response.data
         }    
     }

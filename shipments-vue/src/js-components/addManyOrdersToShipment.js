@@ -1,11 +1,11 @@
 import { ref } from 'vue'
 import axios from 'axios'
 
-const addOrderToShipment = (url) =>{
+const addManyOrdersToShipment = (url) =>{
 
     const error = ref(null)
     const isPending = ref(false)
-    const addOrder =  async (shipmentId, orderId) => {
+    const addOrders =  async (shipmentId, orders) => {
         isPending.value = true
         var requestOptions = {
             method: 'POST',
@@ -20,7 +20,7 @@ const addOrderToShipment = (url) =>{
         };
         
         try {
-            let resp = await axios.post( url + 'Shipment/addPo/' + shipmentId +"/"+ orderId, requestOptions)
+            let resp = await axios.post( url + 'Shipment/addOrders/' + shipmentId,orders, requestOptions)
             if (resp.status <200 & resp.status > 300){
                 isPending.value = false
                 throw Error('Coś poszło nie tak..')
@@ -28,10 +28,10 @@ const addOrderToShipment = (url) =>{
             isPending.value = false
             
         } catch (err) {
-            isPending.value = false
             error.value = err.response.data
+            isPending.value = false
         }    
     }
-      return {addOrder, error, isPending}
+      return {addOrders, error, isPending}
 }
-export default addOrderToShipment
+export default addManyOrdersToShipment

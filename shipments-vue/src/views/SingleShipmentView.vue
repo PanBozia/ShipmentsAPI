@@ -21,8 +21,8 @@
 
                 </div>
                 <div class="tod">
-                    <h1 v-if="shipment.timeOfDeparture == null">{{moment(shipment.etd).format("YYYY MMM DD")}}</h1>
-                    <h1 v-else class="green">{{moment(shipment.timeOfDeparture).format("YYYY MMM DD")}}</h1>
+                    <h1 v-if="shipment.timeOfDeparture == null">{{moment(shipment.etd).format("DD MMM YYYY")}}</h1>
+                    <h1 v-else class="green">{{moment(shipment.timeOfDeparture).format("DD MMM YYYY")}}</h1>
                 </div>
             </div>
                 <div class="item-status" :class="{
@@ -39,10 +39,10 @@
                 </div>
             <div class="item-main">
                 <div>
-                    <p>{{moment(shipment.etd).format("YYYY-MM-DD dddd HH:mm")}}</p>
+                    <p>{{moment(shipment.etd).format("DD MMM YYYY dddd HH:mm")}}</p>
                 </div>
                 <div>
-                    <p v-if="shipment.timeOfDeparture != null">{{moment(shipment.timeOfDeparture).format("YYYY-MM-DD dddd HH:mm")}}</p>
+                    <p v-if="shipment.timeOfDeparture != null">{{moment(shipment.timeOfDeparture).format("DD MMM YYYY dddd HH:mm")}}</p>
                     <p v-else>Brak</p>
                 </div>
                 <div>
@@ -78,11 +78,9 @@
                     <p >{{shipment.comment}}</p>
                 </div>
                 <div class="line-orders">
-                    <span v-for="order in shipment.purchaseOrders" :key="order.id">
-                        <p><span class="order-desc">Nr zamówienia: </span>{{order.poNumber}}</p>
-                        <p><span class="order-desc">Klient: </span>{{order.customerShortName}} ( {{order.customerCity}} )</p>
-                        <p><span class="order-desc">Kategoria: </span>{{order.category}} - {{order.incotermName}}</p>
-                        <br>
+                    <span v-for="(order, index) in shipment.purchaseOrders" :key="order.id">
+                        <p><span class="order-desc">PO# {{index+1}}: </span>{{order.poNumber}} / {{order.category}} - {{order.incotermName}}</p>
+                        <p class="pad"><span class="order-desc">Klient: </span>{{order.customerShortName}} ( {{order.customerCity}} )</p>
                     </span>
                 </div>
                 <div v-if="shipment.forwarder" class="line-forwarder">
@@ -286,7 +284,7 @@ export default {
 }
 .item-header .tod{
     margin-right: 3vh;
-    
+    font-size: 1.4vh;
 }
 .item-header h3{
     margin: 0;
@@ -306,7 +304,7 @@ export default {
 .poHearders div{
     display: flex;
     flex-direction: column;
-    
+    font-size: 1.5vh;
     
 }
 .poHearders h3, h2{
@@ -340,7 +338,7 @@ export default {
     background: linear-gradient(to right,#997801, #fdc600,#fdc600,#fdc600, #fdc600, #997801);
     color: #333;
     border: solid #999 1px;
-    
+    font-size: 1.5vh;
     /* border-left: #fdc600 ; */
     z-index: 1;
     transform: scale(1.2)  translateY(0vh) translateX(0vh);
@@ -368,8 +366,11 @@ export default {
     background: linear-gradient(to right, #22242b, #282d39);
     border-top: solid #777 1px;
     border-bottom: solid #777 1px;
+    font-size: 1.3vh;
+    
 }
 .item-desc{
+    font-size: 1.3vh;
     grid-area: desc;
     display: flex;
     flex-direction: column;
@@ -449,14 +450,18 @@ export default {
     margin: 0;
     padding: 0.0vh 2vh;
     font-weight: 400;
+    
 }
 
 .item-main .line-forwarder, .item-main .line-comment, .item-main .line-orders, 
 .item-desc .line-forwarder, .item-desc .line-comment, .item-desc .line-orders {
-    height: 10vh;
+    height: 9.2vh;
     overflow: hidden;
     overflow-y: visible;
     border-bottom: solid #777 1px;
+}
+.item-desc .line-orders, .item-main .line-orders{
+    height: 11.4vh;
 }
 .item-main .line-forwarder{
     border-bottom: solid #777 0px;
@@ -468,6 +473,9 @@ export default {
 .order-desc{
     color: #ffcb0e;
     color: #999;
+}
+.line-orders .pad{
+    padding-bottom: 0.6vh;
 }
 
 .statusNowa{

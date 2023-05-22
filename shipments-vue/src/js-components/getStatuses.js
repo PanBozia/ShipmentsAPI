@@ -24,8 +24,9 @@ const getStatuses = (url) =>{
                 
                 statuses.value = resp.data
                 isPending.value = false
-
+                
             } catch (er) {
+                isPending.value = false
                 error.value = er.response.data
             }
 

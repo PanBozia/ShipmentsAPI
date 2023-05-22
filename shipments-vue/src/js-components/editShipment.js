@@ -28,8 +28,9 @@ const editShipment = (url, id) =>{
                 throw Error('Coś poszło nie tak..')
             }
             isPending.value = false
-
+            
         } catch (err) {
+            isPending.value = false
             error.value = err.response.data
         }    
     }

@@ -28,6 +28,7 @@ const changeForwarder = (url) =>{
             }
             isPending.value = false
         } catch (err) {
+            isPending.value = false
             error.value = err.response.data
             console.log(error.value)
         }    

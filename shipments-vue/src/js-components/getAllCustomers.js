@@ -24,8 +24,9 @@ const getAllCustomers = (url) =>{
                 
                 customers.value = resp.data
                 isPending.value = false
-
+                
             } catch (er) {
+                isPending.value = false
                 error.value = er.response.data
             }
 

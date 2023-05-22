@@ -203,7 +203,7 @@ export default {
                     // loadOrders(searchOrderPhrase.value, 20, 1, "DeliveryDate", 1)
                     loadOrder(createdId.value).then(()=>{
                         setTimeout(()=>{
-                            handleAddOrder(newOrder.value)},1000)
+                            handleAddOrder(newOrder.value)},500)
                         poNumberForm.value = ''
                         deliveryDateForm.value = null
                         customerIdForm.value = null
@@ -212,11 +212,11 @@ export default {
                         addPoError.value = ''
                         customersError.value = ''
                         createdFlag.value = true
-                        setTimeout(()=>{createdFlag.value = false},4000)
+                        setTimeout(()=>{createdFlag.value = false},2000)
                         isPending1.value = false
                     })
                 }else{
-                    setTimeout(()=>{addPoError.value = null},4000)
+                    setTimeout(()=>{addPoError.value = null},3000)
                 }
             })
             }

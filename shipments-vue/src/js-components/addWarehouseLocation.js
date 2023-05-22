@@ -29,6 +29,7 @@ const addWarehouseLocation = (url) =>{
             createdId.value = resp.data.customerId
             isPending.value = false
         } catch (err) {
+            isPending.value = false
             error.value = err.response.data
             console.log(error.value)
         }    

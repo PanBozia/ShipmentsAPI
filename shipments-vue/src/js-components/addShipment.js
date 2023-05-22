@@ -30,6 +30,7 @@ const addShipment = (url) =>{
             isPending.value = false
         } catch (err) {
             error.value = err.response.data.errors
+            isPending.value = false
             console.log(error.value)
         }    
     }

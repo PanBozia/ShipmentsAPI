@@ -30,7 +30,8 @@ const changeDepartureTime = (url) =>{
                     throw Error('Coś poszło nie tak..')
                 }
                 isPending.value = false
-        } catch (err) {
+            } catch (err) {
+            isPending.value = false
             error.value = err.response.data
         }    
     }

@@ -41,6 +41,7 @@ const changeArea = (url) =>{
                 }
                 isPending.value = false
             } catch (err) {
+                isPending.value = false
                 error.value = err.response.data.errors
             }    
 

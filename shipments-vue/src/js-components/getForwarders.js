@@ -32,8 +32,9 @@ const getForwarders = (url) =>{
                 itemsTo.value = resp.data.itemsTo
                 totalItemsCount.value = resp.data.totalItemsCount
                 isPending.value = false
-
+                
             } catch (er) {
+                isPending.value = false
                 error.value = er.response.data
             }
       }

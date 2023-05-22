@@ -14,6 +14,7 @@ import EditCustomerView from '../views/EditCustomerView.vue'
 import AddAllView from '../views/AddAllView.vue'
 import EditForwarderView from '../views/EditForwarderView.vue'
 import WarehouseView from '../views/WarehouseView.vue'
+import CMRView from '../views/CMRView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -104,6 +105,14 @@ const router = createRouter({
         path: '/office/forwarder/edit/:forwarderId',
         name: 'EditForwarderView',
         component: EditForwarderView,
+        props: true
+        
+    },
+    
+    {
+        path: '/office/shipment/cmr/:shipmentId',
+        name: 'CMRView',
+        component: CMRView,
         props: true
         
     }

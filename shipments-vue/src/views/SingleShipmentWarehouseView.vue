@@ -21,8 +21,8 @@
 
                 </div>
                 <div class="tod">
-                    <h1 v-if="shipment.timeOfDeparture == null">{{moment(shipment.etd).format("YYYY MMM DD")}}</h1>
-                    <h1 v-else class="green">{{moment(shipment.timeOfDeparture).format("YYYY MMM DD")}}</h1>
+                    <h1 v-if="shipment.timeOfDeparture == null">{{moment(shipment.etd).format("DD MMM YYYY")}}</h1>
+                    <h1 v-else class="green">{{moment(shipment.timeOfDeparture).format("DD MMM YYYY")}}</h1>
                 </div>
             </div>
             <div class="item-status" :class="{
@@ -39,10 +39,10 @@
             </div>
             <div class="item-main">
                 <div>
-                    <p>{{moment(shipment.etd).format("YYYY-MM-DD dddd hh:mm")}}</p>
+                    <p>{{moment(shipment.etd).format("DD MMM YYYY dddd HH:mm")}}</p>
                 </div>
                 <div>
-                    <p v-if="shipment.timeOfDeparture != null">{{moment(shipment.timeOfDeparture).format("YYYY-MM-DD dddd hh:mm")}}</p>
+                    <p v-if="shipment.timeOfDeparture != null">{{moment(shipment.timeOfDeparture).format("DD MMM YYYY dddd HH:mm")}}</p>
                     <p v-else>Brak</p>
                 </div>
                 <div>
@@ -78,11 +78,10 @@
                     <p >{{shipment.comment}}</p>
                 </div>
                 <div class="line-orders">
-                    <span v-for="order in shipment.purchaseOrders" :key="order.id">
-                        <p><span class="order-desc">Nr zamówienia: </span>{{order.poNumber}}</p>
-                        <p><span class="order-desc">Klient: </span>{{order.customerShortName}} ( {{order.customerCity}} )</p>
-                        <p><span class="order-desc">Kategoria: </span>{{order.category}} - {{order.incotermName}}</p>
-                        <br>
+                    <span v-for="(order, index) in shipment.purchaseOrders" :key="order.id">
+                        <p><span class="order-desc">PO# {{index+1}}: </span>{{order.poNumber}} / {{order.category}} - {{order.incotermName}}</p>
+                        <p class="pad"><span class="order-desc">Klient: </span>{{order.customerShortName}} ( {{order.customerCity}} )</p>
+                        
                     </span>
                 </div>
                 <div v-if="shipment.forwarder" class="line-forwarder">
@@ -161,7 +160,15 @@
                             </p>
                         </div>
                     </div>
-                
+                    <!-- <div class="content">
+                        <div class="content-btn"  @click="goToCmr">
+                            <p>
+                                Drukuj CMR
+                            </p>
+                        </div>
+                    </div> -->
+                <div>
+  </div>
 
             </div>
     </div>
@@ -195,14 +202,14 @@ import { useLinksStore } from '../stores/linksStore.js'
 import getShipmentById from '../js-components/getShipmentById'
 import moment from "moment/dist/moment"
 import Spinner from '../components/SpinnerComponent.vue'
-//import { useRouter} from 'vue-router'
+import { useRouter} from 'vue-router'
 export default {
     components: { NavbarWarehouse, ChangeShipmentStatus, ChangeShipmentComponent, ChangeForwarder, ChangeShipmentLocation, Spinner },
     props:['shipmentId'],
     setup(props){
         const linksStore = useLinksStore()
         const { loadShipment, error, shipment, isPending} = getShipmentById(linksStore.url)
-        //const router = useRouter()
+        const router = useRouter()
 
         const changeFlagStatus = ref(false)
         const changeFlagData = ref(false)
@@ -245,6 +252,12 @@ export default {
             }
             changeFlagLocation.value = false
         }
+
+        const goToCmr = ()=>{
+            router.push({ name:'CMRView', 
+                            params:{ shipmentId:props.shipmentId }
+                            })
+        }
         
         
         return{ 
@@ -253,7 +266,8 @@ export default {
                 moment, 
                 handleChangeStatus, handleChangeShipmentData, handleChangeForwarder, handleChangeLocation,
                 changeFlagStatus, changeFlagData, changeFlagForwarder, changeFlagLocation,
-                isPending
+                isPending,
+                goToCmr
                 }      
                 
     }

@@ -21,7 +21,7 @@ import EditOrders from '../components/EditOrders.vue'
 import { useLinksStore } from '../stores/linksStore.js'
 import getShipmentById from '../js-components/getShipmentById'
 import removeOrderToShipment from '../js-components/removeOrderFromShipment.js'
-import addOrderToShipment from '../js-components/addOrderToShipment.js'
+import addManyOrdersToShipment from '../js-components/addManyOrdersToShipment.js'
 import Spinner from './SpinnerComponent.vue'
 export default {
     emits:['changeOrdersEvent'],
@@ -31,7 +31,7 @@ export default {
         const linksStore = useLinksStore()
         const {loadShipment, error:loadShipmentsError, shipment, isPending:isPending1 } = getShipmentById(linksStore.url)
         const {removeOrder, isPending:isPending2} = removeOrderToShipment(linksStore.url)
-        const {addOrder, isPending:isPending3} = addOrderToShipment(linksStore.url)
+        const {addOrders, isPending:isPending3} = addManyOrdersToShipment(linksStore.url)
 
         onBeforeMount(()=>{
             loadShipment(props.shipmentId)
@@ -42,9 +42,8 @@ export default {
                 });
         }
         const addNewOrders = async (ordersArray) =>{
-            await ordersArray.forEach(order => {
-                    addOrder(props.shipmentId, order.id)
-                });
+            var ordersIds = ordersArray.map(order => order.id)
+            addOrders(props.shipmentId, ordersIds)
         }
 
         const getOrdersList = (ordersList)=>{
