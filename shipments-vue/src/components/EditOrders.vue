@@ -125,6 +125,8 @@
         Zapisz
     </button>
 </div>
+    <ErrorComponent v-if="addPoError" :msg="addPoError" @reset-error-event="resetErrors" />
+    <ErrorComponent v-if="customersError" :msg="customersError" @reset-error-event="resetErrors" />
 </template>
 
 <script>
@@ -137,10 +139,12 @@ import getPurchaseOrderById from '../js-components/getPurchaseOrderById.js'
 import { useLinksStore } from '../stores/linksStore.js'
 import getShipmentById from '../js-components/getShipmentById.js'
 import moment from 'moment'
+import ErrorComponent from './ErrorComponent.vue';
 
 export default {
     emits:['add-orders-event'],
     props:['shipmentId'],
+    components:{ErrorComponent},
     setup(props, context) {
     const linksStore = useLinksStore()
     const { loadOrders, error: loadOrdersError, orders, totalItemsCount: totalItemsCountPo } = getPurchaseOrders(linksStore.url);
@@ -225,13 +229,22 @@ export default {
                         createdFlag.value = true
                         setTimeout(()=>{createdFlag.value = false},3000)
                     })
-                }else{
-                    setTimeout(()=>{addPoError.value = null},3000)
                 }
+                // else
+                // {
+                //     setTimeout(()=>{addPoError.value = null},3000)
+                // }
             })
             }
         }
+         const resetErrors = ()=>{
+            addPoError.value = null,
+            incotermsError.value = null,
+            customersError.value = null
+            
+        }
     return {
+        resetErrors,
         shipment,
         loadShipmentError,
 

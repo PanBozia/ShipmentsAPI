@@ -418,10 +418,11 @@ input{
 .list-item.shipment-list{
     grid-template-columns: 14% 14% 16% 6% 8% 16% 16% 2% 0% ;
     column-gap: 1%;
+    
 }
 .list-item.shipment-list p{
     font-size: 0.7em;
-    padding: 4px;
+    padding: 0 0.1vh;
 
 }
 .prio-shipment{

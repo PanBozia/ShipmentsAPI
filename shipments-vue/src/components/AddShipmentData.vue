@@ -1,5 +1,5 @@
 <template>
-    <h2>Dodaj nową wysyłkę</h2>
+    <h2 class="order-h2">Dodaj nową wysyłkę</h2>
     
    <div>
         <form class="form-add" @submit.prevent="handleSubmit">
@@ -95,6 +95,7 @@
                                             <textarea class="comment" name="comment" rows="4" cols="1" v-model="commentForm"></textarea>
                                         </div>
                                     </div>
+                                    
                 </div>      
             </div>
             <!-- choose-order-ctnr -->
@@ -212,7 +213,10 @@ export default {
 .double-in{
     display: grid;
 }
-
+.order-h2{
+    margin-top:2vh;
+    padding: 0;
+}
 
 .add-shipment-grid{
     display: grid;

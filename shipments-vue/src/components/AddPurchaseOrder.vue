@@ -45,6 +45,8 @@
             </div>
         </form>
     </div>
+    <ErrorComponent v-if="addPoError" :msg="addPoError" @reset-error-event="resetErrors" />
+    <ErrorComponent v-if="customersError" :msg="customersError" @reset-error-event="resetErrors" />
 </template>
 
 <script>
@@ -55,10 +57,10 @@ import addPurchaseOrder from '../js-components/addPurchaseOrder.js'
 import { useLinksStore } from '../stores/linksStore.js'
 import moment from 'moment'
 import Spinner from './SpinnerComponent.vue'
-
+import ErrorComponent from './ErrorComponent.vue';
 export default {
     emits:['order-added-event'],
-    components:{Spinner},
+    components:{Spinner, ErrorComponent},
     setup(props, context){
         const linksStore = useLinksStore()
         const poNumberForm = ref('')
@@ -96,17 +98,24 @@ export default {
                     customersError.value = ''
                     createdFlag.value = true
                     setTimeout(()=>{createdFlag.value = false},5000)
-                }else{
-                    setTimeout(()=>{addPoError.value = null},4000)
                 }
+                // else{
+                //     setTimeout(()=>{addPoError.value = null},4000)
+                // }
                 if(createdFlag.value){
                     context.emit('order-added-event',  poData.poNumber)
                 }
             })
            
         }
-       
+         const resetErrors = ()=>{
+            addPoError.value = null,
+            incotermsError.value = null,
+            customersError.value = null
+            
+        }
         return {
+            resetErrors,
             isPending1, isPending2, isPending3,
             handleSubmit,
             moment,

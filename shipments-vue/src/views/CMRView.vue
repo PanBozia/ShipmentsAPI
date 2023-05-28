@@ -1,97 +1,169 @@
 <template>
-  <div v-if="clients">
-    <!-- <button @click="getData" >get Data</button> -->
-    <button @click="printToPdf"> PDF </button>
-    <!-- <p>
-        {{clients}}
-    </p>
-    
-    <p>
-        {{shipment}}
-    </p> -->
-    
-  </div>
-  <div v-if="clients">
-    <!-- <div v-if="clients"> -->
-    <div v-for="client in clients" :key="client">
-        <div id="cmr-container">
+    <NavbarWarehouse />
+        <form class="cmr-form" @submit.prevent="">
             
-            <img src="/src/assets/img/cmr.png" alt="" srcset="">
-            <div class="address2">
-                <p>Daicel Safety Systems Sp. z o.o.</p>
-                <p>ul. Strefowa 8</p>
-                <p>59-230 Żarów</p>
-                <p>PL</p>
+            <div class="cmr-container">
+            <!-- 1 column -->
+            <div>
+                <h3>Klient <span>{{formConsigneeName}}</span></h3>
+               
+                    <p class="choose-clinet-head">Wybierz klienta</p>
+                    <!-- <select v-model="formClientIndex">
+                        <option v-for="(client, index) in clients" :key="client.id" :value="index" >
+                            {{index+1}} - {{client.name}}
+                        </option>
+                    </select> -->
+                    <div class="clients-icons-ctnr">
+                        <div class="client-icon" v-for="(client, index) in clients" :key="client.id" :value="index" @click="chooseClient(index)" >
+                            <p>
+                                {{client.shortName}}
+                            </p>
+                        </div>
+                    </div>
+               
+                <h3>1 - Nadawca</h3>
+                <div class="cmr-form-set">
+                    <label>Nazwa firmy</label>
+                    <input type="text" v-model="formSenderName">
+                </div>
+                <div class="cmr-form-set">
+                    <label>Ulica</label>
+                    <input type="text" v-model="formSenderStreet">
+                </div>
+                    
+                <div class="cmr-form-set">
+                    <label>Kod pocztowy i miasto</label>
+                    <input type="text" v-model="formSenderCity">
+                </div>
+                <div class="cmr-form-set">
+                    <label>Kraj</label>
+                    <input type="text" v-model="formSenderCountry">
+                </div>
+                <h3>2 - Odbiorca</h3>
+                <div class="cmr-form-set">
+                    <label>Nazwa firmy</label>
+                    <input type="text" v-model="formConsigneeName">
+                </div>
+                <div class="cmr-form-set">
+                    <label>Ulica</label>
+                    <input type="text" v-model="formConsigneeStreet">
+                </div>
+                    
+                <div class="cmr-form-set">
+                    <label>Kod pocztowy i miasto</label>
+                    <input type="text" v-model="formConsigneeCity">
+                </div>
+                <div class="cmr-form-set">
+                    <label>Kraj</label>
+                    <input type="text" v-model="formConsigneeCountry">
+                </div>
+                <h3>3 - Miejsce przeznaczenia</h3>
+                <div class="cmr-form-set">
+                    <label>Miejscowość, kraj</label>
+                    <input type="text" v-model="formDestination">
+                </div>
+                <h3>4 - Miejsce i data załadowania</h3>
+                <div class="cmr-form-set">
+                    <label>Miejscowość, kraj, data</label>
+                    <input type="text" v-model="formLoadingPlace">
+                </div>
+                <h3>5 - Załączone dokumenty</h3>
+                <div class="cmr-form-set">
+                    <label>Numer dokumentu 1</label>
+                    <input type="text" v-model="formAttachment1">
+                </div>
+                <div class="cmr-form-set">
+                    <label>Numer dokumentu 2</label>
+                    <input type="text" v-model="formAttachment2">
+                </div>
+            </div>    
+            
+            <!-- 2 column -->
+            <div>
+                <h3>6 - Cechy i numery towaru</h3>
+                <div class="cmr-form-set">
+                    <label>Linia #1</label>
+                    <input type="text" v-model="formGoodsMarks1">
+                </div>
+                <div class="cmr-form-set">
+                    <label>Linia #2</label>
+                    <input type="text" v-model="formGoodsMarks2">
+                </div>
+                <div class="cmr-form-set">
+                    <label>Linia #3</label>
+                    <input type="text" v-model="formGoodsMarks3">
+                </div>
+                <div class="cmr-form-set">
+                    <label>Linia #4</label>
+                    <input type="text" v-model="formGoodsMarks4">
+                </div>
+                <h3>7 - Ilość</h3>
+                <div class="cmr-form-set">
+                    <label>Iość palet (szt)</label>
+                    <input type="text" v-model="formGoodsQty">
+                </div>
+                <h3>11 - Waga</h3>
+                <div class="cmr-form-set">
+                    <label>Waga brutto (kg)</label>
+                    <input type="text" v-model="formGoodsWeight">
+                </div>
+                <h3>12 - Objętość</h3>
+                <div class="cmr-form-set">
+                    <label>Wymiary palet (mm)</label>
+                    <div class="dim">
+                        <input class="dim-input" type="number" v-model="formGoodsDimX">
+                        <input class="dim-input" type="number" v-model="formGoodsDimZ">
+                        <input class="dim-input" type="number" v-model="formGoodsDimY">
+                    </div>
+                </div>
+                <div class="cmr-form-set">
+                    <label>Objętość (CBM)</label>
+                    <input type="text" v-model="formGoodsCBM">
+                </div>
+                <h3>16 - Przewoźnik</h3>
+                <div class="cmr-form-set">
+                    <label>Imię i nazwisko</label>
+                    <input type="text" v-model="formSpedName">
+                </div>
+                <div class="cmr-form-set">
+                    <label>Firma</label>
+                    <input type="text" v-model="formSpedCompany">
+                </div>
+                <div class="cmr-form-set">
+                    <label>Numery rejestracyjne</label>
+                    <input type="text" v-model="formSpedCarPlates">
+                </div>
+                <h3></h3>
+                <div class="double-btns">
+                    <button class="btn btn-cmr" @click="showPdf()"> Pokaż CMR</button>
+                    <button class="btn btn-cmr" @click="downloadPdf()">Zapisz CMR </button>
+                    <button class="btn btn-cmr reset" @click="resetForm()">Reset</button>
+                </div>
+                
             </div>
-            <div class="address1">
-                <p>
-                    {{client.name}}
-                </p>
-                <p>
-                    {{client.streetAddress}}
-                </p>
-                <p>
-                {{client.zipCodeAddress}} {{client.cityAddress}}
-                </p>
-                <p>
-                    {{client.countryAddress}}
-                </p>
+            
+           
             </div>
-            <div class="address3">
-               <p> {{client.cityAddress}} , {{client.countryAddress}}</p>
-            </div>
-            <div class="address4">
-               <p> Żarów , PL, {{moment().format('DD.MM.YYYY')}}</p>
-            </div>
-            <div class="forwarder1">
-               <p> {{shipment.forwarder.firstName}} {{shipment.forwarder.lastName}}</p>
-               <p> {{shipment.forwarder.speditor}}</p>
-               <p> {{shipment.forwarder.carPlates}}</p>
-            </div>
-            <div class="cargo0">
-               <p> UN 3268</p>
-            </div>
-            <div class="cargo1">
-               <p> {{shipment.palletQty}}</p>
-            </div>
-            <div class="cargo2">
-               <p> EUR PALLETS</p>
-            </div>
-            <div class="cargo3">
-               <p> INFLATORS</p>
-            </div>
-            <div class="cargo4">
-               <p> 4325</p>
-            </div>
-            <div class="cargo5">
-               <p> {{shipment.palletQty * 1.2 * 0.8 * 1.2}}</p>
-            </div>
-            <div class="cargo6">
-               <p> 3268 </p>
-            </div>
-            <div class="cargo7">
-               <p> 9 </p>
-            </div>
-            <div class="address5">
-                <p> Żarów , PL / {{moment().format('DD.MM.YYYY')}}</p>
-            </div>
+        </form>
+    
+    <!-- <div >
+        <iframe id="pdf" title="CMR" name="CMR"> </iframe>
+    </div> -->
 
-        </div>
-        
-    </div>
-        
-    </div>
+  
 </template>
 
 <script>
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
 import getShipmentById from '../js-components/getShipmentById'
 import getAllCustomers from '../js-components/getAllCustomers'
 import { useLinksStore } from '../stores/linksStore.js'
-import jsPDF  from "jspdf";
-import html2canvas from "html2canvas"
-import moment from 'moment'
+import moment from 'moment/dist/moment'
+import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+import download from 'downloadjs'
+import NavbarWarehouse from '../components/NavbarWarehouse.vue'
 export default {
+    components:{NavbarWarehouse},
     props:['shipmentId'],
     setup(props){
         const linksStore = useLinksStore()
@@ -99,20 +171,127 @@ export default {
         const { loadShipment, error, shipment, isPending} = getShipmentById(linksStore.url)
         const { loadAllCustomers, error:customersError, customers} = getAllCustomers(linksStore.url)
         let singleCustomer
+        const isShown = ref(false)
+
+        const formClientIndex = ref()
+
+        // 1 - Sender
+        const formSenderName = ref('Daicel Safety Systems Europe Sp z o.o.')
+        const formSenderStreet = ref('ul. Sterefowa 6')
+        const formSenderCity = ref('58-130 Żarów')
+        const formSenderCountry = ref('PL')
+        // 2 - Consignee
+        const formConsigneeName = ref('')
+        const formConsigneeStreet = ref('')
+        const formConsigneeCity = ref('')
+        const formConsigneeCountry = ref('')
         
+        const formDestination = ref('')
+        const formLoadingPlace = ref('')
+        const formAttachment1 = ref('')
+        const formAttachment2 = ref('')
+        //6 Goods
+        const formGoodsMarks1 = ref('UN 3268 SAFETY DEVICES, CLASS 9, (E)')
+        const formGoodsMarks2 = ref('UN 3268 URZĄDZENIA BEZPIECZEŃSTWA, KLASA 9, (E)')
+        const formGoodsMarks3 = ref('')
+        const formGoodsMarks4 = ref('')
+        const formGoodsWeight = ref('')
+        const formGoodsDimX = ref(1200)
+        const formGoodsDimZ = ref(800)
+        const formGoodsDimY = ref(1100)
+        const formGoodsCBM = ref(0)
+        const formGoodsQty = ref(0)
+        
+        //16 Speditor
+        const formSpedCompany = ref('')
+        const formSpedName = ref('')
+        const formSpedCarPlates = ref('')
+
+        function replace(sentence) {
+            let sentenceCharArray = sentence.split("")
+            sentenceCharArray.forEach((char,index) => {
+                switch (char) {
+                    case 'ą':
+                        sentenceCharArray[index] = 'a'
+                        break;
+                    case 'Ą':
+                        sentenceCharArray[index] = 'A'
+                        break;
+                    case 'ć':
+                        sentenceCharArray[index] = 'c'
+                        break;
+                    case 'Ć':
+                        sentenceCharArray[index] = 'C'
+                        break;
+                    case 'ę':
+                        sentenceCharArray[index] = 'e'
+                        break;
+                    case 'Ę':
+                        sentenceCharArray[index] = 'E'
+                        break;
+                    case 'ł':
+                        sentenceCharArray[index] = 'l'
+                        break;
+                    case 'Ł':
+                        sentenceCharArray[index] = 'L'
+                        break;
+                    case 'ń':
+                        sentenceCharArray[index] = 'n'
+                        break;
+                    case 'Ń':
+                        sentenceCharArray[index] = 'N'
+                        break;
+                    case 'ó':
+                        sentenceCharArray[index] = 'o'
+                        break;
+                    case 'Ó':
+                        sentenceCharArray[index] = 'O'
+                        break;
+                    case 'ś':
+                        sentenceCharArray[index] = 'ś'
+                        break;
+                    case 'Ś':
+                        sentenceCharArray[index] = 'S'
+                        break;
+                    case 'ź':
+                        sentenceCharArray[index] = 'z'
+                        break;
+                    case 'Ź':
+                        sentenceCharArray[index] = 'Z'
+                        break;
+                    case 'ż':
+                        sentenceCharArray[index] = 'z'
+                        break;
+                    case 'Ż':
+                        sentenceCharArray[index] = 'Z'
+                        break;
+                
+                    default:
+                        break;
+                }
+            });
+            const newSentence = sentenceCharArray.join("");
+            return newSentence;
+        }
+
         const getData = ()=>{
              loadShipment(props.shipmentId).then(()=>{
+                shipment.value.forwarder.firstName = replace(shipment.value.forwarder.firstName)
+                shipment.value.forwarder.lastName = replace(shipment.value.forwarder.lastName)
+                shipment.value.forwarder.speditor = replace(shipment.value.forwarder.speditor)
+
                 loadAllCustomers().then(()=>{
                     shipment.value.purchaseOrders.forEach(order => {
                         singleCustomer = customers.value.filter(customer => customer.shortName == order.customerShortName)
                         singleCustomer = singleCustomer.map((customer)=>{
                             return {
                                         id:customer.id, 
-                                        name:customer.name,
-                                        streetAddress: customer.streetAddress,
-                                        cityAddress: customer.cityAddress,
-                                        zipCodeAddress: customer.zipCodeAddress,
-                                        countryAddress: customer.countryAddress
+                                        name:replace(customer.name),
+                                        shortName: replace(customer.shortName),
+                                        streetAddress: replace(customer.streetAddress),
+                                        cityAddress: replace(customer.cityAddress),
+                                        zipCodeAddress: replace(customer.zipCodeAddress),
+                                        countryAddress: replace(customer.countryAddress)
                                 }
                         })
                         clients.value.push(singleCustomer[0])
@@ -130,48 +309,250 @@ export default {
                 });
             })
         }
+        const pdfUrl = '/src/assets/documents/cmr.pdf'
+        let outputUint8Array = null
         onMounted(()=>{
            getData()
+            
         })
         
-        
-        function convertToPdf(){
+        async function modifyPdf(pdfUrl) {
+            // console.log(client)
+            const pngUrl = '/src/assets/img/logoDSSEblue.png'
+            const pngImageBytes = await fetch(pngUrl).then((res) => res.arrayBuffer())
+
+            const existingPdfBytes = await fetch(pdfUrl).then(res => res.arrayBuffer())
+            const pdfDoc = await PDFDocument.load(existingPdfBytes)
+            const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
+            const pages = pdfDoc.getPages()
             
-            const doc = new jsPDF();
+            const pngImage = await pdfDoc.embedPng(pngImageBytes)
 
-            var domElement = document.querySelector("#cmr-container")
+            fillEachPdfPage(pages, helveticaFont, pngImage)
+            const pdfBytes = await pdfDoc.save().then(res => outputUint8Array = res)
+            return pdfBytes
+            }
 
-            doc.html(domElement,{
-                callback: function(doc){
-                    doc.save('newdoc.pdf');
-                },
-                margin: [10,10,10,10],
-                autoPaging: 'text',
-                x: 0,
-                y: 0,
-                width: 197,
-                windowWidth:675
-            })
-
-        }
-
-        function printToPdf(){
-            html2canvas(document.querySelector('#cmr-container')).then((canvas)=>{
-                let base64image = canvas.toDataURL('image/png')
-                
-                let pdf = new jsPDF('p','px',[1267,896])
-                pdf.addImage(base64image, 'PNG',0,0,896,1267)
-                pdf.save('canvaspdf.pdf')
-
+        const fillEachPdfPage = (pages, font, pngImage)=>{
+            const pngDims = pngImage.scale(0.25)
+            
+            
+            pages.forEach(page => {
+                page.drawImage(pngImage, {
+                    x: page.getWidth() / 2 - pngDims.width / 2 + 250,
+                    y: page.getHeight() / 2 - pngDims.height + 410,
+                    width: pngDims.width,
+                    height: pngDims.height,
+                })
+                const {  height } = page.getSize()
+                const x = 50;
+                const y = height;
+                //1 Sender
+                page.drawText(replace(formSenderName.value), {
+                    x: x,
+                    y: y - 70,
+                    size: 9,
+                    font: font,
+                    color: rgb(0,0,0),
+                    
+                    })
+                page.moveTo(x, y - 80)
+                page.drawText(replace(formSenderStreet.value), { size: 9 })
+                page.moveTo(x, y - 90)
+                page.drawText(replace(formSenderCity.value), { size: 9 })
+                page.moveTo(x, y - 100)
+                page.drawText(replace(formSenderCountry.value), { size: 9 })
+    
+                //2 Consignee
+                page.moveTo(x, y - 140)
+                page.drawText(replace(formConsigneeName.value), { size: 9 })
+                page.moveTo(x, y - 150)
+                page.drawText(replace(formConsigneeStreet.value), { size: 9 })
+                page.moveTo(x, y - 160)
+                page.drawText(replace(formConsigneeCity.value), { size: 9 })
+                page.moveTo(x, y - 170)
+                page.drawText(replace(formConsigneeCountry.value), { size: 9 })
+                //3 Destination
+                page.moveTo(x, y - 220)
+                page.drawText(replace(formDestination.value), { size: 9 })
+                //4 Loading place
+                page.moveTo(x, y - 264)
+                page.drawText(replace(formLoadingPlace.value), { size: 9 })
+                //5 Attachments
+                page.moveTo(x, y - 298)
+                page.drawText(replace(formAttachment1.value), { size: 9 })
+                page.moveTo(x, y - 308)
+                page.drawText(replace(formAttachment2.value), { size: 9 })
+                //16 Speditor
+                page.moveTo(x+280, y - 143)
+                page.drawText(replace(formSpedCompany.value), { size: 9 })
+                page.moveTo(x+280, y - 156)
+                page.drawText(replace(formSpedName.value), { size: 9 })
+                page.moveTo(x+280, y - 172)
+                page.drawText(replace(formSpedCarPlates.value), { size: 12 })
+                //18 Speditor comments
+                page.moveTo(x+280, y - 260)
+                page.drawText('', { size: 9 })
+                page.moveTo(x+280, y - 270)
+                page.drawText('', { size: 9 })
+                //6 7 8 9 10 Marks and Nos
+                page.moveTo(x, y - 350)
+                page.drawText(replace(formGoodsMarks1.value), { size: 9 })
+                page.moveTo(x, y - 362)
+                page.drawText(replace(formGoodsMarks2.value), { size: 9 })
+                page.moveTo(x, y - 374)
+                page.drawText(replace(formGoodsMarks3.value), { size: 9 })
+                page.moveTo(x, y - 386)
+                page.drawText(replace(formGoodsMarks4.value), { size: 9 })
+                page.moveTo(x, y - 398)
+                page.drawText('( ' + formGoodsQty.value.toString()  + ' EUR pallets)', { size: 9 })
+                page.moveTo(x+20, y - 507)
+                page.drawText('9', { size: 9 })
+                page.moveTo(x+110, y - 507)
+                page.drawText('3268', { size: 9 })
+                page.moveTo(x+200, y - 507)
+                page.drawText('N/A', { size: 9 })
+                // 11 Weight
+                page.moveTo(x+400, y - 350)
+                page.drawText(formGoodsWeight.value.toString() + ' kg', { size: 9 })
+                //12 CBM
+                page.moveTo(x+470, y - 350)
+                page.drawText(formGoodsCBM.value.toString(), { size: 9 })
+                //13 Senders instructions
+                page.moveTo(x-10, y - 550)
+                page.drawText('1.1.3.6: Calkowita ilosc dla kazdej kategorii transportu', { size: 8, color: rgb(0.36, 0.36, 0.36) })
+                page.moveTo(x+18, y - 560)
+                page.drawText('/ Total quantity for each transport category:4:.......', { size: 8, color: rgb(0.36, 0.36, 0.36) })
+                page.moveTo(x-10, y - 580)
+                page.drawText('1.1.3.6: Obliczona wartosc dla kazdej kategorii transportu', { size: 8, color: rgb(0.36, 0.36, 0.36) })
+                page.moveTo(x+18, y - 590)
+                page.drawText('/ Calculated value for each transport category:4:0', { size: 8, color: rgb(0.36, 0.36, 0.36) })
+                page.moveTo(x-10, y - 610)
+                page.drawText('1.1.3.6: Obliczona wartosc punktow ADR', { size: 8, color: rgb(0.36, 0.36, 0.36) })
+                page.moveTo(x+18, y - 620)
+                page.drawText('/ Sum of calculeted point value:0', { size: 8, color: rgb(0.36, 0.36, 0.36) })
+                //21 Established in
+                page.moveTo(x, y - 724)
+                page.drawText(replace(formLoadingPlace.value), { size: 9 })
+                //22 Stamp
+                page.moveTo(x+10, y - 750)
+                page.drawText('Daicel Safety Systems', { size: 11, color: rgb(0.50, 0.60, 0.80) })
+                page.moveTo(x+27, y - 761)
+                page.drawText('Europe Sp. z o.o.', { size: 11 , color: rgb(0.50, 0.60, 0.80) })
+                page.moveTo(x+40, y - 772)
+                page.drawText('ul. Strefowa 6', { size: 9 , color: rgb(0.50, 0.60, 0.80) })
+                page.moveTo(x+39, y - 781)
+                page.drawText('58-130 Zarow', { size: 9 , color: rgb(0.50, 0.60, 0.80) })
+                page.moveTo(x+8, y - 790)
+                page.drawText('NIP 886-27-53-552 Regon 891525310', { size: 7 , color: rgb(0.50, 0.60, 0.80) })
             });
         }
+
+        const downloadPdf = ()=>{
+            // const pdfBytes = modifyPdf(pdfUrl)
+            modifyPdf(pdfUrl).then(()=>{
+                const pdfBytes = outputUint8Array
+                download(pdfBytes, "CMR-list-przewozowy.pdf", "application/pdf");
+            })
+        }
+        const showPdf = ()=>{
+            // const pdfBytes = modifyPdf(pdfUrl)
+            isShown.value = true
+            modifyPdf(pdfUrl).then(()=>{
+                const pdfBytes = outputUint8Array
+                const bytes  = new Uint8Array( pdfBytes ); 
+                const blob   = new Blob( [ bytes ], { type: "application/pdf" } );
+                const docUrl = URL.createObjectURL( blob );
+                // document.getElementById('pdf').src = docUrl ;
+                
+                    
+                var tabOrWindow = window.open(docUrl, '_blank');
+                tabOrWindow.focus();
+            })
+        }
+        const chooseClient = (index) =>{
+            formClientIndex.value = index
+            
+        }
+      
+        const formWatcher = watch((formClientIndex), () => {
+            if(formClientIndex.value != null){
+                formConsigneeName.value = clients.value[formClientIndex.value].name
+                formConsigneeStreet.value = clients.value[formClientIndex.value].streetAddress
+                formConsigneeCity.value = clients.value[formClientIndex.value].zipCodeAddress + ' ' + clients.value[formClientIndex.value].cityAddress
+                formConsigneeCountry.value = clients.value[formClientIndex.value].countryAddress
+                formDestination.value = clients.value[formClientIndex.value].cityAddress + ', ' + clients.value[formClientIndex.value].countryAddress 
+                formLoadingPlace.value = 'Zarow, ' + formSenderCountry.value + ', ' + moment().format('DD.MM.YYYY')
+    
+                formSpedCompany.value = shipment.value.forwarder.speditor
+                formSpedCarPlates.value = shipment.value.forwarder.carPlates
+                formSpedName.value = shipment.value.forwarder.firstName + ' ' + shipment.value.forwarder.lastName
+                formGoodsQty.value = shipment.value.palletQty
+                formGoodsWeight.value = shipment.value.palletQty * 425
+                let cbm = ((formGoodsDimX.value/1000) * (formGoodsDimY.value/1000) * (formGoodsDimZ.value/1000))*shipment.value.palletQty
+                formGoodsCBM.value = cbm.toFixed(2)
+            }
+            
+        })
+
+        const formWatchPalQty = watchEffect( ()=>{
+            formGoodsWeight.value = formGoodsQty.value * 425
+             let cbm = ((formGoodsDimX.value/1000) * (formGoodsDimY.value/1000) * (formGoodsDimZ.value/1000))*formGoodsQty.value
+            formGoodsCBM.value = cbm.toFixed(2)
+            
+        })
+
+       const resetForm = ()=>{
+         formClientIndex.value = null
+
+        // 1 - Sender
+         formSenderName.value = 'Daicel Safety Systems Europe Sp z o.o.'
+         formSenderStreet.value = 'ul. Sterefowa 6'
+         formSenderCity.value = '58-130 Żarów'
+         formSenderCountry.value ='PL'
+        // 2 - Consignee
+         formConsigneeName.value = ''
+         formConsigneeStreet.value = ''
+         formConsigneeCity.value = ''
+         formConsigneeCountry.value = ''
         
+         formDestination.value = ''
+         formLoadingPlace.value = ''
+         formAttachment1.value = ''
+         formAttachment2.value = ''
+        //6 Goods
+         formGoodsMarks1.value = 'UN 3268 SAFETY DEVICES, CLASS 9, (E)'
+         formGoodsMarks2.value = 'UN 3268 URZĄDZENIA BEZPIECZEŃSTWA, KLASA 9, (E)'
+         formGoodsMarks3.value = ''
+         formGoodsMarks4.value = ''
+         formGoodsWeight.value = ''
+         formGoodsDimX.value = 1200
+         formGoodsDimZ.value = 800
+         formGoodsDimY.value = 1100
+         formGoodsCBM.value = 0
+         formGoodsQty.value = 0
+       }
+       
+       
+        onUnmounted(()=>{
+            formWatcher()
+            formWatchPalQty()
+        })
+
         return {
-                error, shipment, isPending,
+            chooseClient, resetForm,
+            error, shipment, isPending,
                 customers, customersError,
-                convertToPdf, printToPdf,
                 moment, getData,
-                clients
+                clients, isShown,
+                downloadPdf, showPdf,
+                formClientIndex,
+                formSenderName, formSenderStreet, formSenderCity, formSenderCountry,
+                formConsigneeName, formConsigneeStreet, formConsigneeCity, formConsigneeCountry,
+                formDestination, formAttachment1, formAttachment2,formLoadingPlace, 
+                formGoodsMarks1, formGoodsMarks2, formGoodsMarks3,formGoodsMarks4, 
+                formGoodsWeight, formGoodsDimX, formGoodsDimY, formGoodsDimZ, formGoodsCBM, formGoodsQty,
+                formSpedCarPlates, formSpedCompany, formSpedName
 
             }
     }
@@ -180,107 +561,118 @@ export default {
 </script>
 
 <style>
-#cmr-container{
-    display: block;
-    margin: 4vh 6vh ;
+.clients-icons-ctnr{
+    display: flex;
+}
+.choose-clinet-head{
+    font-size: 0.7vw;
+    margin: 0 0 1vh 0;
+    font-weight: 200;
+}
+.client-icon{
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    width: 5vw;
+    height: 4vh;
+    background: linear-gradient(to right bottom, rgb(24, 76, 174), rgb(16, 41, 82));
+    margin: 0.5vh 0.8vw 0.5vh 0;
+    justify-content: center;
+    align-items: center;
+    border: solid #ffffff 0.15vh;
+}
+.client-icon:hover{
+    background: linear-gradient(to right bottom, #ffbb00, #ad7f00);
+    /* color: #222; */
+    box-shadow: 0.5vh 0.5vh 0.8vh #000000a2;
+    transform: scale(1.1);
+    transition: 200ms ease-in-out;
+}
+.client-icon p{
+    font-size: 0.7vw;
+}
+.cmr-container{
+    display: grid;
+    grid-template-columns: 30vw 30vw ;
+    gap: 2vw;
+    margin: 2vh 2vw;
+}
+.cmr-container h3 span{
+    margin-left: 1vh;
+    color: #ffbb00;
+}
+.cmr-form{
+    display: flex;
     
-    width: 64.5vw;
-    height: 130vh;
-    position: relative;
+    justify-content: center;
     
-    /* background: #ddd; */
 }
-#cmr-container img{ 
-    position: absolute;
-    width: 64.5vw;
-    top :0;
+.cmr-form .reset{
+    background: linear-gradient(to right bottom, #ff2727, #ae1a1a);
+    color: #fff;
 }
-#cmr-container .address1{
-    position: absolute;
-    top: 22.5vh;
-    left: 10vw;
-    font-size: 1.2vh;
+.cmr-form .reset:hover{
+    background: linear-gradient(to right bottom, #ff9375, #e92b2b);
+
 }
-#cmr-container .address2{
-    position: absolute;
-    top: 12.0vh;
-    left: 10vw;
-    font-size: 1.2vh;
+
+.cmr-form .cmr-form-set{
+    display: grid;
+    grid-template-columns: 10vw 18vw;
+    gap: 1vw;
+    /* justify-content: space-between; */
 }
-#cmr-container .address3{
-     position: absolute;
-    top: 34vh;
-    left: 10vw;
-    font-size: 1.3vh;
+.cmr-form .cmr-form-set label{
+    padding: 0.6vh 0;
+    font-size: 0.7vw;
+    font-weight: 200;
 }
-#cmr-container .address4{
-     position: absolute;
-    top: 40vh;
-    left: 10vw;
-    font-size: 1.3vh;
+.cmr-form .cmr-form-set input, .cmr-form .cmr-form-set select{
+    height: 2.3vh;
+    width: 100%;
+    padding-left: 0.7vw ;
 }
-#cmr-container .forwarder1{
-     position: absolute;
-    top: 22.2vh;
-    left: 38.5vw;
-    font-size: 1.3vh;
+.cmr-form-set .dim{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.1vw;
+    
 }
-#cmr-container .cargo0{
-    position: absolute;
-    top: 53vh;
-    left: 7vw;
-    font-size: 1.3vh;
+.cmr-form h3{
+    border-top: solid 1px #fff;
+    margin: 1.5vh 0 0.2vh 0;
+    padding: 0.5vh 0vw 0.5vh 0;
+    
 }
-#cmr-container .cargo1{
-    position: absolute;
-    top: 52.5vh;
-    left: 16vw;
-    font-size: 1.8vh;
+
+#pdf{
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    margin: 0.5vh 0vh;
+    padding: 0;
+    width: 99%;
+    height: 80vh;
+    border: none;
+    background: linear-gradient(to right bottom, #222, #555);
 }
-#cmr-container .cargo2{
-     position: absolute;
-    top: 53vh;
-    left: 21vw;
-    font-size: 1.3vh;
+.clients-buttons-ctnr{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* flex-direction: column; */
+    
 }
-#cmr-container .cargo3{
-     position: absolute;
-    top: 53vh;
-    left: 29vw;
-    font-size: 1.3vh;
+.double-btns{
+    margin-top:2vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around
+    
 }
-#cmr-container .cargo4{
-     position: absolute;
-    top: 53vh;
-    left: 44vw;
-    font-size: 1.3vh;
+.btn-cmr{
+    width: 6vw;
+    margin: 1vh ;
 }
-#cmr-container .cargo5{
-     position: absolute;
-    top: 53.0vh;
-    left: 52vw;
-    font-size: 1.3vh;
-}
-#cmr-container .cargo6{
-     position: absolute;
-    top: 79.7vh;
-    left: 8vw;
-    font-size: 1.3vh;
-}
-#cmr-container .cargo7{
-     position: absolute;
-    top: 79.7vh;
-    left: 21.3vw;
-    font-size: 1.3vh;
-}
-#cmr-container .address5{
-     position: absolute;
-    top: 105.7vh;
-    left: 10.3vw;
-    font-size: 1.3vh;
-}
-#cmr-container p{
-    margin: 0;
-    color: #000;
-}
+
 </style>

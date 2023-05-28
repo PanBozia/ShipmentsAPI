@@ -121,11 +121,15 @@
       </div>
     </div>
   </div>
+  
 <div class="btn-ctnr">
     <button class="btn" @click="handleSubmitOrdersList()">
         Zapisz
     </button>
 </div>
+<ErrorComponent v-if="addPoError" :msg="addPoError" @reset-error-event="resetErrors" />
+<ErrorComponent v-if="customersError" :msg="customersError" @reset-error-event="resetErrors" />
+<ErrorComponent v-if="loadOrdersError" :msg="loadOrdersError" @reset-error-event="resetErrors" />
 
 </template>
 
@@ -139,9 +143,10 @@ import getPurchaseOrderById from '../js-components/getPurchaseOrderById.js'
 import { useLinksStore } from '../stores/linksStore.js'
 import moment from 'moment'
 import Spinner from './SpinnerComponent.vue';
+import ErrorComponent from './ErrorComponent.vue';
 export default {
     emits:['add-orders-event'],
-    components:{Spinner},
+    components:{Spinner, ErrorComponent},
     setup(props, context) {
     const linksStore = useLinksStore()
     const { loadOrders, error: loadOrdersError, orders, totalItemsCount: totalItemsCountPo } = getPurchaseOrders(linksStore.url);
@@ -181,7 +186,7 @@ export default {
         })
 
         const handleCreatePo = ()=>{
-            isPending1.value = true
+            
             const poData = {
                 poNumber : poNumberForm.value,
                 category : categoryForm.value,
@@ -196,7 +201,8 @@ export default {
             else{
             addPoError.value = null
             addNewPO(poData).then(()=>{
-                console.log(addPoError.value)
+                console.log(isPending2.value)
+                console.log(isPending1.value)
                 if(addPoError.value == null){
                     poData['id'] = createdId.value
                     
@@ -212,16 +218,24 @@ export default {
                         addPoError.value = ''
                         customersError.value = ''
                         createdFlag.value = true
-                        setTimeout(()=>{createdFlag.value = false},2000)
+                        setTimeout(()=>{createdFlag.value = false},1000)
                         isPending1.value = false
                     })
-                }else{
-                    setTimeout(()=>{addPoError.value = null},3000)
                 }
+                // else{
+                //     setTimeout(()=>{addPoError.value = null},3000)
+                // }
             })
             }
         }
+        const resetErrors = ()=>{
+            addPoError.value = null,
+            incotermsError.value = null,
+            customersError.value = null
+            loadOrdersError.value = null
+        }
     return {
+        resetErrors,
         isPending1, isPending2,
         handleSearchOrders,
         handleAddOrder,
@@ -277,11 +291,16 @@ export default {
 }
 .choose-order-container {
     display: grid;
-  grid-template-columns: 22vh 22vh;
-  gap: 6vh;
+    grid-template-columns: 24vh 24vh;
+    gap: 6vh;
+    margin-top: 3vh ;
+}
+.choose-order-container h2 {
+    margin-bottom:  2vh;
+    padding: 0;
 }
 .choose-order-container.non-symertic{
-    grid-template-columns: 32vh 22vh;
+    grid-template-columns: 32vh 28vh;
 }
 #header-edit-shipment {
   display: flex;

@@ -160,7 +160,7 @@
                             </p>
                         </div>
                     </div>
-                    <!-- <div class="content">
+                    <!-- <div v-if="shipment.forwarder" class="content">
                         <div class="content-btn"  @click="goToCmr">
                             <p>
                                 Drukuj CMR

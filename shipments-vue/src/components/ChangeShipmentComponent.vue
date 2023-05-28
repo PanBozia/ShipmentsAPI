@@ -72,7 +72,7 @@
 
                                                         <div class="form-set">
                                                                 <div>
-                                                                    <label class="form-labels">Nr plomby</label>
+                                                                    <label class="form-labels">Nr plomby *</label>
                                                                 </div>
                                                                 <div class="double-in">
                                                                     <input type="text" v-model="containerSealNumberForm">
@@ -81,12 +81,14 @@
                                                             
                                                         <div class="form-set"> 
                                                             <div>
-                                                                <label class="form-labels">Komentarz</label>
+                                                                <label class="form-labels">Komentarz *</label>
                                                             </div>
                                                             <div class="comment-ctnr">
                                                                 <textarea class="comment" name="comment" rows="4" cols="1" v-model="commentForm"></textarea>
                                                             </div>
+                                                            <p class="form-labels" style="color: #ccc">* opcjonalnie</p>
                                                         </div>
+                                                        
                                     </div>      
                                 </div>
                                 <!-- choose-order-ctnr -->
@@ -247,8 +249,8 @@ export default {
 }
 .edit-shipment-ctnr{
     display: block;
-    width: 70vh;
-    height: 48vh;
+    width: 80vh;
+    height: 54vh;
     margin:16vh auto 1vh auto;
     padding: 1.5vh 0vh;
     background: linear-gradient(to right bottom, #232323, #383838);

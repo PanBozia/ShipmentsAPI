@@ -2,7 +2,7 @@
     <Spinner v-if="isPending1 || isPending2 || isPending3" />
    <div class="orders-screen">
         <div class="orders-ctnr">
-            <h2>wybierz zamówienia</h2>
+            <h2>Wybierz lub dodaj nowe zamówienia</h2>
             <div class="orders-ctnr-inner">
                     <EditOrders @add-orders-event="getOrdersList" :shipmentId="shipmentId" />
             </div>
@@ -23,6 +23,7 @@ import getShipmentById from '../js-components/getShipmentById'
 import removeOrderToShipment from '../js-components/removeOrderFromShipment.js'
 import addManyOrdersToShipment from '../js-components/addManyOrdersToShipment.js'
 import Spinner from './SpinnerComponent.vue'
+
 export default {
     emits:['changeOrdersEvent'],
     props:['shipmentId'],
