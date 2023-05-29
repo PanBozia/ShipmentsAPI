@@ -10,7 +10,7 @@
                 </span>
                 <!-- <h3>Klient <span>{{formConsigneeName}}</span></h3> -->
                
-                    <p class="choose-clinet-head">Wybierz klienta</p>
+                    <p class="choose-clinet-head" :class="{greenLabel:formClientIndex == null}">Wybierz klienta</p>
                     <!-- <select v-model="formClientIndex">
                         <option v-for="(client, index) in clients" :key="client.id" :value="index" >
                             {{index+1}} - {{client.name}}
@@ -143,10 +143,13 @@
                     <input class="dis" type="text" v-model="formSpedCarPlates">
                 </div>
                 <h3></h3>
-                <div class="double-btns">
+                <div v-if="formClientIndex != null" class="double-btns">
                     <button class="btn btn-cmr" @click="showPdf()"> Pokaż CMR</button>
-                    <button class="btn btn-cmr" @click="downloadPdf()">Zapisz CMR </button>
-                    <button class="btn btn-cmr reset" @click="resetForm()">Reset</button>
+                    <button class="btn btn-cmr" @click="downloadPdf()">Pobierz CMR </button>
+                    <button class="btn btn-cmr reset" @click="resetForm()">Anuluj</button>
+                </div>
+                <div v-else class="no-btns">
+                    <p>Wybierz klienta, dla którego chcesz wypełnić list przewozowy.</p>
                 </div>
                 
             </div>
@@ -427,8 +430,8 @@ export default {
                 page.drawText(replace(formGoodsMarks3.value), { size: 9 })
                 page.moveTo(x, y - 386)
                 page.drawText(replace(formGoodsMarks4.value), { size: 9 })
-                page.moveTo(x, y - 398)
-                page.drawText('( ' + formGoodsQty.value.toString()  + ' EUR pallets)', { size: 9 })
+                page.moveTo(x, y - 402)
+                page.drawText(formGoodsQty.value.toString()  + ' EUR pallets', { size: 11 })
                 page.moveTo(x+20, y - 507)
                 page.drawText('9', { size: 9 })
                 page.moveTo(x+110, y - 507)
@@ -589,6 +592,18 @@ export default {
 </script>
 
 <style>
+.no-btns{
+    display: flex;
+    justify-content: center;
+    font-size:1.0vw;
+    font-weight: 200;
+    color: #a1ff6a;
+    margin: 2vh 1vh;
+    text-align: center;
+}
+.greenLabel{
+    color: #a1ff6a;
+}
 .clients-icons-ctnr{
     display: flex;
 }
@@ -711,7 +726,7 @@ export default {
     
 }
 .double-btns{
-    margin-top:2vh;
+    margin-top:3vh;
     display: flex;
     flex-direction: row;
     justify-content: space-around
