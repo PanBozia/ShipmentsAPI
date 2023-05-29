@@ -5,7 +5,10 @@
             <div class="cmr-container">
             <!-- 1 column -->
             <div>
-                <h3>Klient <span>{{formConsigneeName}}</span></h3>
+                <span class="cmr-client-header">
+                    <h3 class="top-headers">Klient</h3> <h3 class="top-headers yell">{{formConsigneeName}}</h3>
+                </span>
+                <!-- <h3>Klient <span>{{formConsigneeName}}</span></h3> -->
                
                     <p class="choose-clinet-head">Wybierz klienta</p>
                     <!-- <select v-model="formClientIndex">
@@ -14,7 +17,13 @@
                         </option>
                     </select> -->
                     <div class="clients-icons-ctnr">
-                        <div class="client-icon" v-for="(client, index) in clients" :key="client.id" :value="index" @click="chooseClient(index)" >
+                        <div 
+                            class="client-icon" 
+                            v-for="(client, index) in clients" :key="client.id" 
+                            :value="index" 
+                            @click="chooseClient(index)" 
+                            :class="{notChosenIcon:formClientIndex != index}"
+                            >
                             <p>
                                 {{client.shortName}}
                             </p>
@@ -24,57 +33,57 @@
                 <h3>1 - Nadawca</h3>
                 <div class="cmr-form-set">
                     <label>Nazwa firmy</label>
-                    <input type="text" v-model="formSenderName">
+                    <input class="dis" type="text" v-model="formSenderName">
                 </div>
                 <div class="cmr-form-set">
                     <label>Ulica</label>
-                    <input type="text" v-model="formSenderStreet">
+                    <input class="dis" type="text" v-model="formSenderStreet">
                 </div>
                     
                 <div class="cmr-form-set">
                     <label>Kod pocztowy i miasto</label>
-                    <input type="text" v-model="formSenderCity">
+                    <input class="dis" type="text" v-model="formSenderCity">
                 </div>
                 <div class="cmr-form-set">
                     <label>Kraj</label>
-                    <input type="text" v-model="formSenderCountry">
+                    <input class="dis" type="text" v-model="formSenderCountry">
                 </div>
                 <h3>2 - Odbiorca</h3>
                 <div class="cmr-form-set">
                     <label>Nazwa firmy</label>
-                    <input type="text" v-model="formConsigneeName">
+                    <input class="dis" type="text" v-model="formConsigneeName">
                 </div>
                 <div class="cmr-form-set">
                     <label>Ulica</label>
-                    <input type="text" v-model="formConsigneeStreet">
+                    <input class="dis" type="text" v-model="formConsigneeStreet">
                 </div>
                     
                 <div class="cmr-form-set">
                     <label>Kod pocztowy i miasto</label>
-                    <input type="text" v-model="formConsigneeCity">
+                    <input class="dis" type="text" v-model="formConsigneeCity">
                 </div>
                 <div class="cmr-form-set">
                     <label>Kraj</label>
-                    <input type="text" v-model="formConsigneeCountry">
+                    <input class="dis" type="text" v-model="formConsigneeCountry">
                 </div>
                 <h3>3 - Miejsce przeznaczenia</h3>
                 <div class="cmr-form-set">
                     <label>Miejscowość, kraj</label>
-                    <input type="text" v-model="formDestination">
+                    <input class="dis" type="text" v-model="formDestination">
                 </div>
                 <h3>4 - Miejsce i data załadowania</h3>
                 <div class="cmr-form-set">
                     <label>Miejscowość, kraj, data</label>
-                    <input type="text" v-model="formLoadingPlace">
+                    <input class="dis" type="text" v-model="formLoadingPlace">
                 </div>
                 <h3>5 - Załączone dokumenty</h3>
                 <div class="cmr-form-set">
                     <label>Numer dokumentu 1</label>
-                    <input type="text" v-model="formAttachment1">
+                    <input class="dis" type="text" v-model="formAttachment1">
                 </div>
                 <div class="cmr-form-set">
                     <label>Numer dokumentu 2</label>
-                    <input type="text" v-model="formAttachment2">
+                    <input class="dis" type="text" v-model="formAttachment2">
                 </div>
             </div>    
             
@@ -83,55 +92,55 @@
                 <h3>6 - Cechy i numery towaru</h3>
                 <div class="cmr-form-set">
                     <label>Linia #1</label>
-                    <input type="text" v-model="formGoodsMarks1">
+                    <input class="dis" type="text" v-model="formGoodsMarks1">
                 </div>
                 <div class="cmr-form-set">
                     <label>Linia #2</label>
-                    <input type="text" v-model="formGoodsMarks2">
+                    <input class="dis" type="text" v-model="formGoodsMarks2">
                 </div>
                 <div class="cmr-form-set">
                     <label>Linia #3</label>
-                    <input type="text" v-model="formGoodsMarks3">
+                    <input class="dis" type="text" v-model="formGoodsMarks3">
                 </div>
                 <div class="cmr-form-set">
                     <label>Linia #4</label>
-                    <input type="text" v-model="formGoodsMarks4">
+                    <input class="dis" type="text" v-model="formGoodsMarks4">
                 </div>
                 <h3>7 - Ilość</h3>
                 <div class="cmr-form-set">
                     <label>Iość palet (szt)</label>
-                    <input type="text" v-model="formGoodsQty">
+                    <input class="dis" type="text" v-model="formGoodsQty">
                 </div>
                 <h3>11 - Waga</h3>
                 <div class="cmr-form-set">
                     <label>Waga brutto (kg)</label>
-                    <input type="text" v-model="formGoodsWeight">
+                    <input class="dis" type="text" v-model="formGoodsWeight">
                 </div>
                 <h3>12 - Objętość</h3>
                 <div class="cmr-form-set">
                     <label>Wymiary palet (mm)</label>
                     <div class="dim">
-                        <input class="dim-input" type="number" v-model="formGoodsDimX">
-                        <input class="dim-input" type="number" v-model="formGoodsDimZ">
-                        <input class="dim-input" type="number" v-model="formGoodsDimY">
+                        <input class="dim-input dis" type="number" v-model="formGoodsDimX">
+                        <input class="dim-input dis" type="number" v-model="formGoodsDimZ">
+                        <input class="dim-input dis" type="number" v-model="formGoodsDimY">
                     </div>
                 </div>
                 <div class="cmr-form-set">
-                    <label>Objętość (CBM)</label>
-                    <input type="text" v-model="formGoodsCBM">
+                    <label>Objętość (m<sup>3</sup>)</label>
+                    <input class="dis" type="text" v-model="formGoodsCBM">
                 </div>
                 <h3>16 - Przewoźnik</h3>
                 <div class="cmr-form-set">
                     <label>Imię i nazwisko</label>
-                    <input type="text" v-model="formSpedName">
+                    <input class="dis" type="text" v-model="formSpedName">
                 </div>
                 <div class="cmr-form-set">
                     <label>Firma</label>
-                    <input type="text" v-model="formSpedCompany">
+                    <input class="dis" type="text" v-model="formSpedCompany">
                 </div>
                 <div class="cmr-form-set">
                     <label>Numery rejestracyjne</label>
-                    <input type="text" v-model="formSpedCarPlates">
+                    <input class="dis" type="text" v-model="formSpedCarPlates">
                 </div>
                 <h3></h3>
                 <div class="double-btns">
@@ -296,14 +305,28 @@ export default {
                         })
                         clients.value.push(singleCustomer[0])
                     })
+                    var tempArray = clients.value.sort((a, b) => {
+                    const nameA = a.id; 
+                    const nameB = b.id; 
+                    if (nameA < nameB) {
+                        return -1;
+                    }
+                    if (nameA > nameB) {
+                        return 1;
+                    }
+                    // names must be equal
+                    return 0;
+                    });
                    
-                    var tempArray = clients.value.filter((value, index, array)=>{
+                    
+                    tempArray = tempArray.filter((value, index, array)=>{
                         if (index > 0){
-                                return array[index] != array[index-1];
+                            return array[index].shortName !== array[index-1].shortName
                         }else{
                             return array[index]
                         }
                     })
+                    console.log(tempArray)
                     clients.value = tempArray
 
                 });
@@ -312,7 +335,8 @@ export default {
         const pdfUrl = '/src/assets/documents/cmr.pdf'
         let outputUint8Array = null
         onMounted(()=>{
-           getData()
+          getData()
+          toggleDisableInputs(true)
             
         })
         
@@ -331,8 +355,7 @@ export default {
             fillEachPdfPage(pages, helveticaFont, pngImage)
             const pdfBytes = await pdfDoc.save().then(res => outputUint8Array = res)
             return pdfBytes
-            }
-
+        }
         const fillEachPdfPage = (pages, font, pngImage)=>{
             const pngDims = pngImage.scale(0.25)
             
@@ -447,7 +470,6 @@ export default {
                 page.drawText('NIP 886-27-53-552 Regon 891525310', { size: 7 , color: rgb(0.50, 0.60, 0.80) })
             });
         }
-
         const downloadPdf = ()=>{
             // const pdfBytes = modifyPdf(pdfUrl)
             modifyPdf(pdfUrl).then(()=>{
@@ -472,11 +494,11 @@ export default {
         }
         const chooseClient = (index) =>{
             formClientIndex.value = index
-            
         }
-      
         const formWatcher = watch((formClientIndex), () => {
             if(formClientIndex.value != null){
+                toggleDisableInputs(false)
+
                 formConsigneeName.value = clients.value[formClientIndex.value].name
                 formConsigneeStreet.value = clients.value[formClientIndex.value].streetAddress
                 formConsigneeCity.value = clients.value[formClientIndex.value].zipCodeAddress + ' ' + clients.value[formClientIndex.value].cityAddress
@@ -531,8 +553,14 @@ export default {
          formGoodsDimY.value = 1100
          formGoodsCBM.value = 0
          formGoodsQty.value = 0
+         toggleDisableInputs(true)
        }
-       
+       const toggleDisableInputs = (value)=>{
+         let domElements = document.getElementsByClassName("dis")
+                for (let index = 0; index < domElements.length; index++) {
+                    domElements[index].disabled = value
+                }
+       }
        
         onUnmounted(()=>{
             formWatcher()
@@ -569,6 +597,23 @@ export default {
     margin: 0 0 1vh 0;
     font-weight: 200;
 }
+
+.cmr-client-header{
+    border-top: solid #fff 0.15vh;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5vh;
+}
+.cmr-client-header .top-headers{
+    border-top: none;
+    margin-top:0;
+    padding-top:0.5vh;
+    font-size: 1.6vw;
+}
+.cmr-client-header .top-headers.yell{
+    margin-left: 1vh;
+    color: #ffbb00;
+}
 .client-icon{
     cursor: pointer;
     display: flex;
@@ -588,6 +633,9 @@ export default {
     transform: scale(1.1);
     transition: 200ms ease-in-out;
 }
+.notChosenIcon{
+    background: linear-gradient(to right bottom, rgb(89, 89, 89), rgb(58, 58, 58));
+}
 .client-icon p{
     font-size: 0.7vw;
 }
@@ -597,10 +645,7 @@ export default {
     gap: 2vw;
     margin: 2vh 2vw;
 }
-.cmr-container h3 span{
-    margin-left: 1vh;
-    color: #ffbb00;
-}
+
 .cmr-form{
     display: flex;
     
@@ -631,6 +676,7 @@ export default {
     height: 2.3vh;
     width: 100%;
     padding-left: 0.7vw ;
+    font-size: 1.2vh;
 }
 .cmr-form-set .dim{
     display: grid;
@@ -642,6 +688,7 @@ export default {
     border-top: solid 1px #fff;
     margin: 1.5vh 0 0.2vh 0;
     padding: 0.5vh 0vw 0.5vh 0;
+    font-size: 0.8vw;
     
 }
 
