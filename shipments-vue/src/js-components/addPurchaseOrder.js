@@ -22,11 +22,12 @@ const addPurchaseOrder = (url) =>{
       
         try {
             let resp = await axios.post( url + 'PurchaseOrder/', poData, requestOptions)
-            if (resp.response.status <200 & resp.response.status > 300){
+            if (resp.status <200 & resp.status > 300){
                 isPending.value = false
                 throw Error('Coś poszło nie tak..')
             }
             createdId.value = resp.data
+            isPending.value = false
             
         } catch (err) {
             error.value = err.response.data

@@ -200,11 +200,11 @@ export default {
         
         const formDestination = ref('')
         const formLoadingPlace = ref('')
-        const formAttachment1 = ref('')
-        const formAttachment2 = ref('')
+        const formAttachment1 = ref('SDS, instruction for driver, DGD')
+        const formAttachment2 = ref('Delivery Note: ')
         //6 Goods
-        const formGoodsMarks1 = ref('UN 3268 SAFETY DEVICES, CLASS 9, (E)')
-        const formGoodsMarks2 = ref('UN 3268 URZĄDZENIA BEZPIECZEŃSTWA, KLASA 9, (E)')
+        const formGoodsMarks1 = ref('UN 3268 SAFETY DEVICES, 9, (E)')
+        const formGoodsMarks2 = ref('UN 3268 URZĄDZENIA BEZPIECZEŃSTWA, 9, (E)')
         const formGoodsMarks3 = ref('')
         const formGoodsMarks4 = ref('')
         const formGoodsWeight = ref('')
@@ -329,7 +329,7 @@ export default {
                             return array[index]
                         }
                     })
-                    console.log(tempArray)
+                    
                     clients.value = tempArray
 
                 });
@@ -347,6 +347,8 @@ export default {
             // console.log(client)
             const pngUrl = '/src/assets/img/logoDSSEblue.png'
             const pngImageBytes = await fetch(pngUrl).then((res) => res.arrayBuffer())
+            const pictogramUrl = '/src/assets/img/ADR9.png'
+            const pictogramImageBytes = await fetch(pictogramUrl).then((res) => res.arrayBuffer())
 
             const existingPdfBytes = await fetch(pdfUrl).then(res => res.arrayBuffer())
             const pdfDoc = await PDFDocument.load(existingPdfBytes)
@@ -354,13 +356,15 @@ export default {
             const pages = pdfDoc.getPages()
             
             const pngImage = await pdfDoc.embedPng(pngImageBytes)
+            const pngPictogram = await pdfDoc.embedPng(pictogramImageBytes)
 
-            fillEachPdfPage(pages, helveticaFont, pngImage)
+            fillEachPdfPage(pages, helveticaFont, pngImage, pngPictogram)
             const pdfBytes = await pdfDoc.save().then(res => outputUint8Array = res)
             return pdfBytes
         }
-        const fillEachPdfPage = (pages, font, pngImage)=>{
+        const fillEachPdfPage = (pages, font, pngImage, pngPictogram)=>{
             const pngDims = pngImage.scale(0.25)
+            const pictogramDims = pngPictogram.scale(0.09)
             
             
             pages.forEach(page => {
@@ -369,6 +373,12 @@ export default {
                     y: page.getHeight() / 2 - pngDims.height + 410,
                     width: pngDims.width,
                     height: pngDims.height,
+                })
+                 page.drawImage(pngPictogram, {
+                    x: page.getWidth() / 2 - pictogramDims.width / 2 - 224,
+                    y: page.getHeight() / 2 - pictogramDims.height + 3,
+                    width: pictogramDims.width,
+                    height: pictogramDims.height,
                 })
                 const {  height } = page.getSize()
                 const x = 50;
@@ -422,16 +432,27 @@ export default {
                 page.moveTo(x+280, y - 270)
                 page.drawText('', { size: 9 })
                 //6 7 8 9 10 Marks and Nos
-                page.moveTo(x, y - 350)
+                page.moveTo(x , y - 350)
                 page.drawText(replace(formGoodsMarks1.value), { size: 9 })
-                page.moveTo(x, y - 362)
-                page.drawText(replace(formGoodsMarks2.value), { size: 9 })
-                page.moveTo(x, y - 374)
+                page.moveTo(x , y - 360)
+                page.drawText(replace(formGoodsMarks2.value), { size: 9, color: rgb(0.40, 0.40, 0.40) })
+                page.moveTo(x, y - 375)
                 page.drawText(replace(formGoodsMarks3.value), { size: 9 })
-                page.moveTo(x, y - 386)
-                page.drawText(replace(formGoodsMarks4.value), { size: 9 })
-                page.moveTo(x, y - 402)
-                page.drawText(formGoodsQty.value.toString()  + ' EUR pallets', { size: 11 })
+                page.moveTo(x, y - 385)
+                page.drawText(replace(formGoodsMarks4.value), { size: 9, color: rgb(0.40, 0.40, 0.40) })
+                page.moveTo(x, y - 400)
+                page.drawText('OVERPACK used: ' + formGoodsQty.value.toString()  + ' EUR pallets', { size: 9 })
+                page.moveTo(x, y - 410)
+                page.drawText('Zastosowano opakowanie zbiorcze: ' + formGoodsQty.value.toString()  + ' palety typu EUR', { size: 9, color: rgb(0.40, 0.40, 0.40) })
+                if(shipment.value.containerNumber.length > 3){
+                    page.moveTo(x, y - 470)
+                    page.drawText('CTNR#: '+ replace(shipment.value.containerNumber) + ' / ' + shipment.value.containerType, { size: 9 })
+                    page.moveTo(x, y - 482)
+                    page.drawText('SEAL#: '+ shipment.value.containerSealNumber, { size: 9 })
+
+                }
+                
+                
                 page.moveTo(x+20, y - 507)
                 page.drawText('9', { size: 9 })
                 page.moveTo(x+110, y - 507)
@@ -445,18 +466,24 @@ export default {
                 page.moveTo(x+470, y - 350)
                 page.drawText(formGoodsCBM.value.toString(), { size: 9 })
                 //13 Senders instructions
-                page.moveTo(x-10, y - 550)
+                page.moveTo(x-3, y - 545)
+                page.drawText('Przewoz zgodny z 1.1.4.2.1', { size: 8, color: rgb(0.36, 0.36, 0.36) })
+                page.moveTo(x-3, y - 555)
+                page.drawText('Carriage in accordance with 1.1.4.2.1', { size: 8 })
+                page.moveTo(x-3, y - 560)
+                page.drawText('_______________________________________________', { size: 8, color: rgb(0.36, 0.36, 0.36) })
+                page.moveTo(x-3, y - 575)
                 page.drawText('1.1.3.6: Calkowita ilosc dla kazdej kategorii transportu', { size: 8, color: rgb(0.36, 0.36, 0.36) })
-                page.moveTo(x+18, y - 560)
-                page.drawText('/ Total quantity for each transport category:4:.......', { size: 8, color: rgb(0.36, 0.36, 0.36) })
-                page.moveTo(x-10, y - 580)
+                page.moveTo(x+23, y - 585)
+                page.drawText('/ Total quantity for each transport category:4:.......', { size: 8 })
+                page.moveTo(x-3, y - 600)
                 page.drawText('1.1.3.6: Obliczona wartosc dla kazdej kategorii transportu', { size: 8, color: rgb(0.36, 0.36, 0.36) })
-                page.moveTo(x+18, y - 590)
-                page.drawText('/ Calculated value for each transport category:4:0', { size: 8, color: rgb(0.36, 0.36, 0.36) })
-                page.moveTo(x-10, y - 610)
+                page.moveTo(x+23, y - 610)
+                page.drawText('/ Calculated value for each transport category:4:0', { size: 8 })
+                page.moveTo(x-3, y - 625)
                 page.drawText('1.1.3.6: Obliczona wartosc punktow ADR', { size: 8, color: rgb(0.36, 0.36, 0.36) })
-                page.moveTo(x+18, y - 620)
-                page.drawText('/ Sum of calculeted point value:0', { size: 8, color: rgb(0.36, 0.36, 0.36) })
+                page.moveTo(x+23, y - 635)
+                page.drawText('/ Sum of calculeted point value:0', { size: 8 })
                 //21 Established in
                 page.moveTo(x, y - 724)
                 page.drawText(replace(formLoadingPlace.value), { size: 9 })
@@ -516,6 +543,8 @@ export default {
                 formGoodsWeight.value = shipment.value.palletQty * 425
                 let cbm = ((formGoodsDimX.value/1000) * (formGoodsDimY.value/1000) * (formGoodsDimZ.value/1000))*shipment.value.palletQty
                 formGoodsCBM.value = cbm.toFixed(2)
+                formGoodsMarks4.value = `${shipment.value.palletQty * 40} Skrzyn kartonowych (4G)`
+                formGoodsMarks3.value = `${shipment.value.palletQty * 40} Cardboard boxes (4G)`
             }
             
         })
