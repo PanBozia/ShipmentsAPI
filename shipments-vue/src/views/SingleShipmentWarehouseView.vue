@@ -160,13 +160,13 @@
                             </p>
                         </div>
                     </div>
-                    <div v-if="shipment.forwarder" class="content">
+                    <!-- <div v-if="shipment.forwarder" class="content">
                         <div class="content-btn"  @click="goToCmr">
                             <p>
                                 Drukuj CMR
                             </p>
                         </div>
-                    </div>
+                    </div> -->
                 <div>
   </div>
 

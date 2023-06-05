@@ -111,9 +111,13 @@
                     <label>Iość palet (szt)</label>
                     <input class="dis" type="text" v-model="formGoodsQty">
                 </div>
+                <div class="cmr-form-set">
+                    <label>Waga  palety brutto (kg)</label>
+                    <input class="dis" type="number" v-model="formGoodsSingleWeight">
+                </div>
                 <h3>11 - Waga</h3>
                 <div class="cmr-form-set">
-                    <label>Waga brutto (kg)</label>
+                    <label>Waga całkowita brutto (kg)</label>
                     <input class="dis" type="text" v-model="formGoodsWeight">
                 </div>
                 <h3>12 - Objętość</h3>
@@ -208,6 +212,7 @@ export default {
         const formGoodsMarks3 = ref('')
         const formGoodsMarks4 = ref('')
         const formGoodsWeight = ref('')
+        const formGoodsSingleWeight = ref(450)
         const formGoodsDimX = ref(1200)
         const formGoodsDimZ = ref(800)
         const formGoodsDimY = ref(1100)
@@ -447,11 +452,11 @@ export default {
                 if(shipment.value.containerNumber.length > 3){
                     page.moveTo(x, y - 470)
                     page.drawText('CTNR#: '+ replace(shipment.value.containerNumber) + ' / ' + shipment.value.containerType, { size: 9 })
+                }
+                if(shipment.value.containerSealNumber.length > 3){
                     page.moveTo(x, y - 482)
                     page.drawText('SEAL#: '+ shipment.value.containerSealNumber, { size: 9 })
-
                 }
-                
                 
                 page.moveTo(x+20, y - 507)
                 page.drawText('9', { size: 9 })
@@ -461,7 +466,7 @@ export default {
                 page.drawText('N/A', { size: 9 })
                 // 11 Weight
                 page.moveTo(x+400, y - 350)
-                page.drawText(formGoodsWeight.value.toString() + ' kg', { size: 9 })
+                page.drawText(formGoodsWeight.value.toString(), { size: 9 })
                 //12 CBM
                 page.moveTo(x+470, y - 350)
                 page.drawText(formGoodsCBM.value.toString(), { size: 9 })
@@ -489,15 +494,15 @@ export default {
                 page.drawText(replace(formLoadingPlace.value), { size: 9 })
                 //22 Stamp
                 page.moveTo(x+10, y - 750)
-                page.drawText('Daicel Safety Systems', { size: 11, color: rgb(0.50, 0.60, 0.80) })
+                page.drawText('Daicel Safety Systems', { size: 11, color: rgb(0.60, 0.70, 0.90) })
                 page.moveTo(x+27, y - 761)
-                page.drawText('Europe Sp. z o.o.', { size: 11 , color: rgb(0.50, 0.60, 0.80) })
+                page.drawText('Europe Sp. z o.o.', { size: 11 , color: rgb(0.60, 0.70, 0.90) })
                 page.moveTo(x+40, y - 772)
-                page.drawText('ul. Strefowa 6', { size: 9 , color: rgb(0.50, 0.60, 0.80) })
+                page.drawText('ul. Strefowa 6', { size: 9 , color: rgb(0.60, 0.70, 0.90) })
                 page.moveTo(x+39, y - 781)
-                page.drawText('58-130 Zarow', { size: 9 , color: rgb(0.50, 0.60, 0.80) })
+                page.drawText('58-130 Zarow', { size: 9 , color: rgb(0.60, 0.70, 0.90) })
                 page.moveTo(x+8, y - 790)
-                page.drawText('NIP 886-27-53-552 Regon 891525310', { size: 7 , color: rgb(0.50, 0.60, 0.80) })
+                page.drawText('NIP 886-27-53-552 Regon 891525310', { size: 7 , color: rgb(0.60, 0.70, 0.90) })
             });
         }
         const downloadPdf = ()=>{
@@ -540,7 +545,7 @@ export default {
                 formSpedCarPlates.value = shipment.value.forwarder.carPlates
                 formSpedName.value = shipment.value.forwarder.firstName + ' ' + shipment.value.forwarder.lastName
                 formGoodsQty.value = shipment.value.palletQty
-                formGoodsWeight.value = shipment.value.palletQty * 425
+                formGoodsWeight.value = shipment.value.palletQty * formGoodsSingleWeight.value
                 let cbm = ((formGoodsDimX.value/1000) * (formGoodsDimY.value/1000) * (formGoodsDimZ.value/1000))*shipment.value.palletQty
                 formGoodsCBM.value = cbm.toFixed(2)
                 formGoodsMarks4.value = `${shipment.value.palletQty * 40} Skrzyn kartonowych (4G)`
@@ -550,7 +555,7 @@ export default {
         })
 
         const formWatchPalQty = watchEffect( ()=>{
-            formGoodsWeight.value = formGoodsQty.value * 425
+            formGoodsWeight.value = (formGoodsQty.value * formGoodsSingleWeight.value).toFixed(2)
              let cbm = ((formGoodsDimX.value/1000) * (formGoodsDimY.value/1000) * (formGoodsDimZ.value/1000))*formGoodsQty.value
             formGoodsCBM.value = cbm.toFixed(2)
             
@@ -611,7 +616,7 @@ export default {
                 formConsigneeName, formConsigneeStreet, formConsigneeCity, formConsigneeCountry,
                 formDestination, formAttachment1, formAttachment2,formLoadingPlace, 
                 formGoodsMarks1, formGoodsMarks2, formGoodsMarks3,formGoodsMarks4, 
-                formGoodsWeight, formGoodsDimX, formGoodsDimY, formGoodsDimZ, formGoodsCBM, formGoodsQty,
+                formGoodsSingleWeight, formGoodsWeight, formGoodsDimX, formGoodsDimY, formGoodsDimZ, formGoodsCBM, formGoodsQty,
                 formSpedCarPlates, formSpedCompany, formSpedName
 
             }
