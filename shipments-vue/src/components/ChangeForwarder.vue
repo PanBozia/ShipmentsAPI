@@ -3,7 +3,7 @@
         <div class="forwarder-ctnr">
             <h2>wybierz przewoźnika</h2>
             <div class="forwarder-ctnr-inner">
-                    <ChooseForwarder @forwarder-chosen-event="getForwarderId" />
+                    <ChooseForwarder @forwarder-chosen-event="getForwarderId" :currentForwarder="props.currentForwarder" />
             </div>
             <div class="exit-btn" @click="handleExit">
                 <p>
@@ -15,22 +15,19 @@
 </template>
 
 <script>
-    import { onBeforeMount } from 'vue'
     import changeForwarder from '../js-components/changeForwarder.js'
     import ChooseForwarder from './ChooseForwarder.vue'
     import { useLinksStore } from '../stores/linksStore.js'
     export default {
     emits:['changeForwarderEvent'],
-    props:['shipmentId'],
+    props:['shipmentId','currentForwarder'],
     components:{ChooseForwarder},
     setup(props, context){
         const linksStore = useLinksStore()
         const {change, error} = changeForwarder(linksStore.url)
-        onBeforeMount(()=>{
-        })
-
+       
         const getForwarderId = (newForwarder)=>{
-            console.log(newForwarder)
+           
             change(props.shipmentId, newForwarder.id).then(()=>{
                 context.emit('changeForwarderEvent', true)
             })
@@ -40,7 +37,7 @@
         }
 
         return {
-            error,
+            error, props,
             getForwarderId, handleExit
         }
     }

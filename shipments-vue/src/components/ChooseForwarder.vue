@@ -98,14 +98,14 @@
 
 <script>
 
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import getForwarders from '../js-components/getForwarders.js'
 import AddForwarder from '../components/AddForwarder.vue'
 import getForwarderById from '../js-components/getForwarderById.js'
 import { useLinksStore } from '../stores/linksStore.js'
 
 export default {
-    
+    props:['currentForwarder'],
     emits:['forwarder-chosen-event'],
     components:{AddForwarder},
     setup(props,context){
@@ -136,6 +136,9 @@ export default {
                 newForwarder.value = forwarder.value
             })
         }
+        onMounted(()=>{
+            newForwarder.value = props.currentForwarder
+        })
 
         return {
                 handleEmitForwarder,

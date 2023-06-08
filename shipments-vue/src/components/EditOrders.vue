@@ -171,8 +171,8 @@ export default {
         if (!orderExist) ordersList.value.push(order);
     };
     const handleRemoveOrder = (order) => {
-    //   ordersList.value = ordersList.value.filter((po) => po != order);
-        ordersList.value.pop(order)
+      ordersList.value = ordersList.value.filter((po) => po != order);
+        // ordersList.value.pop(order)
     };
 
     const handleSubmitOrdersList = () => {

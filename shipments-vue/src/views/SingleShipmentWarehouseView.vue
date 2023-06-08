@@ -181,7 +181,7 @@
     <ChangeShipmentComponent @changeShipmentDataEvent="handleChangeShipmentData" :shipmentId="shipment.id" />
   </div>
   <div v-if="changeFlagForwarder">
-    <ChangeForwarder @changeForwarderEvent="handleChangeForwarder" :shipmentId="shipmentId"/>
+    <ChangeForwarder @changeForwarderEvent="handleChangeForwarder" :shipmentId="shipmentId" :currentForwarder="shipment.forwarder"/>
   </div>
   <div v-if="changeFlagLocation">
     <ChangeShipmentLocation @changeLocationEvent="handleChangeLocation" :shipmentId="shipmentId"/>

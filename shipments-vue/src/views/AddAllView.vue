@@ -208,7 +208,7 @@
     <div>
     </div>
     <div>
-      <ChooseOrder @add-orders-event="handleAddOrders"/>
+      <ChooseOrder @add-orders-event="handleAddOrders" :currentOrders="chosenOrders" />
     </div>
     <div></div>
   </div>
@@ -217,7 +217,7 @@
         <div>
         </div>
         <div>
-        <ChooseForwarder @forwarder-chosen-event="handleChoosenForwarder"/>
+        <ChooseForwarder @forwarder-chosen-event="handleChoosenForwarder" :currentForwarder="chosenForwarder" />
         </div>
         <div></div>
   </div>

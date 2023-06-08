@@ -135,7 +135,7 @@
 
 <script>
 import getPurchaseOrders from "../js-components/getPurchaseOrders.js";
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, onMounted, ref } from "vue";
 import getIncoterms from '../js-components/getIncoterms.js'
 import getAllCustomers from '../js-components/getAllCustomers.js'
 import addPurchaseOrder from '../js-components/addPurchaseOrder.js'
@@ -145,6 +145,7 @@ import moment from 'moment'
 import Spinner from './SpinnerComponent.vue';
 import ErrorComponent from './ErrorComponent.vue';
 export default {
+    props:['currentOrders'],
     emits:['add-orders-event'],
     components:{Spinner, ErrorComponent},
     setup(props, context) {
@@ -183,6 +184,12 @@ export default {
         onBeforeMount (()=>{
             loadIncoterms();
             loadAllCustomers();
+        })
+        onMounted(()=>{
+            if(props.currentOrders){
+                ordersList.value = props.currentOrders
+            }
+            
         })
 
         const handleCreatePo = ()=>{
