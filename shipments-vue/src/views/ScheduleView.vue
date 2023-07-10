@@ -169,7 +169,7 @@
 </template>
 
 <script>
-import { onBeforeMount, onUnmounted, ref } from 'vue'
+import { onBeforeMount, onMounted, onUnmounted, ref } from 'vue'
 import getScheduledShipments from '../js-components/getScheduledShipments.js'
 import moment from 'moment'
 import { useLinksStore } from '../stores/linksStore.js'
@@ -190,9 +190,6 @@ export default {
             
             document.body.classList.add("stop-scrolling");
         
-        })
-        onUnmounted(()=>{
-            document.body.classList.remove("stop-scrolling");
         })
         
         const loadScheduleShipments = ()=>{
@@ -215,7 +212,7 @@ export default {
                         //     for (let i = 1; i < shipment.purchaseOrders.length; i++) {
                         //         console.log(i)
                         //         if(shipment.purchaseOrders[i].customerShortName != clientName){
-                        //             clients.push(shipment.purchaseOrders[i].customerShortName)
+                            //             clients.push(shipment.purchaseOrders[i].customerShortName)
                         //         }               
                         //     }
 
@@ -228,7 +225,7 @@ export default {
        
     
           function requestFullScreen(element) {
-                // Supports most browsers and their versions.
+              // Supports most browsers and their versions.
                 var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
 
                 if (requestMethod) { // Native full screen.
@@ -270,10 +267,21 @@ export default {
             router.go(-1);
             document.body.classList.remove("stop-scrolling");
         }
+           
+        const myInterval = setInterval(()=>{
+                loadScheduleShipments()
+                }, 1000*120)
+        onMounted(()=>{
+            myInterval
+        })
      
+        onUnmounted(()=>{
+            document.body.classList.remove("stop-scrolling");
+            clearInterval(myInterval)
+        })
 
         return{
-             isPending,
+            isPending,
              error, 
              shipments, 
              moment, 

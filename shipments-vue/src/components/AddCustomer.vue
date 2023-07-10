@@ -70,9 +70,18 @@ setup(){
     const {addNewCustomer, error, createdId, isPending} = addCustomer(linksStore.url)
 
     const handleSubmit = ()=>{
+        errorForm.value = ''
+        
+        if(shortNameForm.value.includes(" ") || shortNameForm.value.length > 6 ){
+            errorForm.value = 'Nazwa (skrót) nie powinna zawierać spacji i musi mieć od 3 do 6 znaków. '
+        }
+        console.log(shortNameForm.value.length)
+        console.log(errorForm.value)
+
         if(countryForm.value.length > 2){
-            errorForm.value = "Kod kraju jest nieprawidłowy (tylko 2 znaki)"
-        }else{
+            errorForm.value = "Kod kraju jest nieprawidłowy (tylko 2 znaki). "
+        }
+        if(errorForm.value == ''){
             let formInputData = {
                 name: nameForm.value,
                 shortName: shortNameForm.value,
