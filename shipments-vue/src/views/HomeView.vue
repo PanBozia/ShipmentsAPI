@@ -1,6 +1,6 @@
 <template>
   
-  <div class="frame home-screen back01" :class="{back02:moment().format('HH:mm') > moment('10:00').format('HH:mm') }" >
+  <div class="frame home-screen back02">
 
     <div class="nav-container">
         <div class="top-bar home-bar">
@@ -45,7 +45,7 @@
        klientach oraz przewoźnikach. Narzędzie pozwala na wymianę danych między logistykami (biuro 
        <span class="material-symbols-outlined desc-symbol">swap_horiz</span> magazyn), czego wynikiem jest czytelny harmonogram wysyłek w postaci tablicy informacyjnej (dashboard'u).</p>
     </div>
-    <div class="home-desc ver">
+    <div class="ver">
         <p>
             UPDATED: 2023-07-11
         </p>
@@ -90,14 +90,14 @@ export default {
     
     margin: 0vh auto;
 }
-.home-desc.ver p{
+.ver p{
     text-align: center;
     font-size: 1.2vh;
     font-weight: 600;
-    color: #444;
-    margin-top: 2vh ;
-    background: #151515;
-    padding: 0.5vh 0;
+    color: #4a4a4a;
+    margin-top: 4vh ;
+    background: #15151560;
+    padding: 1.5vh 0;
 }
 .home-desc span{
     font-weight: 400;
