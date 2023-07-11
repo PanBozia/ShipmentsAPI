@@ -15,9 +15,16 @@ import AddAllView from '../views/AddAllView.vue'
 import EditForwarderView from '../views/EditForwarderView.vue'
 import WarehouseView from '../views/WarehouseView.vue'
 import CMRView from '../views/CMRView.vue'
+import Error404View from '../views/Error404View.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+        path:  '/:pathMatch(.*)*',
+        name: 'Error404View',
+        component: Error404View,
+    
+    },
     {
       path: '/',
       name: 'home',
