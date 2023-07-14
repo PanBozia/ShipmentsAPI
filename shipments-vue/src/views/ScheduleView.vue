@@ -6,7 +6,9 @@
         </span>
     
     </div>    
-
+    <div class="clock-ctnr">
+        <h1>{{hours}}:{{minutes}}</h1><h2>:{{sec}}</h2>
+    </div>
     <div class="palletCount" >
         <h2 v-if="shipmentsCount == 0"><span>{{moment().format("dddd")}}</span> Dzisiaj nie ma wysyłek</h2>
         <h2 v-if="shipmentsCount == 1"><span>{{moment().format("dddd")}}</span> Dzisiaj mamy <span>{{shipmentsCount}}</span> wysyłkę <span>{{palletCount}}</span> PAL</h2>
@@ -204,21 +206,7 @@ export default {
                             shipmentsCount.value++
                             palletCount.value = palletCount.value + shipment.palletQty
                         }
-                        // // creating customers array with unique customers names accordng to purchase orders 
-                        // let clientName = shipment.purchaseOrders[0].customerShortName
-                        // let clients = []
-                        // clients.push(shipment.purchaseOrders[0].customerShortName)
-                        // if(shipment.purchaseOrders.length > 1){
-                        //     for (let i = 1; i < shipment.purchaseOrders.length; i++) {
-                        //         console.log(i)
-                        //         if(shipment.purchaseOrders[i].customerShortName != clientName){
-                            //             clients.push(shipment.purchaseOrders[i].customerShortName)
-                        //         }               
-                        //     }
-
-                        // }
-                        // shipment['Clients'] = clients
-                        // console.log(shipment)
+                    
                     });
             })
         }
@@ -271,14 +259,41 @@ export default {
         const myInterval = setInterval(()=>{
                 loadScheduleShipments()
                 }, 1000*120)
+        const clockInterval = setInterval(()=>{
+                startTime()
+                }, 1000)
         onMounted(()=>{
             myInterval
+            startTime()
+            clockInterval
         })
      
         onUnmounted(()=>{
             document.body.classList.remove("stop-scrolling");
             clearInterval(myInterval)
+            clearInterval(clockInterval)
         })
+
+        //clock
+
+        const hours = ref()
+        const minutes = ref()
+        const sec = ref()
+
+
+        function startTime() {
+            const today = new Date();
+            hours.value = today.getHours();
+            minutes.value = today.getMinutes();
+            sec.value = today.getSeconds();
+            minutes.value = checkTime(minutes.value);
+            sec.value = checkTime(sec.value);
+        }
+
+        function checkTime(i) {
+            if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+            return i;
+        }
 
         return{
             isPending,
@@ -287,7 +302,8 @@ export default {
              moment, 
              refreshScreenOn, gotoShipment,
              palletCount, shipmentsCount, 
-             goBack
+             goBack,
+             hours, minutes, sec
         }
     }
 
@@ -298,6 +314,42 @@ export default {
 .stop-scrolling{
     overflow: hidden !important;
 }
+.clock-ctnr{
+    position: absolute;
+    top: 1.25vh;
+    /* left: 68vh; */
+    width: 12vw;
+    height: 6.4vh;
+    /* border: solid #000000 0.2vh; */
+    /* background: linear-gradient(to right, #00000000, #2b4f94,#00000000); */
+    
+    margin: 0 44%;
+    padding: 0;
+    border-radius: 3vh;
+}
+.clock-ctnr h1{
+    position: relative;
+    padding: 0;
+    margin: 0%;
+    top:-0.4vh;
+    left: 4.8vh;
+    z-index: 101;
+    height: 2vh;
+    font-size: 6vh;
+
+}
+.clock-ctnr h2{
+    position: relative;
+    padding: 0;
+    margin: 0%;
+    top: -0.4vh;
+    left: 16vh;
+    z-index: 101;
+    height: 2vh;
+    color: #fdc700;
+    font-size: 3vh;
+}
+
 .palletCount h2{
     position: fixed;
     padding: 0;
