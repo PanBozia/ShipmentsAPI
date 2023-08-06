@@ -8,7 +8,7 @@
             <div class="chosen-summary">
                 <h3>DANE NOWEJ WYSYŁKI</h3>
                 <div v-if="chosenShipment != null">
-                    <p v-if="chosenShipment.hasPriority"> PRIORYTETOWA</p>
+                    <p v-if="chosenShipment.hasPriority"> NEW PARTS</p>
                     <p><span class="yellow">ETD:</span> {{moment(chosenShipment.etd).format("YYYY-MM-DD / HH:mm")}}</p>
                     <p v-if="chosenShipment.containerNumber"><span class="yellow">Nr kontenera: </span>{{chosenShipment.containerNumber}}</p>
                     <p v-if="chosenShipment.containerType"><span class="yellow">Typ kontenera: </span>{{chosenShipment.containerType}}</p>

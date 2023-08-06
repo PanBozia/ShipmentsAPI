@@ -49,7 +49,7 @@
                     <p class="prio-line" v-if="shipment.hasPriority">
                         <span>TAK</span>
                         <span class="material-symbols-outlined">
-                            timer
+                            new_label
                         </span>
                     </p>
                     <p v-else>
@@ -101,7 +101,7 @@
                     <p>ATD</p>
                 </div>
                 <div>
-                    <p>PRIORYTET</p>
+                    <p>ZAWIERA NOWE CZĘŚCI</p>
                 </div>
                 <div>
                     <p>ILOŚĆ PALET</p>

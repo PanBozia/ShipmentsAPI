@@ -490,7 +490,7 @@ export default {
   box-sizing: border-box;
 }
 .userSwitch-inner:before {
-  content: "PRIO";
+  content: "NEW PARTS";
   padding-left: 10px;
   background-color: #fff;
   color: #000000;

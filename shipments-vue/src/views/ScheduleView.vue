@@ -125,7 +125,9 @@
                 </div>
                 <!-- zamówienie -->
                 <div v-if="shipment.purchaseOrders.length != 0">
-                    <div v-for="(order, index) in shipment.purchaseOrders" :key="order.id" class="doubleline">
+                    <div v-for="(order, index) in shipment.purchaseOrders" :key="order.id" class="doubleline"
+                    :class="{
+                        sample:order.category == 'Sample'}">
                          <span class="index">{{index+1}}</span>
                         {{order.category}}: {{order.poNumber}} 
                     </div>
@@ -167,7 +169,7 @@
                     <span>
                         {{shipment.status}}
                     </span>
-                    <span v-if="shipment.hasPriority" class="material-symbols-outlined timer">timer</span>
+                    <span v-if="shipment.hasPriority" class="material-symbols-outlined timer">new_label</span>
                 </div>
                 <div v-else>N/A</div>
 
@@ -416,7 +418,7 @@ export default {
     font-size: 3vh ;
     margin: 0 0 0 1vh;
     padding: 0;
-    color: #fdc700;
+    color: #ffea00;
 
 }
 .schedule-container{
@@ -474,5 +476,8 @@ export default {
     color: #777;
     font-size: 1.3vh;
     /* vertical-align: middle; */
+}
+.sample{
+    color: #a8cbff;
 }
 </style>

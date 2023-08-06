@@ -12,7 +12,7 @@
                                     <div>
                                                         <div class="form-set">
                                                             <div>
-                                                                <label class="form-labels"> Wysyłka priorytetowa</label>    
+                                                                <label class="form-labels">Nowe części</label>    
                                                             </div>
                                                             <div class="prio-ctnr">
                                                                 <div class="userSwitch">
@@ -23,7 +23,7 @@
                                                                     </label>
                                                                 
                                                                 </div>
-                                                                <p><span class="material-symbols-outlined timer">timer</span> </p>
+                                                                <p><span class="material-symbols-outlined timer">new_label</span> </p>
                                                             </div>
                                                         </div>
 
@@ -338,7 +338,7 @@ export default {
   
 }
 .userSwitch-inner:before {
-  content: "PRIORYTET";
+  content: "NEW PARTS";
   padding-left: 36px;
   background-color: #98483f;
   color: #fff;

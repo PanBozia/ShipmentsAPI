@@ -65,9 +65,9 @@
                                 <input type="datetime-local" v-model="etdForm" required>
                             </div>
                             <div class="double-ctnr-item">
-                                <label class="form-labels"> Wysyłka priorytetowa</label>    
+                                <label class="form-labels"> Nowe części</label>    
                                 <div class="prio-ctnr">
-                                    <p><span class="material-symbols-outlined timer">timer</span> </p>
+                                    <p><span class="material-symbols-outlined timer">fiber_new</span> </p>
                                     <div class="userSwitch">
                                         <input type="checkbox" name="userSwitch" :checked="hasPriorityForm" class="userSwitch-cb"  :id="hasPriorityForm" v-model="hasPriorityForm">
                                         <label class="userSwitch-label" @click="handlePrio()">
@@ -573,7 +573,7 @@ export default {
   
 }
 .userSwitch-inner:before {
-  content: "PRIO";
+  content: "NEW PARTS";
   padding-left: 10px;
   background-color: #fff;
   color: #000000;

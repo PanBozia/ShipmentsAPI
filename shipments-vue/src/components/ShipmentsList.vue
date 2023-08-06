@@ -93,7 +93,7 @@
             <!-- <input type="checkbox"  v-model="hasPriority">
             <label>PRIO</label> -->
 
-            <p><span class="material-symbols-outlined">timer</span></p>
+            <p><span class="material-symbols-outlined">new_label</span></p>
             <div class="userSwitch">
                                 <input type="checkbox" name="userSwitch" :checked="hasPriority" class="userSwitch-cb"  :id="hasPriority" v-model="hasPriority">
                                 <label class="userSwitch-label" @click="handlePrio()">
@@ -178,7 +178,7 @@
                 <p v-else>N/A</p>
                 <!-- <p>{{shipment.createdByUser}}</p> -->
                 <p>{{shipment.status}}</p>
-                <div v-if="shipment.hasPriority"><p><span class="material-symbols-outlined">timer</span></p></div>
+                <div v-if="shipment.hasPriority"><p><span class="material-symbols-outlined">new_label</span></p></div>
                 <div v-else></div>
                 
         </div>    
@@ -600,7 +600,7 @@ label{
   
 }
 .userSwitch-inner:before {
-  content: "PRIO";
+  content: "NEW PARTS";
   padding-left: 10px;
   background-color: #fff;
   color: #000000;
