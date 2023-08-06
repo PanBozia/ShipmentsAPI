@@ -6,14 +6,21 @@
         </span>
     
     </div>    
-    <div class="clock-ctnr">
-        <h1>{{hours}}:{{minutes}}</h1><h2>:{{sec}}</h2>
-    </div>
-    <div class="palletCount" >
-        <h2 v-if="shipmentsCount == 0"><span>{{moment().format("dddd")}}</span> Dzisiaj nie ma wysyłek</h2>
-        <h2 v-if="shipmentsCount == 1"><span>{{moment().format("dddd")}}</span> Dzisiaj mamy <span>{{shipmentsCount}}</span> wysyłkę <span>{{palletCount}}</span> PAL</h2>
-        <h2 v-if="shipmentsCount > 1 && shipmentsCount < 5"><span>{{moment().format("dddd")}}</span> Dzisiaj mamy <span>{{shipmentsCount}}</span> wysyłki <span>{{palletCount}}</span> PAL</h2>
-        <h2 v-if="shipmentsCount > 4"><span>{{moment().format("dddd")}}</span> Dzisiaj mamy <span>{{shipmentsCount}}</span> wysyłek <span>{{palletCount}}</span> PAL</h2>
+    <div class="summary-ctnr">
+        <div class="palletCount" >
+            <h2 v-if="shipmentsCount == 0"><span>{{moment().format("dddd")}}</span> Dzisiaj nie ma wysyłek</h2>
+            <h2 v-if="shipmentsCount == 1"><span>{{moment().format("dddd")}}</span> Dzisiaj mamy <span>{{shipmentsCount}}</span> wysyłkę <span>{{palletCount}}</span> PAL</h2>
+            <h2 v-if="shipmentsCount > 1 && shipmentsCount < 5"><span>{{moment().format("dddd")}}</span> Dzisiaj mamy <span>{{shipmentsCount}}</span> wysyłki <span>{{palletCount}}</span> PAL</h2>
+            <h2 v-if="shipmentsCount > 4"><span>{{moment().format("dddd")}}</span> Dzisiaj mamy <span>{{shipmentsCount}}</span> wysyłek <span>{{palletCount}}</span> PAL</h2>
+        </div>
+        <div class="clock-ctnr">
+            <h1>{{hours}}</h1>
+            <div class="colon">:</div>
+            <h1>{{minutes}}</h1>
+            <div class="colon">:</div>
+            <h2>{{sec}}</h2>
+        </div>
+        
     </div>
     <div class="navbar">
         <div class="navbar-line"></div>
@@ -269,7 +276,7 @@ export default {
         })
      
         onUnmounted(()=>{
-            document.body.classList.remove("stop-scrolling");
+            document.body.classList.remove("stop-scrolling")
             clearInterval(myInterval)
             clearInterval(clockInterval)
         })
@@ -282,17 +289,17 @@ export default {
 
 
         function startTime() {
-            const today = new Date();
-            hours.value = today.getHours();
-            minutes.value = today.getMinutes();
-            sec.value = today.getSeconds();
-            minutes.value = checkTime(minutes.value);
-            sec.value = checkTime(sec.value);
+            const today = new Date()
+            hours.value = today.getHours()
+            minutes.value = today.getMinutes()
+            sec.value = today.getSeconds()
+            minutes.value = checkTime(minutes.value)
+            sec.value = checkTime(sec.value)
         }
 
         function checkTime(i) {
-            if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
-            return i;
+            if (i < 10) {i = "0" + i}  // add zero in front of numbers < 10
+            return i
         }
 
         return{
@@ -314,50 +321,56 @@ export default {
 .stop-scrolling{
     overflow: hidden !important;
 }
-.clock-ctnr{
+.summary-ctnr {
     position: absolute;
-    top: 1.25vh;
-    /* left: 68vh; */
-    width: 12vw;
-    height: 6.4vh;
-    /* border: solid #000000 0.2vh; */
-    /* background: linear-gradient(to right, #00000000, #2b4f94,#00000000); */
+    height: 9vh;
+    top: 0;
+    right: 0;
+    display: flex;
+    gap: 5vw;
     
-    margin: 0 44%;
-    padding: 0;
-    border-radius: 3vh;
+}
+.clock-ctnr{
+    
+    padding: 0 1vw;
+    margin: 0;
+    display: flex;
+    gap: 0.2vw;
+    
 }
 .clock-ctnr h1{
-    position: relative;
+    text-align: right;
+    margin: auto 0;
     padding: 0;
-    margin: 0%;
-    top:-0.4vh;
-    left: 4.8vh;
     z-index: 101;
-    height: 2vh;
-    font-size: 6vh;
-
+    font-size: 6.5vh;
+    
 }
-.clock-ctnr h2{
-    position: relative;
-    padding: 0;
-    margin: 0%;
-    top: -0.4vh;
-    left: 16vh;
-    z-index: 101;
-    height: 2vh;
+.clock-ctnr .colon{
+    padding: 0 0 0.8vh 0;
     color: #fdc700;
     font-size: 3vh;
+    align-self: center;
 }
-
-.palletCount h2{
-    position: fixed;
+.clock-ctnr h2{
+    margin: auto 0;
+    padding: 0;
+    color: #fdc700;
+    font-size: 3.2vh;
+    
+}
+.palletCount{
+    
+    text-align: right;
     padding: 0;
     margin: 0%;
-    top: 2.5vh;
-    right: 4vh;
     z-index: 100;
-    height: 2vh;
+    align-self: center;
+}
+.palletCount h2{
+    padding: 0;
+    margin: 0%;
+    z-index: 100;
     color:#ddd;
     font-size: 2.5vh;
 }
