@@ -27,6 +27,11 @@
         <div class="schedule-container schedule-bar">
             <div>
                 <div class="schedule-header">
+                    <p></p>
+                </div>
+            </div>
+            <div>
+                <div class="schedule-header">
                     <p>KLIENT</p>
                 </div>
             </div>
@@ -71,6 +76,11 @@
                     <p>STATUS</p>
                 </div>
             </div>
+            <!-- <div>
+                <div class="schedule-header">
+                    <p>NPIS</p>
+                </div>
+            </div> -->
         </div>
         <div class="navbar-line"></div>
     </div>
@@ -90,7 +100,13 @@
                     prioRow: shipment.hasPriority
                     }"
                     >
-
+                <!-- npis -->
+                <div v-if="shipment.hasPriority" class="npis">
+                    <p>NPIS</p>
+                </div>
+                <div v-else>
+                    <p></p>
+                </div>
                 <!-- klient -->
                 <!-- :class="{doubleline:shipment.purchaseOrders.length>1} -->
                 <div v-if="shipment.purchaseOrders.length != 0">
@@ -169,9 +185,10 @@
                     <span>
                         {{shipment.status}}
                     </span>
-                    <span v-if="shipment.hasPriority" class="material-symbols-outlined timer">new_label</span>
+                    <!-- <span v-if="shipment.hasPriority" class="material-symbols-outlined timer">new_label</span> -->
                 </div>
                 <div v-else>N/A</div>
+                
 
             </div>
         </div>
@@ -398,11 +415,13 @@ export default {
 
     background: linear-gradient(to right, #232938, #213D67);
     border-bottom: solid 0.1vh #ddd;
+    
     /* border-color: #000000; */
     min-height: 7.0vh;
     box-shadow: inset 0 1vh 2vh #00000030;
     color: #ddd;
     cursor: pointer;
+    overflow: hidden;
 }
 .secondRow{
     background: linear-gradient(to right, #252d4e, #1d488a);
@@ -413,6 +432,7 @@ export default {
 .status{
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 .status .timer{
     font-size: 3vh ;
@@ -428,12 +448,44 @@ export default {
     font-size: 2.6vh;
     display: grid;
     align-items: center;
-    grid-template-columns:1.2fr 2.8fr 3fr 1.2fr 0.8fr 2.3fr 2.0fr 3fr 2fr ;
-    column-gap: 1.6vw;
-    padding: 0.3vh 1vw 0.3vh 4vw;
+    grid-template-columns: 0.8fr 1.3fr 2.6fr 2.8fr 1.1fr 0.8fr 2.3fr 2.0fr 2.8fr 2fr;
+    column-gap: 1.3vw;
+    padding: 0.3vh 1.5vw 0.3vh 0.0vw;
+    overflow:hidden;
 }
 .schedule-container div{
     word-wrap: none;
+}
+.schedule-container .npis{
+    /* align-self: flex-start; */
+}
+.npis{
+    position: relative;
+    display: flex;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: linear-gradient( to right,#b79c00,#ffd900);
+    align-items: center;
+    justify-content: center;
+    height: 2.9vh;
+    width: 3.4vw;
+    
+    box-shadow: 0.3vh 0.3vh 0.4vh #00000099;
+    border-right: 0.15vh solid #000;
+    border-bottom: 0.15vh solid #000;
+    /* box-shadow: inset 0 1vh 2vh #00000030; */
+    border-radius: 0 2vh 2vh 0;
+    
+}
+.npis p{
+    padding: 0;
+    margin: 0;
+    font-size: 1.5vh;
+    /* font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
+    color: #171d39;
+    transform: translateX(0.9vh) translateY(0.1vh);
 }
 .schedule-header p{
     font-family: 'Bebas Neue';
