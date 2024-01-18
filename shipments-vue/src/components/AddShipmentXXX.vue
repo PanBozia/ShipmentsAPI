@@ -65,7 +65,7 @@
                                             <option value="N/A">N/A</option>
                                             <option value="20ft">20ft</option>
                                             <option value="40ft">40ft</option>
-                                            <option value="40ft">40ft HQ</option>
+                                            <option value="40ft HQ">40ft HQ</option>
                                         </select>
                                     </div>
 

@@ -10,7 +10,7 @@
                     <img id="dsse-logo" src="@/assets/img/logoDSSE.png" alt="">
                 </router-link>
                 <div id="label">FG SHIPMENTS</div>
-                <img id="hat" src="@/assets/img/hatsanta.png" alt="">
+                <!--<img id="hat" src="@/assets/img/hatsanta.png" alt=""> -->
             </div>
             <div>
                 <RouterView />

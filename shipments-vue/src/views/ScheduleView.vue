@@ -8,10 +8,11 @@
     </div>    
     <div class="summary-ctnr">
         <div class="palletCount" >
-            <h2 v-if="shipmentsCount == 0"><span>{{moment().format("dddd")}}</span> Dzisiaj nie ma wysyłek</h2>
-            <h2 v-if="shipmentsCount == 1"><span>{{moment().format("dddd")}}</span> Dzisiaj mamy <span>{{shipmentsCount}}</span> wysyłkę <span>{{palletCount}}</span> PAL</h2>
-            <h2 v-if="shipmentsCount > 1 && shipmentsCount < 5"><span>{{moment().format("dddd")}}</span> Dzisiaj mamy <span>{{shipmentsCount}}</span> wysyłki <span>{{palletCount}}</span> PAL</h2>
-            <h2 v-if="shipmentsCount > 4"><span>{{moment().format("dddd")}}</span> Dzisiaj mamy <span>{{shipmentsCount}}</span> wysyłek <span>{{palletCount}}</span> PAL</h2>
+            
+            <h2 v-if="shipmentsCount == 0"><span class="dmonth">{{moment().format("DD-MMM")}}</span><span>{{moment().format("dddd")}}</span> Dzisiaj nie ma wysyłek</h2>
+            <h2 v-if="shipmentsCount == 1"><span class="dmonth">{{moment().format("DD-MM")}}</span><span>{{moment().format("dddd")}}</span> Dzisiaj mamy <span>{{shipmentsCount}}</span> wysyłkę <span>{{palletCount}}</span> PAL</h2>
+            <h2 v-if="shipmentsCount > 1 && shipmentsCount < 5"><span class="dmonth">{{moment().format("DD-MMM")}}</span><span>{{moment().format("dddd")}}</span> Dzisiaj mamy <span>{{shipmentsCount}}</span> wysyłki <span>{{palletCount}}</span> PAL</h2>
+            <h2 v-if="shipmentsCount > 4"><span class="dmonth">{{moment().format("DD-MMM")}}</span><span>{{moment().format("dddd")}}</span> Dzisiaj mamy <span>{{shipmentsCount}}</span> wysyłek <span>{{palletCount}}</span> PAL</h2>
         </div>
         <div class="clock-ctnr">
             <h1>{{hours}}</h1>
@@ -170,7 +171,10 @@
                 </div>
                 <div v-else>N/A</div>
                 <!-- CTNR# -->
-                <div v-if="shipment.containerNumber">{{shipment.containerNumber}}</div>
+                <div v-if="shipment.containerType">{{shipment.containerType}}
+                    <span v-if="shipment.containerNumber">#: {{shipment.containerNumber}}</span>
+                </div>
+                <!-- <div v-if="shipment.containerNumber">{{shipment.containerNumber}}</div> -->
                 <div v-else>N/A</div>
                 <!-- NR REJ. -->
                 <div v-if="shipment.forwarder != null">{{shipment.forwarder.carPlates}}</div>
@@ -397,6 +401,9 @@ export default {
     font-size: 3.8vh;
     color: #fdc700;
     margin:0 0.5vh;
+}
+.palletCount h2 span.dmonth{
+    color: #ddd;
 }
 .back-arrow {
     position: fixed;
