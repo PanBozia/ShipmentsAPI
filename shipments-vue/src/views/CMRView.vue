@@ -367,9 +367,9 @@ export default {
             const pdfBytes = await pdfDoc.save().then(res => outputUint8Array = res)
             return pdfBytes
         }
-        const fillEachPdfPage = (pages, font, pngImage, pngPictogram)=>{
+        const fillEachPdfPage = (pages, font, pngImage)=>{
             const pngDims = pngImage.scale(0.25)
-            const pictogramDims = pngPictogram.scale(0.09)
+            // const pictogramDims = pngPictogram.scale(0.09)
             
             
             pages.forEach(page => {
@@ -379,12 +379,12 @@ export default {
                     width: pngDims.width,
                     height: pngDims.height,
                 })
-                 page.drawImage(pngPictogram, {
-                    x: page.getWidth() / 2 - pictogramDims.width / 2 - 224,
-                    y: page.getHeight() / 2 - pictogramDims.height + 3,
-                    width: pictogramDims.width,
-                    height: pictogramDims.height,
-                })
+                //  page.drawImage(pngPictogram, {
+                //     x: page.getWidth() / 2 - pictogramDims.width / 2 - 224,
+                //     y: page.getHeight() / 2 - pictogramDims.height + 3,
+                //     width: pictogramDims.width,
+                //     height: pictogramDims.height,
+                // })
                 const {  height } = page.getSize()
                 const x = 50;
                 const y = height;
