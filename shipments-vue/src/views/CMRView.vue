@@ -8,14 +8,10 @@
                 <span class="cmr-client-header">
                     <h3 class="top-headers">Klient</h3> <h3 class="top-headers yell">{{formConsigneeName}}</h3>
                 </span>
-                <!-- <h3>Klient <span>{{formConsigneeName}}</span></h3> -->
+                
                
                     <p class="choose-clinet-head" :class="{greenLabel:formClientIndex == null}">Wybierz klienta</p>
-                    <!-- <select v-model="formClientIndex">
-                        <option v-for="(client, index) in clients" :key="client.id" :value="index" >
-                            {{index+1}} - {{client.name}}
-                        </option>
-                    </select> -->
+                
                     <div class="clients-icons-ctnr">
                         <div 
                             class="client-icon" 
@@ -29,23 +25,23 @@
                             </p>
                         </div>
                     </div>
-               
+    <!-- <span v-if="formClientIndex != null"> -->
                 <h3>1 - Nadawca</h3>
                 <div class="cmr-form-set">
-                    <label>Nazwa firmy</label>
+                    <label :class="{alertfont:formSenderName == ''}">Nazwa firmy</label>
                     <input class="dis" type="text" v-model="formSenderName">
                 </div>
                 <div class="cmr-form-set">
-                    <label>Ulica</label>
+                    <label :class="{alertfont:formSenderStreet == ''}">Ulica</label>
                     <input class="dis" type="text" v-model="formSenderStreet">
                 </div>
                     
                 <div class="cmr-form-set">
-                    <label>Kod pocztowy i miasto</label>
+                    <label :class="{alertfont:formSenderCity == ''}">Kod pocztowy i miasto</label>
                     <input class="dis" type="text" v-model="formSenderCity">
                 </div>
                 <div class="cmr-form-set">
-                    <label>Kraj</label>
+                    <label :class="{alertfont:formSenderCountry == ''}">Kraj</label>
                     <input class="dis" type="text" v-model="formSenderCountry">
                 </div>
                 <h3>2 - Odbiorca</h3>
@@ -73,77 +69,94 @@
                 </div>
                 <h3>4 - Miejsce i data załadowania</h3>
                 <div class="cmr-form-set">
-                    <label>Miejscowość, kraj, data</label>
+                    <label :class="{alertfont:formLoadingPlace == ''}">Miejscowość, kraj, data</label>
                     <input class="dis" type="text" v-model="formLoadingPlace">
                 </div>
                 <h3>5 - Załączone dokumenty</h3>
                 <div class="cmr-form-set">
-                    <label>Numer dokumentu 1</label>
+                    <label >Numer dokumentu 1</label>
                     <input class="dis" type="text" v-model="formAttachment1">
                 </div>
                 <div class="cmr-form-set">
                     <label>Numer dokumentu 2</label>
                     <input class="dis" type="text" v-model="formAttachment2">
                 </div>
+<!-- </span> -->
             </div>    
             
             <!-- 2 column -->
             <div>
                 <h3>6 - Cechy i numery towaru</h3>
                 <div class="cmr-form-set">
-                    <label>Linia #1</label>
+                    <label  :class="{alertfont:formGoodsMarks1 == ''}">Linia #1</label>
                     <input class="dis" type="text" v-model="formGoodsMarks1">
                 </div>
                 <div class="cmr-form-set">
-                    <label>Linia #2</label>
+                    <label  :class="{alertfont:formGoodsMarks2 == ''}">Linia #2</label>
                     <input class="dis" type="text" v-model="formGoodsMarks2">
                 </div>
                 <div class="cmr-form-set">
-                    <label>Linia #3</label>
+                    <label  :class="{alertfont:formGoodsMarks3 == ''}">Linia #3</label>
                     <input class="dis" type="text" v-model="formGoodsMarks3">
                 </div>
                 <div class="cmr-form-set">
-                    <label>Linia #4</label>
+                    <label  :class="{alertfont:formGoodsMarks4 == ''}">Linia #4</label>
                     <input class="dis" type="text" v-model="formGoodsMarks4">
                 </div>
-                <h3>7 - Ilość</h3>
                 <div class="cmr-form-set">
-                    <label>Iość palet (szt)</label>
-                    <input class="dis" type="text" v-model="formGoodsQty">
+                    <label>Linia #5</label>
+                    <input class="dis" type="text" v-model="formGoodsMarks5">
                 </div>
-                <div class="cmr-form-set">
-                    <label>Waga  palety brutto (kg)</label>
-                    <input class="dis" type="number" v-model="formGoodsSingleWeight">
+
+                <div class="cmrquest">
+                    <div class="cmrquest-item">
+                        <input class="dis" type="checkbox" v-model="isDgd">
+                        <label @click="isDgd=!isDgd">UN 3268</label>
+                    </div>
+                    <div class="cmrquest-item">
+                        <input class="dis" type="checkbox" v-model="isAdrRegulated">
+                        <label @click="isAdrRegulated = !isAdrRegulated">Klauzula ADR: Przewóz zgodny z 1.1.4.2.1 </label>
+                    </div>
+                    <div class="cmrquest-item">
+                        <input class="dis" type="checkbox" v-model="isOverpack">
+                        <label @click="isOverpack = !isOverpack">Zastosowano opakowanie zbiorcze OVERPACK.</label>
+                    </div>
                 </div>
+
+                    <h3>7 - Ilość</h3>
+                    <div class="cmr-form-set">
+                        <label :class="{alertfont:formGoodsQty == ''}">Iość palet (szt)</label>
+                        <input class="dis" type="text" v-model="formGoodsQty">
+                    </div>
+                
                 <h3>11 - Waga</h3>
                 <div class="cmr-form-set">
-                    <label>Waga całkowita brutto (kg)</label>
+                    <label :class="{alertfont:formGoodsNet == ''}">Waga netto towaru(kg)</label>
+                    <input class="dis" type="text" v-model="formGoodsNet">
+                </div>
+                <div class="cmr-form-set">
+                    <label :class="{alertfont:formGoodsWeight == ''}">Waga całkowita brutto (kg)</label>
                     <input class="dis" type="text" v-model="formGoodsWeight">
                 </div>
                 <h3>12 - Objętość</h3>
                 <div class="cmr-form-set">
-                    <label>Wymiary palet (mm)</label>
-                    <div class="dim">
-                        <input class="dim-input dis" type="number" v-model="formGoodsDimX">
-                        <input class="dim-input dis" type="number" v-model="formGoodsDimZ">
-                        <input class="dim-input dis" type="number" v-model="formGoodsDimY">
-                    </div>
-                </div>
-                <div class="cmr-form-set">
-                    <label>Objętość (m<sup>3</sup>)</label>
+                    <label :class="{alertfont:formGoodsCBM == ''}">Objętość (m<sup>3</sup>)</label>
                     <input class="dis" type="text" v-model="formGoodsCBM">
+                </div>
+                <div class="cmr-form-set cbm-btn">
+                    <div class="btn  dis" :class="{notChosenIcon:formClientIndex != null}" @click="handleShowCalc">Kalkulator objętości (CBM)</div>
                 </div>
                 <h3>16 - Przewoźnik</h3>
                 <div class="cmr-form-set">
-                    <label>Imię i nazwisko</label>
+                    <label :class="{alertfont:formSpedName == ''}">Imię i nazwisko</label>
                     <input class="dis" type="text" v-model="formSpedName">
                 </div>
                 <div class="cmr-form-set">
-                    <label>Firma</label>
+                    <label :class="{alertfont:formSpedCompany == ''}">Firma</label>
                     <input class="dis" type="text" v-model="formSpedCompany">
                 </div>
                 <div class="cmr-form-set">
-                    <label>Numery rejestracyjne</label>
+                    <label :class="{alertfont:formSpedCarPlates == ''}">Numery rejestracyjne</label>
                     <input class="dis" type="text" v-model="formSpedCarPlates">
                 </div>
                 <h3></h3>
@@ -165,7 +178,10 @@
     <!-- <div >
         <iframe id="pdf" title="CMR" name="CMR"> </iframe>
     </div> -->
-
+    
+    <div v-if="showCalcFlag">
+        <CBMcalculator @calculateCbmEvent="handleCalculateCbm"/>
+    </div>
   
 </template>
 
@@ -178,8 +194,10 @@ import moment from 'moment/dist/moment'
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import download from 'downloadjs'
 import NavbarWarehouse from '../components/NavbarWarehouse.vue'
+import CBMcalculator from '../components/CBMcalculator.vue'
+
 export default {
-    components:{NavbarWarehouse},
+    components:{NavbarWarehouse, CBMcalculator},
     props:['shipmentId'],
     setup(props){
         const linksStore = useLinksStore()
@@ -190,6 +208,7 @@ export default {
         const isShown = ref(false)
 
         const formClientIndex = ref()
+        const showCalcFlag = ref(false)
 
         // 1 - Sender
         const formSenderName = ref('Daicel Safety Systems Europe Sp z o.o.')
@@ -204,20 +223,23 @@ export default {
         
         const formDestination = ref('')
         const formLoadingPlace = ref('')
-        const formAttachment1 = ref('SDS, instruction for driver, DGD')
+        const formAttachment1 = ref('Instructions in writing according to ADR, DGD, SDS')
         const formAttachment2 = ref('Delivery Note: ')
         //6 Goods
         const formGoodsMarks1 = ref('UN 3268 SAFETY DEVICES, 9, (E)')
         const formGoodsMarks2 = ref('UN 3268 URZĄDZENIA BEZPIECZEŃSTWA, 9, (E)')
-        const formGoodsMarks3 = ref('')
-        const formGoodsMarks4 = ref('')
+        const formGoodsMarks3 = ref('1000 Fiberboard boxes (4G)')
+        const formGoodsMarks4 = ref('1000 Skrzyn tekturowych (4G)')
+        const formGoodsMarks5 = ref('')
+        const isDgd = ref(true)
+        const isAdrRegulated = ref(true)
+        const isOverpack = ref(true)
+
         const formGoodsWeight = ref('')
-        const formGoodsSingleWeight = ref(450)
-        const formGoodsDimX = ref(1200)
-        const formGoodsDimZ = ref(800)
-        const formGoodsDimY = ref(1100)
-        const formGoodsCBM = ref(0)
-        const formGoodsQty = ref(0)
+        const formGoodsNet = ref('')
+        
+        const formGoodsCBM = ref('')
+        const formGoodsQty = ref('')
         
         //16 Speditor
         const formSpedCompany = ref('')
@@ -290,6 +312,10 @@ export default {
             const newSentence = sentenceCharArray.join("");
             return newSentence;
         }
+        const handleShowCalc = () =>{
+            showCalcFlag.value = true
+        }
+       
 
         const getData = ()=>{
              loadShipment(props.shipmentId).then(()=>{
@@ -442,13 +468,22 @@ export default {
                 page.moveTo(x , y - 360)
                 page.drawText(replace(formGoodsMarks2.value), { size: 9, color: rgb(0.40, 0.40, 0.40) })
                 page.moveTo(x, y - 375)
-                page.drawText(replace(formGoodsMarks3.value), { size: 9 })
+                page.drawText('Total quantity (Net. weight): '+ formGoodsNet.value.toString() + ' kg', { size: 9  })
                 page.moveTo(x, y - 385)
-                page.drawText(replace(formGoodsMarks4.value), { size: 9, color: rgb(0.40, 0.40, 0.40) })
+                page.drawText('Ilosc calkowita (waga netto): '+ formGoodsNet.value.toString() + ' kg', { size: 9, color: rgb(0.40, 0.40, 0.40)  })
+                
                 page.moveTo(x, y - 400)
-                page.drawText('OVERPACK used: ' + formGoodsQty.value.toString()  + ' EUR pallets', { size: 9 })
+                page.drawText(replace(formGoodsMarks3.value), { size: 9 })
                 page.moveTo(x, y - 410)
-                page.drawText('Zastosowano opakowanie zbiorcze: ' + formGoodsQty.value.toString()  + ' palety typu EUR', { size: 9, color: rgb(0.40, 0.40, 0.40) })
+                page.drawText(replace(formGoodsMarks4.value), { size: 9, color: rgb(0.40, 0.40, 0.40) })
+                page.moveTo(x, y - 425)
+                page.drawText(replace(formGoodsMarks5.value), { size: 9  })
+                if(isOverpack.value){
+                    page.moveTo(x, y - 440)
+                    page.drawText('OVERPACK used: ' + formGoodsQty.value.toString()  + ' pallets', { size: 9 })
+                    page.moveTo(x, y - 450)
+                    page.drawText('Zastosowano opakowanie zbiorcze: ' + formGoodsQty.value.toString()  + ' palet', { size: 9, color: rgb(0.40, 0.40, 0.40) })
+                }
                 if(shipment.value.containerNumber.length > 3){
                     page.moveTo(x, y - 470)
                     page.drawText('CTNR#: '+ replace(shipment.value.containerNumber) + ' / ' + shipment.value.containerType, { size: 9 })
@@ -457,13 +492,14 @@ export default {
                     page.moveTo(x, y - 482)
                     page.drawText('SEAL#: '+ shipment.value.containerSealNumber, { size: 9 })
                 }
-                
-                page.moveTo(x+20, y - 507)
-                page.drawText('9', { size: 9 })
-                page.moveTo(x+110, y - 507)
-                page.drawText('3268', { size: 9 })
-                page.moveTo(x+200, y - 507)
-                page.drawText('N/A', { size: 9 })
+                if(isDgd.value){
+                    page.moveTo(x+20, y - 507)
+                    page.drawText('9', { size: 9 })
+                    page.moveTo(x+110, y - 507)
+                    page.drawText('3268', { size: 9 })
+                    page.moveTo(x+200, y - 507)
+                    page.drawText('N/A', { size: 9 })
+                }
                 // 11 Weight
                 page.moveTo(x+400, y - 350)
                 page.drawText(formGoodsWeight.value.toString(), { size: 9 })
@@ -471,24 +507,28 @@ export default {
                 page.moveTo(x+470, y - 350)
                 page.drawText(formGoodsCBM.value.toString(), { size: 9 })
                 //13 Senders instructions
-                page.moveTo(x-3, y - 545)
-                page.drawText('Przewoz zgodny z 1.1.4.2.1', { size: 8, color: rgb(0.36, 0.36, 0.36) })
-                page.moveTo(x-3, y - 555)
-                page.drawText('Carriage in accordance with 1.1.4.2.1', { size: 8 })
-                page.moveTo(x-3, y - 560)
-                page.drawText('_______________________________________________', { size: 8, color: rgb(0.36, 0.36, 0.36) })
-                page.moveTo(x-3, y - 575)
-                page.drawText('1.1.3.6: Calkowita ilosc dla kazdej kategorii transportu', { size: 8, color: rgb(0.36, 0.36, 0.36) })
-                page.moveTo(x+23, y - 585)
-                page.drawText('/ Total quantity for each transport category:4:.......', { size: 8 })
-                page.moveTo(x-3, y - 600)
-                page.drawText('1.1.3.6: Obliczona wartosc dla kazdej kategorii transportu', { size: 8, color: rgb(0.36, 0.36, 0.36) })
-                page.moveTo(x+23, y - 610)
-                page.drawText('/ Calculated value for each transport category:4:0', { size: 8 })
-                page.moveTo(x-3, y - 625)
-                page.drawText('1.1.3.6: Obliczona wartosc punktow ADR', { size: 8, color: rgb(0.36, 0.36, 0.36) })
-                page.moveTo(x+23, y - 635)
-                page.drawText('/ Sum of calculeted point value:0', { size: 8 })
+                if(isAdrRegulated.value){
+                    page.moveTo(x-3, y - 540)
+                    page.drawText('Przewoz zgodny z 1.1.4.2.1', { size: 8, color: rgb(0.36, 0.36, 0.36) })
+                    page.moveTo(x-3, y - 550)
+                    page.drawText('Carriage in accordance with 1.1.4.2.1', { size: 8 })
+                }
+                page.moveTo(x-3, y - 557)
+                page.drawText('__________________________________________________', { size: 8, color: rgb(0.36, 0.36, 0.36) })
+                page.moveTo(x-3, y - 570)
+                page.drawText('Ilosc calkowitadla4 kategorii transportowej (1.1.3.6.3): ' + formGoodsNet.value.toString(), { size: 8, color: rgb(0.36, 0.36, 0.36) })
+                page.moveTo(x-3, y - 580)
+                page.drawText('Total quantity for transport category 4 (1.1.3.6.3): ' + formGoodsNet.value.toString(), { size: 8 })
+                page.moveTo(x-3, y - 592)
+                page.drawText('Wartosc obliczona dla 4 kategorii transportowej (1.1.3.6.4): 0', { size: 8, color: rgb(0.36, 0.36, 0.36) })
+                page.moveTo(x-3, y - 602)
+                page.drawText('Value calculated for transport category 4 (1.1.3.6.4): 0', { size: 8 })
+                page.moveTo(x-3, y - 614)
+                page.drawText('Suma wartosci obliczonych dlawszystkich kategorii', { size: 8, color: rgb(0.36, 0.36, 0.36) })
+                page.moveTo(x-3, y - 624)
+                page.drawText('transportowych (1.1.3.6.4): 0', { size: 8, color: rgb(0.36, 0.36, 0.36) })
+                page.moveTo(x-3, y - 634)
+                page.drawText('Total value calculeted for all transport categories: 0', { size: 8 })
                 //21 Established in
                 page.moveTo(x, y - 724)
                 page.drawText(replace(formLoadingPlace.value), { size: 9 })
@@ -545,19 +585,9 @@ export default {
                 formSpedCarPlates.value = shipment.value.forwarder.carPlates
                 formSpedName.value = shipment.value.forwarder.firstName + ' ' + shipment.value.forwarder.lastName
                 formGoodsQty.value = shipment.value.palletQty
-                formGoodsWeight.value = shipment.value.palletQty * formGoodsSingleWeight.value
-                let cbm = ((formGoodsDimX.value/1000) * (formGoodsDimY.value/1000) * (formGoodsDimZ.value/1000))*shipment.value.palletQty
-                formGoodsCBM.value = cbm.toFixed(2)
-                formGoodsMarks4.value = `${shipment.value.palletQty * 40} Skrzyn kartonowych (4G)`
-                formGoodsMarks3.value = `${shipment.value.palletQty * 40} Cardboard boxes (4G)`
+                
+               
             }
-            
-        })
-
-        const formWatchPalQty = watchEffect( ()=>{
-            formGoodsWeight.value = (formGoodsQty.value * formGoodsSingleWeight.value).toFixed(2)
-             let cbm = ((formGoodsDimX.value/1000) * (formGoodsDimY.value/1000) * (formGoodsDimZ.value/1000))*formGoodsQty.value
-            formGoodsCBM.value = cbm.toFixed(2)
             
         })
 
@@ -577,19 +607,12 @@ export default {
         
          formDestination.value = ''
          formLoadingPlace.value = ''
-         formAttachment1.value = ''
-         formAttachment2.value = ''
+         
         //6 Goods
          formGoodsMarks1.value = 'UN 3268 SAFETY DEVICES, CLASS 9, (E)'
          formGoodsMarks2.value = 'UN 3268 URZĄDZENIA BEZPIECZEŃSTWA, KLASA 9, (E)'
-         formGoodsMarks3.value = ''
-         formGoodsMarks4.value = ''
-         formGoodsWeight.value = ''
-         formGoodsDimX.value = 1200
-         formGoodsDimZ.value = 800
-         formGoodsDimY.value = 1100
-         formGoodsCBM.value = 0
-         formGoodsQty.value = 0
+         isDgd.value = true
+         
          toggleDisableInputs(true)
        }
        const toggleDisableInputs = (value)=>{
@@ -598,11 +621,21 @@ export default {
                     domElements[index].disabled = value
                 }
        }
+       const toggleCheckbox = (x) =>{
+        x = !x
+       }
        
         onUnmounted(()=>{
             formWatcher()
-            formWatchPalQty()
         })
+        const handleCalculateCbm = (newCbm)=>{
+            if(newCbm == false){newCbm  = 0}
+            else{
+                formGoodsCBM.value = newCbm
+            }
+            showCalcFlag.value = false
+        }
+       
 
         return {
             chooseClient, resetForm,
@@ -615,9 +648,13 @@ export default {
                 formSenderName, formSenderStreet, formSenderCity, formSenderCountry,
                 formConsigneeName, formConsigneeStreet, formConsigneeCity, formConsigneeCountry,
                 formDestination, formAttachment1, formAttachment2,formLoadingPlace, 
-                formGoodsMarks1, formGoodsMarks2, formGoodsMarks3,formGoodsMarks4, 
-                formGoodsSingleWeight, formGoodsWeight, formGoodsDimX, formGoodsDimY, formGoodsDimZ, formGoodsCBM, formGoodsQty,
-                formSpedCarPlates, formSpedCompany, formSpedName
+                formGoodsMarks1, formGoodsMarks2, formGoodsMarks3,formGoodsMarks4, formGoodsMarks5, isDgd,isAdrRegulated, isOverpack,
+                formGoodsWeight, formGoodsCBM, formGoodsQty, formGoodsNet,
+                formSpedCarPlates, formSpedCompany, formSpedName,
+                handleShowCalc,
+                handleCalculateCbm,
+                showCalcFlag,
+                toggleCheckbox
 
             }
     }
@@ -638,6 +675,7 @@ export default {
 .greenLabel{
     color: #a1ff6a;
 }
+
 .clients-icons-ctnr{
     display: flex;
 }
@@ -727,6 +765,22 @@ export default {
     padding-left: 0.7vw ;
     font-size: 1.2vh;
 }
+.cmr-form .cmrquest{
+    font-size: 0.7vw;
+    display: flex;
+    flex-direction: column;
+    margin: 4px auto;
+    
+}
+.cmr-form .cmrquest .cmrquest-item label{
+    padding-left: 10px;
+    font-weight: 400;
+}
+
+.cmr-form .cmrquest .cmrquest-item input[type=checkbox]{
+    transform: scale(1.6);    
+    margin-top: 10px;
+}
 .cmr-form-set .dim{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -739,6 +793,22 @@ export default {
     padding: 0.5vh 0vw 0.5vh 0;
     font-size: 0.8vw;
     
+}
+.cmr-form .cbm-btn{
+    padding: 8px 2px;
+    display: flex;
+    justify-content: center  ;
+}
+.cmr-form .cbm-btn .btn{
+    width: 66%;
+    background: #212946;
+    border: 1px solid #eee;
+    color: #eee;
+    font-weight: 300;
+}
+.cmr-form .cbm-btn .btn:hover{
+    background: #69749c;
+    box-shadow: 10px 10px 14px #00000050;
 }
 
 #pdf{
@@ -769,6 +839,9 @@ export default {
 .btn-cmr{
     width: 6vw;
     margin: 1vh ;
+}
+.alertfont{
+    color: #fc9595;
 }
 
 </style>

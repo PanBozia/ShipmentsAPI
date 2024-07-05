@@ -38,7 +38,7 @@ namespace ShipmentsAPI
             services.AddControllers();
             services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
             services.AddDbContext<ShipmentsDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("ShipmentsDbConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("ShipmentsDbConnectionAsus")));
             services.AddScoped<ShipmentsDataSeeder>();
             services.AddAutoMapper(this.GetType().Assembly);
             services.AddScoped<ICustomerService, CustomerService>();

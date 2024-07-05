@@ -13,6 +13,11 @@
                         <p>HARMONOGRAM</p>
                     </router-link>
                 </div>
+                <div>
+                    <router-link :to="{name: 'AddAllView'}">
+                        <p id="addshipnav">+ <span class="material-symbols-outlined" >rocket_launch</span></p>
+                    </router-link>
+                </div>
 
             </div>
             <div class="nav-right">
@@ -58,6 +63,9 @@ export default {
     font-size: 2.2vh;
     padding: 0;
     margin: 0;
+}
+#addshipnav{
+    color: #003e86;
 }
 
 </style>

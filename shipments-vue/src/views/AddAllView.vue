@@ -177,11 +177,13 @@
         </div>
 
 
-        <div v-if="chosenForwarder == null" class="uncompleatedbar">
-        </div>
-        <div v-else class="compleatedbar"></div>
-        <div v-if="chosenForwarder == null" class="uncompleatedbar"></div>
-        <div v-else class="compleatedbar endline">
+        <div v-if="chosenForwarder == null && ommitedFlag == false" class="uncompleatedbar"></div>
+        <div v-if="chosenForwarder == null && ommitedFlag == true" class="halfcompleatedbar"></div>
+        <div v-if="chosenForwarder != null" class="compleatedbar"></div>
+
+        <div v-if="chosenForwarder == null && ommitedFlag == false" class="uncompleatedbar"></div>
+        <div v-if="chosenForwarder == null && ommitedFlag == true" class="halfcompleatedbar"></div>
+        <div v-if="chosenForwarder == !null" class="compleatedbar endline">
             <span v-if="chosenShipment != null && chosenOrders != null && chosenForwarder !== null && createdId == '' " class="material-symbols-outlined lifted">
                 forklift
             </span>
@@ -392,6 +394,8 @@ export default {
     const editOrders = ref(false)
     const editForwarder = ref(false)
 
+    const ommitedFlag =ref(false)
+
     const handleNewShipment = (shipmentData) =>{
         chosenShipment.value = shipmentData
         editShipment.value = false
@@ -409,6 +413,9 @@ export default {
     const handleChoosenForwarder = (newForwarder)=>{
         chosenForwarder.value = newForwarder
         editForwarder.value = false
+        if(newForwarder == null){
+            ommitedFlag.value = true
+        }
     }
 
     const handleEdit = (shipment, order, forwarder)=>{
@@ -452,7 +459,8 @@ export default {
       chosenOrders, handleAddOrders,
       addShipmentError, createdId, handleSaveShipmentData,
       addOrdersError,
-      editShipment, editOrders, editForwarder, handleEdit
+      editShipment, editOrders, editForwarder, handleEdit,
+      ommitedFlag
     };
   },
 };
@@ -503,6 +511,16 @@ export default {
     background: #42c231;
     transition: 500ms ease-in;
     /* justify-self: stretch; */
+}
+.halfcompleatedbar{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-height: 0.8vh;
+    max-height: 0.8vh;
+    margin: 0;
+    background: #ffbb00;
+    transition: 500ms ease-in;
 }
 .color-done{
     background-color: #42c231;
