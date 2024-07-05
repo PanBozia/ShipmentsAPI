@@ -47,7 +47,7 @@
     </div>
     <div class="ver">
         <p>
-            UPDATED: 2023-07-11
+            UPDATED: 2024-07-05
         </p>
     </div>
 
