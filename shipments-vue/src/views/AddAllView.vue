@@ -44,18 +44,19 @@
         <div class="chosen-summary">
             <h3>WYBRANE ZAMÓWIENIA</h3>
             <div v-if="chosenOrders != null">
-                <div v-if="chosenOrders.length == 0">
-                    <p>Wysyłka bez zamówień</p>
-                    <p>(edytuj później)</p>
-                </div>
-                <div v-else v-for="order in chosenOrders" :key="order.id" class="chosen-orders">
+                <div v-for="order in chosenOrders" :key="order.id" class="chosen-orders">
                     <p><span class="yellow">Nr: </span>{{order.poNumber}}</p>
                     <p><span class="yellow">Klient: </span>{{order.customerName}}</p>
                     <p><span class="yellow">Kategoria: </span> {{order.category}} ({{order.incotermName}})</p>
                     
                 </div>
             </div>
-            <div v-else>
+            <div v-if="chosenOrders == null && ommitedFlagPo == true">
+                <p>Nie wybrano żadnych zamówienia do tej wysyłki.</p>
+                <p class="alert">(Nie zapiszesz wysyłki bez zamówień)</p>
+                              
+            </div>
+            <div v-if="chosenOrders == null && ommitedFlagPo == false">
                 <div>
                     <p>
                         Nie wybrano zamówień
@@ -67,16 +68,18 @@
     </div>
     <!-- 4th column -->
      <div v-if="chosenOrders != null" class="forward-arrow done seven-item" >
-        <span class="material-symbols-outlined edit" >
+        <span class="material-symbols-outlined edit fff" >
             task_alt
         </span>
         <span v-if="createdId ==''" class="edit-label" @click="handleEdit(0,1,0)">
             EDYTUJ
         </span>
     </div>
-    <div v-else class="forward-arrow undone seven-item">
-        <span class="material-symbols-outlined">
-            unpublished
+    <div v-if="chosenOrders == null" class="forward-arrow undone seven-item">
+        <span v-if="ommitedFlagPo == true" class="material-symbols-outlined alert">warning</span>
+        <span v-if="ommitedFlagPo == false" class="material-symbols-outlined">unpublished</span>
+        <span v-if="createdId =='' && ommitedFlagPo == true" class="edit-label edBtn" @click="handleEdit(0,1,0)">
+            EDYTUJ
         </span>
     </div>
     <!-- 5th column -->
@@ -86,11 +89,7 @@
                 
                 <h3>Wybrany przwoźnik</h3>
                 <div v-if="chosenForwarder != null">
-                    <div v-if="chosenOrders.length == 0">
-                        <p>Wysyłka bez przewoźnika</p>
-                        <p>(edytuj później)</p>
-                    </div>
-                    <div v-else>
+                    <div>
                         <p><span class="yellow">Tablice rej.: </span>{{chosenForwarder.carPlates}}</p>
                         <p><span class="yellow">Firma: </span>{{chosenForwarder.speditor}}</p>
                         <p><span class="yellow">Kierowca: </span>{{chosenForwarder.firstName}} {{chosenForwarder.lastName}}</p>
@@ -120,7 +119,9 @@
         <span class="material-symbols-outlined">
             unpublished
         </span>
-        {{chosenForwarder}}
+        <span v-if="createdId =='' && ommitedFlagForwarder == true" class="edit-label edBtn" @click="handleEdit(0,0,1)">
+            EDYTUJ
+        </span>
     </div>
     <!-- 7th column -->
     <div v-if="createdId ==''" class="button-ctnr">
@@ -152,49 +153,56 @@
         <div class="uncompleatedbar" :class="{compleatedbar:createdId != ''}"></div>
     </div> -->
     <div class="row-container-seven bar">
-        <div v-if="chosenShipment == null" class="uncompleatedbar">
+        <div v-if="chosenShipment == null" class="uncompleatedbar b1">
             <span class="material-symbols-outlined lifted">
                 forklift
             </span>
         </div>
-        <div v-else class="compleatedbar"></div>
-        <div v-if="chosenShipment == null" class="uncompleatedbar"></div>
-        <div v-else class="compleatedbar endline">
-            <span v-if="chosenShipment != null && chosenOrders == null & chosenForwarder == null " class="material-symbols-outlined lifted">
+        <div v-else class="compleatedbar b1"></div>
+        <div v-if="chosenShipment == null" class="uncompleatedbar b2"></div>
+        <div v-else class="compleatedbar endline b2">
+            <span v-if="chosenShipment != null && chosenOrders == null && chosenForwarder == null " class="material-symbols-outlined lifted">
                 forklift
             </span>
         </div>
 
 
-        <div v-if="chosenOrders == null" class="uncompleatedbar">
-        </div>
-        <div v-else class="compleatedbar"></div>
-        <div v-if="chosenOrders == null" class="uncompleatedbar"></div>
-        <div v-else class="compleatedbar endline">
-            <span v-if="chosenShipment != null && chosenOrders != null && chosenForwarder == null " class="material-symbols-outlined lifted">
+        <div v-if="chosenOrders == null && ommitedFlagPo == false" class="uncompleatedbar b3"></div>
+        <div v-if="chosenOrders == null && ommitedFlagPo == true" class="halfcompleatedbar b3"></div>
+        <div v-if="chosenOrders != null" class="compleatedbar b3"></div>
+        
+        <div v-if="chosenOrders == null && ommitedFlagPo == false" class="uncompleatedbar b4"></div>
+        <div v-if="chosenOrders == null && ommitedFlagPo == true" class="halfcompleatedbar b4"></div>
+        <div v-if="chosenOrders != null" class="compleatedbar endline b4">
+            <span v-if="chosenShipment != null && chosenOrders != null && chosenForwarder == null && ommitedFlagForwarder == false " class="material-symbols-outlined lifted">
                 forklift
             </span>
         </div>
 
 
-        <div v-if="chosenForwarder == null && ommitedFlag == false" class="uncompleatedbar"></div>
-        <div v-if="chosenForwarder == null && ommitedFlag == true" class="halfcompleatedbar"></div>
-        <div v-if="chosenForwarder != null" class="compleatedbar"></div>
+        <div v-if="chosenForwarder == null && ommitedFlagForwarder == false" class="uncompleatedbar b5"></div>
+        <div v-if="chosenForwarder == null && ommitedFlagForwarder == true" class="halfcompleatedbar b5"></div>
+        <div v-if="chosenForwarder != null" class="compleatedbar b5"></div>
 
-        <div v-if="chosenForwarder == null && ommitedFlag == false" class="uncompleatedbar"></div>
-        <div v-if="chosenForwarder == null && ommitedFlag == true" class="halfcompleatedbar"></div>
-        <div v-if="chosenForwarder == !null" class="compleatedbar endline">
+        <div v-if="chosenForwarder == null && ommitedFlagForwarder == false" class="uncompleatedbar b6"></div>
+        <div v-if="chosenForwarder == null && ommitedFlagForwarder == true" class="halfcompleatedbar endline b6">
+            <span v-if="chosenShipment != null && chosenOrders != null && chosenForwarder == null && createdId == '' " class="material-symbols-outlined lifted">
+                forklift
+            </span>
+        </div>
+        <div v-if="chosenForwarder != null" class="compleatedbar endline b6">
             <span v-if="chosenShipment != null && chosenOrders != null && chosenForwarder !== null && createdId == '' " class="material-symbols-outlined lifted">
                 forklift
             </span>
         </div>
-        
-        <div v-if="createdId == ''" class="uncompleatedbar"></div>
-        <div v-else class="compleatedbar endline">
+
+        <div v-if="createdId == ''" class="uncompleatedbar tesbar b7"></div>
+        <div v-else class="compleatedbar endline b7">
             <span v-if="chosenShipment != null && chosenOrders != null && chosenForwarder !== null && createdId != '' " class="material-symbols-outlined lifted endline">
                 local_shipping
             </span>
         </div>
+        
     </div>
 
   <div class="row-container-one" v-if="editShipment">
@@ -223,7 +231,8 @@
         </div>
         <div></div>
   </div>
-    <div class="row-container-two larger" v-if="chosenShipment !=null && chosenOrders != null && chosenForwarder != null">
+    <div class="row-container-two larger" v-if="chosenShipment !=null && chosenOrders != null ">
+        <!-- && chosenForwarder != null -->
         <div></div>
         <div v-if="!createdId && !editShipment && !editOrders && !editForwarder">
             <p>Dane zostały wprowadzone.</p>
@@ -275,7 +284,7 @@
                        
                        
                     </div>
-                    <div>
+                    <div v-if="chosenForwarder != null">
                         <p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p>
                         <h3>Przewoźnik:</h3>
                         <p>
@@ -394,8 +403,9 @@ export default {
     const editOrders = ref(false)
     const editForwarder = ref(false)
 
-    const ommitedFlag =ref(false)
-
+    const ommitedFlagForwarder =ref(false)
+    const ommitedFlagPo =ref(false)
+    
     const handleNewShipment = (shipmentData) =>{
         chosenShipment.value = shipmentData
         editShipment.value = false
@@ -406,15 +416,18 @@ export default {
 
     const handleAddOrders = (ordersList) => {
       chosenOrders.value = ordersList
+      if(chosenOrders.value == null){ ommitedFlagPo.value = true }
+      else { ommitedFlagPo.value = false}
       editOrders.value = false
       if(chosenForwarder.value == null){editForwarder.value = true}
+      console.log(chosenOrders.value)
     };
 
     const handleChoosenForwarder = (newForwarder)=>{
         chosenForwarder.value = newForwarder
         editForwarder.value = false
         if(newForwarder == null){
-            ommitedFlag.value = true
+            ommitedFlagForwarder.value = true
         }
     }
 
@@ -425,7 +438,9 @@ export default {
     }
     
     const handleSaveShipmentData = ()=>{
-        
+        editShipment.value = false
+        editForwarder.value = false
+        editOrders.value =false
         if(chosenForwarder.value){
                 chosenShipment.value['forwarderId'] = chosenForwarder.value['id']
             }
@@ -460,7 +475,7 @@ export default {
       addShipmentError, createdId, handleSaveShipmentData,
       addOrdersError,
       editShipment, editOrders, editForwarder, handleEdit,
-      ommitedFlag
+      ommitedFlagForwarder, ommitedFlagPo
     };
   },
 };
@@ -519,9 +534,10 @@ export default {
     min-height: 0.8vh;
     max-height: 0.8vh;
     margin: 0;
-    background: #ffbb00;
+    background:#ffc014;
     transition: 500ms ease-in;
 }
+
 .color-done{
     background-color: #42c231;
 }
@@ -551,6 +567,17 @@ export default {
 .undone{
     color: #364b6c;
 }
+.undone .edBtn{
+    color: #e6b800;
+}
+.undone .material-symbols-outlined{
+    font-size: 3vw;
+}
+.undone .material-symbols-outlined.alert{
+    color:#ff8b5d;
+    font-weight: 200;
+    
+}
 .button-ctnr{
     display:flex;
     justify-content: center;
@@ -576,6 +603,9 @@ export default {
 
 .chosen-summary{
     padding:0 6vh 0 6vh;
+}
+.chosen-summary .alert{
+    color: #ff8b5d;
 }
 .chosen-summary p{
     font-size: 1.2vh;

@@ -24,7 +24,7 @@
                 <input type="text" v-model="phoneForm">
             </div>
             <div id="add-btn-container">
-                <button>Zapisz</button>
+                <button>Dodaj</button>
             </div>
             <div v-if="errorForm || error" class="error" >
                 <p>{{errorForm}}</p>

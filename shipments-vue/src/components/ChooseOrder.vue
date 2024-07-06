@@ -165,7 +165,11 @@ export default {
     };
 
     const handleSubmitOrdersList = () => {
-      context.emit("add-orders-event", ordersList.value);
+      if(ordersList.value.length == 0){
+        context.emit("add-orders-event", null);
+      }else{
+        context.emit("add-orders-event", ordersList.value);
+      }
     };
 
     //add order
