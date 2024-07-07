@@ -10,7 +10,11 @@
                 <p><span class="material-symbols-outlined">list_alt</span></p>
             </div>
             <div class="item-container main-add-btn" @click="openAddComponent">
-                <p><span class="material-symbols-outlined">add</span></p>
+                <p>
+                    <span class="material-symbols-outlined">add</span>
+                    <span class="material-symbols-outlined">clinical_notes</span>
+
+                </p>
             </div>
         </div>
         

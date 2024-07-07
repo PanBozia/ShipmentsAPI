@@ -10,7 +10,10 @@
                 <p><span class="material-symbols-outlined">list_alt</span></p>
             </div>
             <div class="item-container main-add-btn" @click="openAddComponent">
-                <p><span class="material-symbols-outlined">add</span></p>
+                <p>
+                    <span class="material-symbols-outlined">add</span>
+                    <span class="material-symbols-outlined">news</span>
+                </p>
             </div>
         </div>
         <div v-if="listFlag" class="item-v">

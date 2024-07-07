@@ -144,7 +144,10 @@
                     <input class="dis" type="text" v-model="formGoodsCBM">
                 </div>
                 <div class="cmr-form-set cbm-btn">
-                    <div class="btn  dis" :class="{notChosenIcon:formClientIndex != null}" @click="handleShowCalc">Kalkulator objętości (CBM)</div>
+                    <label>Kalkulator objętości</label>
+                    <div class="btn  dis" :class="{notChosenCalc:formClientIndex == null}" @click="handleShowCalc">
+                        <span class="material-symbols-outlined">calculate</span>
+                    </div>
                 </div>
                 <h3>16 - Przewoźnik</h3>
                 <div class="cmr-form-set">
@@ -795,19 +798,31 @@ export default {
     
 }
 .cmr-form .cbm-btn{
-    padding: 8px 2px;
-    display: flex;
-    justify-content: center  ;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    padding-right: 0;
+    margin-right: 0;
 }
 .cmr-form .cbm-btn .btn{
-    width: 66%;
-    background: #212946;
-    border: 1px solid #eee;
-    color: #eee;
-    font-weight: 300;
+    height: 2.3vh;
+    padding: 0;
+    padding-top: 4px;
+    width: 1.6vw;
+    color: #ffffff;
+    font-weight: 500;
+    background: none;
+}
+.notChosenCalc{
+    display: none;
+}
+
+.cmr-form .cbm-btn .btn .material-symbols-outlined{
+    font-size: 2.2vw;
+    font-weight: 200;
 }
 .cmr-form .cbm-btn .btn:hover{
-    background: #69749c;
+    /* background: #0c56aa; */
+    transform: scale(1.3);
     box-shadow: 10px 10px 14px #00000050;
 }
 
@@ -830,7 +845,7 @@ export default {
     
 }
 .double-btns{
-    margin-top:3vh;
+    
     display: flex;
     flex-direction: row;
     justify-content: space-around
@@ -838,7 +853,8 @@ export default {
 }
 .btn-cmr{
     width: 6vw;
-    margin: 1vh ;
+    margin: 1vh;
+    font-size: 0.6vw;
 }
 .alertfont{
     color: #fc9595;

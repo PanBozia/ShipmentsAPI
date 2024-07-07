@@ -218,7 +218,7 @@ a:hover{
 }
 .main-list-btn{
     /* background: linear-gradient(to right bottom, #5bb7f8,#0e409d); */
-    background: linear-gradient(to right bottom, #ae86ff,#8c34ff);
+    /* background: linear-gradient(to right bottom, #ae86ff,#8c34ff); */
     justify-self: end;
     font-size: 1.2em;
     width: 40px;
@@ -228,9 +228,9 @@ a:hover{
 }
 .main-add-btn{
     justify-self: end;
-    background: linear-gradient(to right bottom, #b0d730,#8cb30b,#51680f);
+    /* background: linear-gradient(to right bottom, #b0d730,#8cb30b,#51680f); */
     font-size: 1.2em;
-    width: 40px;
+    width: 46px;
     height: 60px;
     /* border-radius: 50%; */
     
@@ -242,9 +242,9 @@ a:hover{
     justify-content: center;
     margin:10px 10px;
     padding: 2px 14px;
-    box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.374);
+    
     max-height: 60px;
-    border-radius: 50%;
+    
 }
 .item-container p{
     display: flex;
@@ -255,7 +255,7 @@ a:hover{
     display: flex;
     flex-direction: row;
     transform: scale(1.1);
-    background: linear-gradient(to right bottom, #ffcc00,#be7200);
+    color:  #ffcc00;
 }
 .material-symbols-outlined{
     font-size: 2em;

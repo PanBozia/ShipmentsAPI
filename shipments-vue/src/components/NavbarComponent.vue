@@ -64,8 +64,11 @@ export default {
     padding: 0;
     margin: 0;
 }
-#addshipnav{
-    color: #003e86;
+
+#addshipnav:hover{
+    transform: scale(1.4);
 }
+
+
 
 </style>

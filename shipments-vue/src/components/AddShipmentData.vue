@@ -18,7 +18,10 @@
                                                 </label>
                                             
                                             </div>
-                                            <p><span class="material-symbols-outlined timer">new_label</span> </p>
+                                            <!-- <p><span class="material-symbols-outlined timer">new_label</span> </p> -->
+                                            <div class="npis-label" :class="{npislabelon:hasPriorityForm}">
+                                                <p>+ NPIS</p>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -282,8 +285,8 @@ export default {
 .userSwitch-inner:before {
   content: "NEW PARTS";
   padding-left: 36px;
-  background-color: #98483f;
-  color: #fff;
+  background-color: #ffd000;
+  color: #030303;
   box-shadow: inset 2px 2px 4px rgba(0,0,0,0.4);
   font-weight: 400;
 }
@@ -439,6 +442,21 @@ input[type=range]::-ms-fill-upper {
 }
 input[type=range]:focus::-ms-fill-upper {
   background: #367ebd;
+}
+.npis-label{
+    display: flex;
+    background: #ffed4c;
+    z-index: -1;
+}
+.npislabelon{
+    z-index: 1;
+}
+.npis-label p{
+    margin: 4px 6px;
+    text-align: center;
+    font-size: 12px;
+    color: #474747;
+    
 }
 </style>
 
