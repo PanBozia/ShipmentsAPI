@@ -369,7 +369,7 @@ export default {
                 });
             })
         }
-        const pdfUrl = '/src/assets/documents/cmr.pdf'
+        const pdfUrl = '/src/assets/documents/cmr.pdf' // To do: Tu by co poprawił z generowanie linków...
         let outputUint8Array = null
         onMounted(()=>{
           getData()
@@ -379,9 +379,9 @@ export default {
         
         async function modifyPdf(pdfUrl) {
             // console.log(client)
-            const pngUrl = '/src/assets/img/logoDSSEblue.png'
+            const pngUrl = '/src/assets/img/logoDSSEblue.png' // To do: Tu by co poprawił z generowanie linków...
             const pngImageBytes = await fetch(pngUrl).then((res) => res.arrayBuffer())
-            const pictogramUrl = '/src/assets/img/ADR9.png'
+            const pictogramUrl = '/src/assets/img/ADR9.png' // To do: Tu by co poprawił z generowanie linków...
             const pictogramImageBytes = await fetch(pictogramUrl).then((res) => res.arrayBuffer())
 
             const existingPdfBytes = await fetch(pdfUrl).then(res => res.arrayBuffer())
